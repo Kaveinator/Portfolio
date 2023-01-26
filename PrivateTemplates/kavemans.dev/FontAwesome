@@ -1,0 +1,6 @@
+<script src="https://kit.fontawesome.com/7d3a235ca6.js" crossorigin="anonymous"></script>
+<style>
+    :root {
+        --font-awesome-version: "Font Awesome 5 Free";
+    }
+</style>

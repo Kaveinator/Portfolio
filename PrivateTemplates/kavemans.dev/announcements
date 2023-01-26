@@ -1,0 +1,8 @@
+
+      <div class="announcements centerize">
+        <div class="info dynamicMargin" onclick="this.remove();">
+          <strong>Maintainance Inbound!</strong>
+          Site is currently in its development stage!
+          <!--Some features/pages may not work properly-->
+        </div>
+      </div>

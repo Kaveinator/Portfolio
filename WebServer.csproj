@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <StartupObject>WebServer.Program</StartupObject>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="AssemblyInfo">
+			<_Parameter1>$([System.DateTime]::UtcNow.ToString("yyyy.M.d.h"))</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Plugins\" />
+	  <Folder Include="PublicTemplates\kavemans.dev\src\sprites\Battle-of-the-Forces\" />
+	  <Folder Include="PublicTemplates\kavemans.dev\src\sprites\Tanki-X-Revive\" />
+	</ItemGroup>
+  <ItemGroup>
+    <None Include="configs/**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PublicTemplates/**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PrivateTemplates/**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

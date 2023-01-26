@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="UTF-8">
+      <title>Projects</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./src/styles/framework.css" type="text/css" rel="stylesheet" />
+    <link href="./src/styles/common.css" type="text/css" rel="stylesheet" />
+    <link href="./src/styles/main.css" type="text/css" rel="stylesheet" />
+    <link href="./src/styles/devlog.css" type="text/css" rel="stylesheet" />
+    <model src="kavemans.dev/FontAwesome"></model>
+  </head>
+  <body>
+    <model src="kavemans.dev/header.html"></model>
+    <div class="header"></div>
+    <div class="contentWrapper">
+      <main id="projects" class="container centerize">
+        <model src="kavemans.dev/announcements"></model>
+        <h2>Projects</h2>
+        <div class="feed dynamicMargin centerize">
+          <div class="row">
+            <img src="/src/sprites/logo/BattleOfTheForcesLogo.png" />
+            <a href="#">Fullstack Developer - Battle of the Forces</a>
+            <span>
+              A game built with Unity3D using the C# language. On server side, uses Entity Framework with
+              SQLite as the storage engine. Client authentication works by sending a RESTful API to the
+              AuthServer that then returns a AuthToken and Guid combination to log into game servers. This
+              project is still in development
+            </span>
+          </div>
+          <div class="row">
+            <img src="/src/sprites/logo/TankiXLogo.png" />
+            <a href="#">Backend Developer - Revive Tanki X</a>
+            <span>
+              Built a server with a team of 4 members for Tanki X. Was in charge of building in-game client
+              authentication, cross-server communication and central server. Used Entity Framework with MySQL as the storage
+              provider. The central server was reponsible for storing user data, authenticating game servers, balancing players
+              based on overall volume or server volume and relaying broadcasts to all active servers. And built a small
+              dashboard to keep track of statistics.
+            </span>
+          </div>
+          <div class="row">
+            <img src="/src/sprites/logo/SkyChat.png" />
+            <a href="#">UI/UX Engineer - SkyChat</a>
+            <span>
+              Built a web application for a decentralized chat platform for a Skynet competition.
+              Looked and functioned very similiar to Discord or Slack, except not tied to a central location.
+              Design is fluid and supports switching from mobile/desktop/portrait view. Also built an electron client
+              which included a few tweaks to make the app look and feel more smooth.
+            </span>
+          </div>
+          <div class="row">
+            <img src="/src/sprites/logo/icons8-web-48.png" />
+            <a href="#">Fullstack Web Developer - Education Hub</a>
+            <span>
+              Built a web application for a learning platform in two weeks.
+              Backend utilized a node.js server and MySQL storage to get and store channels, courses and content links.
+              Frontend was built with HTML/CSS and Javascript (vanilla), was complete with a course catalog and search.
+            </span>
+          </div>
+          <div class="row">
+            <img src="/src/sprites/logo/icons8-web-48.png" />
+            <a href="#">Web Hosting Project - Personal Project</a>
+            <span>
+              Frontend programmed in HTML/CSS with vanilla JS, Backend programmed in node.js and uses MySQL for data storage.
+              This platform allowed you to create a static website, enable/disable your site, and allowed to enable/disable FTP access.
+            </span>
+          </div>
+          <div class="row">
+            <img src="/src/sprites/logo/icons8-web-48.png" />
+            <a href="#">The Grand Finale - Personal Project</a>
+            <span>
+              A project built with Unity and C#.
+              A single-player plane game where the player is tasked to destroy bases and other planes.
+              You can also customize and upgrade certain equipment. 
+            </span>
+          </div>
+          <div class="row">
+            <img src="/src/sprites/logo/icons8-web-48.png" />
+            <a href="#">Endless Runner - Personal Project</a>
+            <span>
+              
+            </span>
+          </div>
+        </div>
+        </div>
+      </main>
+    </div>
+    <model src="kavemans.dev/footer.html"></model>
+  </body>
+</html>

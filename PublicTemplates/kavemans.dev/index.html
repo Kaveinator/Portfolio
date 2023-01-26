@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+		<meta charset="UTF-8">
+		<title>Kaveman's Site</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./src/styles/framework.css" type="text/css" rel="stylesheet" />
+    <link href="./src/styles/common.css" type="text/css" rel="stylesheet" />
+    <link href="./src/styles/main.css" type="text/css" rel="stylesheet" />
+    <model src="kavemans.dev/FontAwesome"></model>
+  </head>
+  <body>
+    <model src="kavemans.dev/header.html"></model>
+    <div class="contentWrapper">
+      <main id="simpleParallaxEffect" class="centerize">
+        <div class="announcementsContainer">
+          <model src="kavemans.dev/announcements"></model>
+        </div>
+        <div class="intro">
+          <span>Hi, my name is Kaveman and I'm a...</span>
+          <span id="mainRoleThing">Software Developer</span>
+        </div>
+        <span class="credits">Parallax Vectors by <a href="https://www.vecteezy.com/free-vector/parallax">Vecteezy</a></span>
+      </main>
+      <div id="knownLanguagesAndTech" class="container centerize">
+        <h2>Skills</h2>
+        <div class="container centerize">
+            <div class="item centerize" label="HTML">
+                <img src="/src/sprites/langs/html.png" />
+            </div>
+            <div class="item centerize" label="CSS">
+                <img src="/src/sprites/langs/css.png" />
+            </div>
+            <div class="item centerize" label="Javascript">
+                <img src="/src/sprites/langs/javascript.png" />
+            </div>
+            <div class="item centerize" label="node.js">
+                <img src="/src/sprites/langs/nodejs.png" />
+            </div>
+            <div class="item centerize" label="Electron">
+                <img src="/src/sprites/langs/electron.png" />
+            </div>
+            <div class="item centerize" label="C#">
+                <img src="/src/sprites/langs/csharp.png" />
+            </div>
+            <div class="item centerize" label="Unity3D">
+                <img src="/src/sprites/langs/unity.png" />
+            </div>
+            <div class="item centerize" label="MySQL">
+                <img src="/src/sprites/langs/mysql.png" />
+            </div>
+            <div class="item centerize" label="Git">
+                <img src="/src/sprites/langs/github.png" />
+            </div>
+        </div>
+      </div>
+      <div id="projects" class="container centerize">
+        <h2>Recent Work</h2>
+        <div class="row dynamicMargin">
+          <img src="/src/sprites/Logo/BattleOfTheForces.png" />
+          <a href="#">Fullstack Developer - Battle of the Forces</a>
+          <span>
+            A game built with Unity3D using the C# language. On server side, uses Entity Framework with
+            SQLite as the storage engine. Client authentication works by sending a RESTful API to the
+            AuthServer that then returns a AuthToken and Guid combination to log into game servers. This
+            project is still in development
+          </span>
+        </div>
+        <div class="row dynamicMargin">
+          <img src="/src/sprites/Logo/ReviveTankiX.png" />
+          <a href="#">Backend Developer - Revive Tanki X</a>
+          <span>
+            Built a server with a team of 4 members for Tanki X. Was in charge of building in-game client
+            authentication, cross-server communication and central server. Used Entity Framework with MySQL as the storage
+            provider. The central server was reponsible for storing user data, authenticating game servers, balancing players
+            based on overall volume or server volume and relaying broadcasts to all active servers. And built a small
+            dashboard to keep track of statistics.
+          </span>
+        </div>
+        <div class="row dynamicMargin">
+          <img src="/src/sprites/Logo/SkyChat.png" />
+          <a href="#">UI/UX Developer - SkyChat</a>
+          <span>
+            Built a web application for a decentralized chat platform for a Skynet competition.
+            Looked and functioned very similiar to Discord or Slack, except not tied to a central location.
+            Design is fluid and supports switching from mobile/desktop/portrait view. Also built an electron client
+            which included a few tweaks to make the app look and feel more smooth.
+          </span>
+        </div>
+        <div class="row dynamicMargin">
+          <img src="/src/sprites/Logo/EducationHub.png" />
+          <a href="#">Fullstack Web Developer - Education Hub</a>
+          <span>
+            Built a web application for a learning platform in two weeks.
+            Backend utilized a node.js server and MySQL storage to get and store channels, courses and content links.
+            Frontend was built with HTML/CSS and Javascript (vanilla), was complete with a course catalog and search.
+          </span>
+        </div>
+      </div>
+    </div>
+    <model src="kavemans.dev/footer.html"></model>
+    <script src="./src/scripts/KeyFirePlugin.js"></script>
+    <script defer>
+      var fixedDeltaTime = 1000 / 60;
+      var simpleParallaxEffect = setInterval(() => {
+        Object3DTransform("simpleParallaxEffect", 0, 0, -100, "calc(100% - {0}");
+      }, fixedDeltaTime);
+    </script>
+    </body>
+</html>

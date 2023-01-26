@@ -1,0 +1,18 @@
+{
+  "Enabled": true,
+  "Port": 80,
+  "RequestTimeout": 10000,
+  "ProductionDirectory": "Static",
+  "DefaultDomain": "kavemans.dev",
+  "ShowExceptionsOnErrorPages": true,
+  "_UriFiller": "What files should it search for when autofilling URLs",
+  "UriFillers": [
+    "index.html",
+    "index.htm",
+    "index.txt",
+    "default.webp",
+    "default.png"
+  ],
+  "MaxCacheAge": 604800,
+  "MaxConcurrentRequests": 1000
+}
