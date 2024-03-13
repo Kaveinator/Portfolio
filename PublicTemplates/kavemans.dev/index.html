@@ -4,52 +4,115 @@
 		<meta charset="UTF-8">
 		<title>Kaveman's Site</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./src/styles/framework.css" type="text/css" rel="stylesheet" />
-    <link href="./src/styles/common.css" type="text/css" rel="stylesheet" />
-    <link href="./src/styles/main.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/framework.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/common.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/main.css" type="text/css" rel="stylesheet" />
     <model src="kavemans.dev/FontAwesome"></model>
   </head>
   <body>
     <model src="kavemans.dev/header.html"></model>
     <div class="contentWrapper">
-      <main id="simpleParallaxEffect" class="centerize">
+      <main id="simpleParallaxEffect" class="centerize darken">
         <div class="announcementsContainer">
           <model src="kavemans.dev/announcements"></model>
         </div>
-        <div class="intro">
+        <div class="intro landing" style="--background-image: url('./../sprites/ChannelIcon.jpg'); --border-radius: 50%;">
           <span>Hi, my name is Kaveman and I'm a...</span>
           <span id="mainRoleThing">Software Developer</span>
         </div>
-        <span class="credits">Parallax Vectors by <a href="https://www.vecteezy.com/free-vector/parallax">Vecteezy</a></span>
+        <span class="credits">Background: A map I worked on called "Madness" for the <a href="https://txrevive.net">TankiX</a> project</span>
       </main>
       <div id="knownLanguagesAndTech" class="container centerize">
         <h2>Skills</h2>
         <div class="container centerize">
             <div class="item centerize" label="HTML">
+              <div class="popupAnchor centerize">
+                <div>
+                  <div class="popup">
+                    This is language that can be used to create servers or applications
+                  </div>
+                </div>
+              </div>
                 <img src="/src/sprites/langs/html.png" />
             </div>
             <div class="item centerize" label="CSS">
+              <div class="popupAnchor centerize">
+                <div>
+                  <div class="popup">
+                    This is language that can be used to create servers or applications
+                  </div>
+                </div>
+              </div>
                 <img src="/src/sprites/langs/css.png" />
             </div>
             <div class="item centerize" label="Javascript">
+              <div class="popupAnchor centerize">
+                <div>
+                  <div class="popup">
+                    This is language that can be used to create servers or applications
+                  </div>
+                </div>
+              </div>
                 <img src="/src/sprites/langs/javascript.png" />
             </div>
             <div class="item centerize" label="node.js">
+                <div class="popupAnchor centerize">
+                  <div>
+                    <div class="popup">
+                      This is language that can be used to create servers or applications
+                    </div>
+                  </div>
+                </div>
                 <img src="/src/sprites/langs/nodejs.png" />
             </div>
             <div class="item centerize" label="Electron">
+              <div class="popupAnchor centerize">
+                <div>
+                  <div class="popup">
+                    This is language that can be used to create servers or applications
+                  </div>
+                </div>
+              </div>
                 <img src="/src/sprites/langs/electron.png" />
             </div>
             <div class="item centerize" label="C#">
+              <div class="popupAnchor centerize">
+                <div>
+                  <div class="popup">
+                    This is language that can be used to create servers or applications
+                  </div>
+                </div>
+              </div>
                 <img src="/src/sprites/langs/csharp.png" />
             </div>
             <div class="item centerize" label="Unity3D">
+              <div class="popupAnchor centerize">
+                <div>
+                  <div class="popup">
+                    This is language that can be used to create servers or applications
+                  </div>
+                </div>
+              </div>
                 <img src="/src/sprites/langs/unity.png" />
             </div>
             <div class="item centerize" label="MySQL">
+              <div class="popupAnchor centerize">
+                <div>
+                  <div class="popup">
+                    This is language that can be used to create servers or applications
+                  </div>
+                </div>
+              </div>
                 <img src="/src/sprites/langs/mysql.png" />
             </div>
             <div class="item centerize" label="Git">
+              <div class="popupAnchor centerize">
+                <div>
+                  <div class="popup">
+                    This is language that can be used to create servers or applications
+                  </div>
+                </div>
+              </div>
                 <img src="/src/sprites/langs/github.png" />
             </div>
         </div>
@@ -99,7 +162,7 @@
       </div>
     </div>
     <model src="kavemans.dev/footer.html"></model>
-    <script src="./src/scripts/KeyFirePlugin.js"></script>
+    <script src="/src/scripts/KeyFirePlugin.js"></script>
     <script defer>
       var fixedDeltaTime = 1000 / 60;
       var simpleParallaxEffect = setInterval(() => {

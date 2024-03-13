@@ -1,0 +1,257 @@
+@charset "UTF-8";
+
+main {
+  --background-y-anchor: 60%;
+  padding: 80px 0 20px 0;
+  min-height: 80px;
+  background-position: 0 var(--background-y-anchor);
+  background-image:
+    linear-gradient(
+      -90deg,
+      rgba(10, 15, 22, 0.2) 0%,
+      rgba(10, 15, 22, 1) 100%
+    ),
+    var(--background-image);
+}
+
+
+@media (max-width: 765px), (orientation: portrait) {
+  main {
+    background-position-x: 50%;
+  }
+}
+
+.subProjectEntry {
+  height: auto;
+  min-height: 40px;
+  overflow: hidden;
+  transition: 300ms all ease-in-out;
+  background-color: #242d3c;
+  border: 3px solid rgb(255 255 255 / 10%);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.subProjectEntry > header,
+.subProjectEntry > summary {
+  position: relative;
+  text-align: left;
+  padding: 4px 16px;
+  background-color: rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+  min-height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 2;
+  color: rgb(255, 255, 255);
+  height: auto;
+}
+
+.subProjectEntry > div {
+  text-align: left;
+  box-sizing: border-box;
+  height: 0px;
+  padding: 0px 0px;
+  transition: 200ms max-height ease-in-out;
+  max-height: 0px;
+}
+
+.subProjectEntry.open > div {
+  padding: 4px 16px;
+  max-height: 1000px;
+  height: auto;
+  max-height: 800px;
+}
+
+.subProjectEntry.open > header,
+.subProjectEntry.open > summary {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.subProjectEntry > header:hover,
+.subProjectEntry > summary:hover {
+  color: rgb(118, 233, 52);
+}
+
+.subProjectEntry.open {
+  max-height: 1000%;
+}
+
+.lessonItem {
+  --size: 80px;
+  --border-radius: 6px;
+  --background-color: rgb(31, 38, 49);
+  --graphic-height: 100%;
+  --graphic-width: 120px;
+  --content-height: 100%;
+  --content-width: calc(100% - var(var(--graphic-width)));
+  height: var(--size);
+  max-height: var(--size);
+  border-radius: var(--border-radius);
+  background-color: #242d3c;
+  transition: all 200ms ease-in-out;
+  margin: 10px 0;
+  background-position: 0 60%;
+  background-size: 120px 100%;
+  background-color: var(--background-color);
+  /*background-image: linear-gradient(-90deg, rgb(31, 38, 49) 1%, #00000000 90%), var(--background-image);*/
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.lessonItem:hover { --background-color: #242d3c; }
+
+.lessonItem .content,
+.lessonItem::after {
+  position: absolute;
+  top: 0;
+  transition: all 200ms ease-in-out;
+  content: "";
+}
+
+.lessonItem::after {
+  height: 100%;
+  width: 100%;
+  content: "";
+  border-radius: var(--border-radius);
+  pointer-events: none;
+  box-shadow: inset rgb(58 66 80 / 80%) 0 0 0 1px;
+}
+
+.lessonItem:hover::after {
+  box-shadow: inset rgb(58 66 80 / 80%) 0 0 0 3px;
+}
+
+.lessonItem > img {
+  object-fit: cover;
+  width: var(--graphic-width);
+  height: var(--graphic-height);
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 200ms ease-in-out;
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+.lessonItem:hover > img { box-shadow: rgb(58 66 80 / 80%) 2px 0 0 0; }
+
+.lessonItem > .content {
+  height: var(--content-height);
+  width: var(--content-width);
+  padding: 5px 8px;
+  left: 120px;
+  box-sizing: border-box;
+  text-shadow: #000 0 0 3px;
+}
+
+.lessonItem > .content > .title {
+  font-weight: bold;
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.lessonItem > .content > .labels > .label {
+  display: inline-block;
+  object-fit: contain;
+  --size: 18pt;
+  height: 12pt;
+  width: 14pt;
+  position: relative;
+  text-align: left;
+}
+
+.lessonItem > .content > .labels > .label > img {
+  position: absolute;
+  height: var(--size);
+  width: auto;
+  position: absolute; 
+  top: -1pt;
+}
+
+.lessonItem > .content > .description { 
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+  color: #fff;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+
+@media (max-width: 765px), (orientation: portrait) {
+  .lessonItem { 
+    --graphic-height: 200px;
+    --graphic-width: 100%;
+    --content-height: 122.5px;
+    --content-width: 100%;
+    --size: calc(122.5px + 200px); /* For some reason, using var(--content-height) + car(--graphic-height) doesn't work here */
+    max-height: unset;
+    height: auto;
+  }
+
+  .lessonItem > .content {
+    width: 100%;
+    height: 122.5px;
+    top: 0;/*var(--graphic-height);*/
+    left: 0;
+    /*background-color: rgba(10, 15, 22, 0.8);*/
+    /*backdrop-filter: blur(3px);*/
+    position: relative;
+  }
+
+  .lessonItem > .content > .description { -webkit-line-clamp: 4; }
+  
+  .lessonItem > img {
+    /* For gradient effect: Didn't look good enough so disabled it
+    --mask: linear-gradient(90deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+    -webkit-mask-image: var(--mask);
+    mask-image: var(--mask);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;*/
+    /* Effect: Make the thumbnail as background */
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    position: relative;
+  }
+
+  .lessonItem:hover > img { box-shadow: rgb(58 66 80 / 80%) 0 2px 0 0; }
+}
+
+.label .tooltiptext {
+  width: 120px;
+  background-color: #131a26;
+  color: #fff;
+  text-align: center;
+  border-radius: var(--border-radius);
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: -50%;
+  margin-left: -38px;
+  opacity: 0;
+  transition: opacity 100ms ease-in-out;
+  pointer-events: none;
+  box-shadow: inset rgb(58 66 80 / 80%) 0 0 0 3px,
+    rgba(0, 0, 0, 0.6) 0 0 3px 0;
+}
+
+.label .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgb(58 66 80 / 80%)  transparent transparent transparent;
+}
+
+.label:hover .tooltiptext {
+  pointer-events: auto;
+  opacity: 1;
+}

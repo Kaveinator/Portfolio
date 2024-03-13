@@ -3,20 +3,38 @@
     <head>
         <title>{?:StatusCode} - {?:Title}</title>
         <link href="/src/styles/framework.css" type="text/css" rel="stylesheet" />
-        <link href="./src/styles/main.css" type="text/css" rel="stylesheet" />
-        <link href="./src/styles/mobileOverrides.css" type="text/css" rel="stylesheet" />
+        <link href="/src/styles/common.css" type="text/css" rel="stylesheet" />
+        <link href="/src/styles/main.css" type="text/css" rel="stylesheet" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             footer {
                 position: fixed;
                 bottom: 0px;
             }
+
+            body {
+                background-image: url('/src/images/RTX_Halloween.webp');
+                background-size: cover;
+                background-position: center center;
+            }
+
+            .ice {
+                backdrop-filter: blur(5px);
+                background-color: rgba(0, 0, 0, 0.5);
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+            }
         </style>
     </head>
     <body class="centerize">
-        <model src="kavemans.dev/header.html"></model>
-        <div style="font-size: 2em;">{?:Title}</div>
-        <span>{?:Subtitle}</span>
-        <model src="kavemans.dev/footer.html"></model>
+        <div class="ice centerize">
+            <model src="kavemans.dev/header.html"></model>
+            <div style="font-size: 2em;">{?:Title}</div>
+            <span>{?:Subtitle}</span>
+            <model src="kavemans.dev/footer.html"></model>
+        </div>
     </body>
 </html>

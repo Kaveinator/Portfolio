@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ellipsis with Line Wrap</title>
+<style>
+  .ellipsis {
+    width: 200px; /* Set your desired width */
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Show ellipsis for overflowing text */
+  }
+
+  .multi-line-ellipsis {
+    width: 200px; /* Set your desired width */
+    white-space: normal; /* Allow text to wrap */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Show ellipsis for overflowing text */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limit number of lines */
+    -webkit-box-orient: vertical;
+  }
+</style>
+</head>
+<body>
+  <div class="ellipsis">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  </div>
+
+  <div class="multi-line-ellipsis">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.
+  </div>
+</body>
+</html>

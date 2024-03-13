@@ -4,18 +4,44 @@ main {
   min-height: 80vh;
   background-image: 
     /*linear-gradient(0deg, black 1%, transparent 10%),*/
-    url('./../sprites/frontSampleBackground.jpg');
+    url('./../images/RTX_Halloween.webp');
     background-position: center 100%;
+  position: relative;
+}
+
+main::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+main.interlace::before {
+  /* Test CSS rule, from TXR project, but doesn't look good here */
+  background: url("https://txrevive.net/src/sprites/interlace.webp");
+}
+
+main.darken::before {
+  box-shadow: inset 0 0 250px 30px rgb(0 0 0 / 75%);
 }
 
 main .intro {
-  position: relative;
-  left: 7.5%;
-  width: 85%;
+  --border-radius: 8px;
   text-align: left;
   /*background-color: #ff00000D;*/
   font-size: 2em;
   text-shadow: #000 0 0 5px;
+  z-index: 1;
+}
+
+main .intro.landing {
+  position: relative;
+  left: 7.5%;
+  width: 85%;
+
   margin-top: 60px;
   margin-bottom: 40px;
 }
@@ -25,13 +51,13 @@ main .intro::before {
   height: 2.5em;
   width: 2.5em;
   background-color: #131a26;
-  border-radius: 50%;
+  border-radius: var(--border-radius);
   display: block;
   float: left;
   margin-right: 15px;
-  box-shadow: inset #000 0 0 20px 10px;
-  box-shadow: inset 0 0 10px 2.5px #000, 0 0 0 2.5px #b3d4fc, 0 0 10px 2.5px #000;
-  background-image: url('./../sprites/ChannelIcon.jpg');
+  /*box-shadow: inset #000 0 0 20px 10px;*/
+  box-shadow: inset 0 0 10px 2.5px rgba(0, 0, 0, 0.3), 0 0 0 2.5px #b3d4fc, 0 0 10px 2.5px #000, 0 0 0 2.5px #b3d4fc, 0 0 10px 2.5px #000;
+  background-image: var(--background-image);
   background-position: center center;
   background-size: cover;
 }
@@ -41,14 +67,49 @@ main .intro #mainRoleThing {
   color: #3bd671;
 }
 
+main .intro .linksBox {
+  font-size: 14pt;
+  min-height: 43px;
+  height: auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+}
+main .intro .linksBox > a,
+main .intro .linksBox > span {
+  text-decoration: none;
+  --icon: "\f0ac";
+  margin: 0 16px 8px 0;
+}
+
+main .intro .linksBox > a:hover {
+  text-decoration: underline;
+}
+
+main .intro .linksBox > a::before {
+  font-family: var(--font-awesome-version);
+  font-weight: 900;
+  content: var(--icon);
+  padding-right: 5px;
+  width: 20px;
+  height: 20px;
+  max-width: 20px;
+  display: inline-block;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 12pt;
+}
+
 main .credits {
   position: absolute;
-  left: 5px;
+  left: 8px;
   color: #fff;
-  opacity: 0;
-  bottom: 20%;
+  bottom: 8px;
   padding-bottom: 5px;
-  display: none;
+  text-shadow: #000 0 0 5px, #000 0 0 2.5px;
 }
 
 .announcementsContainer {
@@ -58,6 +119,13 @@ main .credits {
 
 #knownLanguagesAndTech, #projects {
   box-shadow: rgba(255, 255, 255, 0.3) 0 -3px 0;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.container.showBorder {
+  box-shadow: rgba(255, 255, 255, 0.3) 0 -3px 0;
+  position: relative;
 }
 
 #knownLanguagesAndTech .container {
@@ -100,6 +168,40 @@ main .credits {
   /*bottom: 15px;
   position: relative;*/
   margin-bottom: 15px;
+}
+
+#knownLanguagesAndTech .container .item .popupAnchor {
+  top: 0;
+  left: 0;
+  height: 0px;
+  overflow: visible;
+  width: 100%;
+  justify-content: end;
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+  pointer-events: none;
+}
+
+#knownLanguagesAndTech .container .item .popup {
+  position: relative;
+  bottom: 0;
+  min-height: 20px;
+  background-color: #212937;
+  border-radius: 4px;
+  color: #fff;
+  min-width: 60px;
+  box-shadow: inset rgba(255, 255, 255, 0.3) 0 0 0px 2px;
+  min-width: 80%;
+  max-width: 120%;
+  padding: 4px 8px;
+  text-align: left;
+  width: 240px;
+}
+
+#knownLanguagesAndTech .container .item:hover .popupAnchor,
+#knownLanguagesAndTech .container .item .popupAnchor:hover {
+  opacity: 1;
+  pointer-events: all;
 }
 
 #projects .row {
@@ -170,8 +272,19 @@ main .credits {
   padding: 0 15px 10px 15px;
 }
 
+@media (max-width: 800px), (orientation: portrait) {
+  main .intro /*.intermediate*/ {
+    display: block;
+  }
+
+  main .intro::before {
+    margin-right: 15px;
+    margin-bottom: 0px;
+  }
+}
+
 @media (max-width: 765px), (orientation: portrait) {
-  main .intro {
+  main .intro:not(.forceLandscape) {
     width: 100%;
     left: 0;
     display: flex;
@@ -182,18 +295,32 @@ main .credits {
     text-shadow: #000 0 0 2.5px;
   }
 
-  main .intro::before {
+  main .intro:not(.forceLandscape)::before {
     margin-bottom: 15px;
     margin-right: 0;
   }
 
-  main .intro span {
+  main .intro:not(.forceLandscape) span {
     width: 100%;
     box-sizing: border-box;
     padding: 0 5%;
   }
 
-  main .intro #mainRoleThing {
+  main .intro:not(.forceLandscape) .linksBox {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: auto;
+  }
+
+  main .intro .linksBox a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80vw;
+    white-space: nowrap;
+  }
+
+  main .intro:not(.forceLandscape) #mainRoleThing {
     display: block;
     color: #3bd671;
   }
