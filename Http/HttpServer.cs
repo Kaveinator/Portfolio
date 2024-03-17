@@ -309,7 +309,6 @@ namespace WebServer.Http {
             else {//if (Directory.Exists(filePath)) {
                 foreach (string filler in UriFillers) {
                     string filledPath = filler[0] == '*' ? filePath + filler.Substring(1) : Path.Combine(new [] { filePath }.Concat(filler.Split('/')).ToArray());
-                    Logger.LogDebug(filledPath);
                     if (File.Exists(filledPath)) {
                         resource.StatusCode = HttpStatusCode.Created;
                         resource.MimeString = MimeTypeMap.GetMimeType(Path.GetExtension(filledPath).ToLower());
