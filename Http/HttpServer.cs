@@ -120,7 +120,8 @@ namespace WebServer.Http {
                 context.Response.Headers.Add("x-content-type-options: nosniff");
                 context.Response.Headers.Add("x-xss-protection:1; mode=block");
                 context.Response.Headers.Add("x-frame-options:DENY");
-                context.Response.Headers.Add("Server", string.Empty);
+                context.Response.Headers.Add("Server", "WebServer 2024.3.16b3");
+                context.Response.Headers.Add("ServerEnv", Program.Mode.ToString());
 
                 // Get Callback stuff
                 string host = FormatCallbackKey(context.Request.Url.Host),
@@ -305,9 +306,10 @@ namespace WebServer.Http {
                 resource.ClearFlag();
                 return resource;
             }
-            else if (Directory.Exists(filePath)) {
+            else {//if (Directory.Exists(filePath)) {
                 foreach (string filler in UriFillers) {
-                    string filledPath = Path.Combine(filePath, filler);
+                    string filledPath = filler[0] == '*' ? filePath + filler.Substring(1) : Path.Combine(new [] { filePath }.Concat(filler.Split('/')).ToArray());
+                    Logger.LogDebug(filledPath);
                     if (File.Exists(filledPath)) {
                         resource.StatusCode = HttpStatusCode.Created;
                         resource.MimeString = MimeTypeMap.GetMimeType(Path.GetExtension(filledPath).ToLower());
@@ -320,10 +322,11 @@ namespace WebServer.Http {
                     }
                 }
                 return GetGenericStatusPage(HttpStatusCode.Forbidden, host: request.Url.Host, defaultHost: DefaultDomain);
-            }
+            }/*
             else if (Directory.Exists(filePath = Path.Combine(filePath, "..")) && filePath.Contains(basePath)) {
                 foreach (string filler in UriFillers) {
-                    string filledPath = Path.Combine(filePath, filler);
+                    string filledPath = filler[0] == '*' ? filePath + filler.Substring(1) : Path.Combine(filePath, filler);
+                    Debug.Log($"{filledPath);
                     if (File.Exists(filledPath)) {
                         resource.StatusCode = HttpStatusCode.Created;
                         resource.MimeString = MimeTypeMap.GetMimeType(Path.GetExtension(filledPath).ToLower());
@@ -335,7 +338,7 @@ namespace WebServer.Http {
                     }
                 }
                 //return GetGenericStatusPage(HttpStatusCode.Forbidden, host: request.Url.Host, defaultHost: DefaultDomainName);
-            }
+            }*/
             return GetGenericStatusPage(HttpStatusCode.NotFound, host: request.Url.Host, defaultHost: DefaultDomain);
 
         }

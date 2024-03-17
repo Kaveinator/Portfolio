@@ -15,7 +15,7 @@ namespace WebServer.Commands {
         public string[] Aliases => new[] { "cache", "c" };
 
         public void Execute(string[] args) {
-            if (args.Length == 1) { Help(args); return; }
+            if (args.Length == 1) { Logger.LogExplicit(Help(args)); return; }
             if (!Enum.TryParse<Action>(args[1], true, out Action action)) {
                 Logger.LogWarning($"Unable to parse '{args[1]}' as Action");
                 return;
@@ -68,9 +68,11 @@ namespace WebServer.Commands {
         public string Help(string[] args)
             => $"{Description}\nAliases: {string.Join(", ", Aliases)}\nUsage: \n> <{string.Join("/", Aliases)}> <Action> [...] [?]\n" +
             $"\nActions:" +
-            $"\n  {Action.Purge} {args} - Static resources are cached" + // TODO: Make a filter param, only from this domain/resource that has string in it
-            $"\n  {Action.View} {args} - Shows list of cached resources, and their status" + // TODO: Make a filter, ex: only from this domain
-            $"\n  {Action.MaxAge} <string[]: timespan> - Sets the value of age, if no age parameter is passed, shows the current age" +
+            $"\n  {(int)Action.Purge}:{Action.Purge} <string: filter> - Static resources are cached" + // TODO: Make a filter param, only from this domain/resource that has string in it
+            $"\n         - filter: Not Implemented" +
+            $"\n  {(int)Action.View}:{Action.View} <string: filter> - Shows list of cached resources, and their status" + // TODO: Make a filter, ex: only from this domain
+            $"\n         - filter: Not Implemented" +
+            $"\n  {(int)Action.MaxAge}:{Action.MaxAge} <string[]: timespan> - Sets the value of age, if no age parameter is passed, shows the current age" +
             $"\n         - timespan units: (w)eek, (d)ay, (h)our, (m)inute, (s)econd, ms => millisecond" +
             $"\n           Ex: 1w 1d 2h " +
             $"\n  ? - Help menu" +

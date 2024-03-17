@@ -18,9 +18,12 @@ namespace WebServer.Commands {
                 return;
             }
             if (!Enum.TryParse<Mode>(args[1].Trim(), true, out Mode mode)) {
-                Logger.LogExplicit($"Unable to parse Mode '{args[1]}'. (Values: {string.Join('/', Enum.GetNames<Mode>())})");
+                Logger.LogExplicit($"Unable to parse Mode '{args[1]}'. (Values: {string.Join('/', Enum.GetValues<Mode>().Select(eVal => $"{eVal}({(int)eVal})"))})");
                 return;
             }
+            // When you assign a new mode to `Program.Mode` the program will log the change already, so only log if there is no change
+            if (Program.Mode == mode)
+                Logger.LogExplicit($"Mode is already set to '{mode}'");
             Program.Mode = mode;
             //Logger.LogExplicit($"Mode set to '{Program.Mode}'");
             if (mode == Mode.Production && args.Contains(CompileFlag)) {
@@ -29,10 +32,10 @@ namespace WebServer.Commands {
         }
 
         public string Help(string[] args)
-            => $"{Description}\nAliases: {string.Join(", ", Aliases)}\nUsage: \n> <{string.Join("/", Aliases)}> <Mode> [-s] [?]\n" +
+            => $"{Description}\nAliases: {string.Join(", ", Aliases)}\nUsage: \n> <{string.Join("/", Aliases)}> <Mode> [-b] [?]\n" +
             $"\nOptions:" +
-            $"\n  <Mode> - Values: {string.Join("/", Enum.GetNames<Mode>())}" +
-            $"\n  {CompileFlag} - Build/rebuild static/production folder (only effective if <Action> parameter is set to 'Production'" +
+            $"\n  <Mode> - Values: {string.Join("/", Enum.GetValues<Mode>().Select(eVal => $"{eVal}({(int)eVal})"))}" +
+            $"\n  {CompileFlag} - Build/rebuild static/production folder (only effective if <Mode> parameter is set to '{Mode.Production}'" +
             $"\n  ? - Help menu" +
             $"" +
             $"\nExamples:" +

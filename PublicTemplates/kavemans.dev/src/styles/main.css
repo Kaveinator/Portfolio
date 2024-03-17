@@ -146,11 +146,13 @@ main .credits {
   height: 120px;
   width: 90px;
   margin: 10px;
-  box-shadow: inset rgb(255 255 255 / 0%) 0 0 0 3px;
+  box-shadow: inset rgb(255 255 255 / 10%) 0 0 0 1px;
 }
 
 #knownLanguagesAndTech .container .item:hover {
-  box-shadow: inset rgb(255 255 255 / 10%) 0 0 0 3px;
+  /* This looks very clean, except sticking with 3px one right now */
+  box-shadow: inset rgb(255 255 255 / 20%) 0 0 0 1px;
+  /*box-shadow: inset rgb(255 255 255 / 10%) 0 0 0 3px;*/
   background-color: #242d3c;
 }
 
@@ -200,7 +202,7 @@ main .credits {
 
 #knownLanguagesAndTech .container .item:hover .popupAnchor,
 #knownLanguagesAndTech .container .item .popupAnchor:hover {
-  opacity: 1;
+  opacity: 0;
   pointer-events: all;
 }
 
@@ -215,7 +217,7 @@ main .credits {
   background-size: 2em 2em;
   background-position: center center;*/
   min-height: 90px;
-  box-shadow: inset rgb(255 255 255 / 0%) 0 0 0 3px;
+  box-shadow: inset rgb(255 255 255 / 10%) 0 0 0 1px;
 }
 
 #projects .row:hover {
