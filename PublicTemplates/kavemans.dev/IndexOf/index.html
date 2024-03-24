@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Index Of '{?:RelativeLocation}'</title>
+    <style>
+      @font-face{
+        font-family:'Open Sans Light';
+        src: url('./../fonts/OpenSans/Light.eot');
+        src: local('Open Sans Light'),
+              url('./../fonts/OpenSans/Light.woff') format('woff'),
+              url('./../fonts/OpenSans/Light.ttf') format('truetype');
+      }
+
+      /* Poppins font... not used
+      @font-face{
+        font-family: 'Poppins';
+        src: url('/src/fonts/Poppins/Light.ttf');
+        src: local('Poppins'),
+              url('/src/fonts/Poppins/Light.ttf') format('truetype');
+      }*/
+
+      .centerize {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .dynamicMargin {
+        max-width: 1000px;
+        width: calc(100% - 30px);
+        box-sizing: border-box;
+        text-align: left;
+      }
+
+      html, body {
+          min-height: 100vh;
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          font-family: "Open Sans Light", sans-serif;
+          color: #fff;
+          background-color: #131a26;
+      }
+
+      body {
+        padding: 0;
+        margin: 0;
+        position: relative;
+        min-height: 100vh;
+      }
+
+      header {
+        width: 100%;
+        height: 40px;
+        background-color: #242d3c;
+        box-sizing: border-box;
+        position: relative;
+        box-shadow: #3a4250 0 3px 0 0;
+      }
+
+      #clock, nav {
+        position: absolute;
+        top: 0;
+      }
+
+      #clock {
+        height: 100%;
+        background-color: #10141b;
+        width: 120px;
+        text-align: center;
+        box-shadow: #3a4250 3px 0 0 0;
+      }
+
+      #clock:empty::after {
+        content: "--:--:--";
+        opacity: 0.5;
+      }
+
+      nav {
+        left: 120px;
+        color: #fff;
+        width: calc(100vw - 120px);
+        box-sizing: border-box;
+        padding: 10px;
+        flex-direction: row !important;
+        justify-content: flex-start !important;
+      }
+
+      nav a {
+        color: rgba(75, 150, 55, 1);
+        text-decoration: none;
+      }
+
+      nav * {
+        margin: 0 5px;
+      }
+    </style>
+  </head>
+  <body onload="Start();">
+    <header>
+      <span id="clock" class="centerize"></span>
+      <nav class="centerize">
+        <a href="/">Home</a>&nbsp;/ Here
+      </nav>
+    </header>
+    <div class="centerize">
+      <div class="dynamicMargin" style="text-align: left;">
+        <h2>Directories</h2>
+        <div class="feed"></div>
+        <h2>Files</h2>
+        <div class="feed"></div>
+      </div>
+    </div>
+    <script defer>
+      const ClockElem = document.getElementById("clock"),
+        NavBarElem = document.querySelector("nav"),
+        IsNullOrUndefined = obj => !(obj && obj !== 'null' && obj !== 'undefined');
+
+      function Start() {
+        UpdateNav();
+      }
+
+      // Will need to be carried out on server later
+      function UpdateNav() {
+        NavBarElem.innerHTML = "";
+        let paths = [ '/' ],
+          currHref = '';
+        paths.push(...window.location.pathname.split('/').filter(part => part.length > 0));
+        for (let i = 0; i < paths.length; i++) {
+          let isLastElem = i + 1 == paths.length,
+            name = paths[i];
+          currHref += name;
+          console.log(`isLastElem: ${isLastElem}; name: ${name}; i: ${i}; maxI: ${paths.length}; `);
+          if (name == '/') name = "kavemans.dev";
+          let elem,
+            textNodeDefined = false;
+          if (i != 0) {
+            elem = document.createTextNode("/ ");
+            textNodeDefined = true;
+          }
+          if (!isLastElem) {
+            if (textNodeDefined)
+              NavBarElem.append(elem);
+            elem = document.createElement("a");
+            elem.setAttribute("href", currHref);
+            elem.innerText = name;
+          }
+          else {
+            if (textNodeDefined)
+              elem.nodeValue += name;
+            else elem = document.createTextNode(name);
+            //elem = document.createElement("span");
+            //elem.innerText = name;
+          }
+          NavBarElem.append(elem);
+        }
+      }
+    </script>
+  </body>
+</html>

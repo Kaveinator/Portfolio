@@ -320,7 +320,7 @@ namespace WebServer.Http {
                         return resource;
                     }
                 }
-                return GetGenericStatusPage(HttpStatusCode.Forbidden, host: request.Url.Host, defaultHost: DefaultDomain);
+                return GetGenericStatusPage(Directory.Exists(filePath) ? HttpStatusCode.Forbidden : HttpStatusCode.NotFound, host: request.Url.Host, defaultHost: DefaultDomain);
             }/*
             else if (Directory.Exists(filePath = Path.Combine(filePath, "..")) && filePath.Contains(basePath)) {
                 foreach (string filler in UriFillers) {
@@ -339,7 +339,10 @@ namespace WebServer.Http {
                 //return GetGenericStatusPage(HttpStatusCode.Forbidden, host: request.Url.Host, defaultHost: DefaultDomainName);
             }*/
             return GetGenericStatusPage(HttpStatusCode.NotFound, host: request.Url.Host, defaultHost: DefaultDomain);
+        }
 
+        public public HttpResponse ShowIndexOf(string directoryPath) {
+            return null;
         }
 
         public Dictionary<HttpStatusCode, Tuple<string, string>> GenericStatus = new Dictionary<HttpStatusCode, Tuple<string, string>>() {

@@ -14,8 +14,8 @@
     "index.htm",
     "index.txt",
     "default.webp",
-    "../default.webp",
     "default.png",
+    "../default.webp",
     "../default.png"
   ],
   "MaxCacheAge": 604800,
