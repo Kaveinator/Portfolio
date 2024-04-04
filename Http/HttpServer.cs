@@ -341,7 +341,7 @@ namespace WebServer.Http {
             return GetGenericStatusPage(HttpStatusCode.NotFound, host: request.Url.Host, defaultHost: DefaultDomain);
         }
 
-        public public HttpResponse ShowIndexOf(string directoryPath) {
+        public HttpResponse ShowIndexOf(string directoryPath) {
             return null;
         }
 
