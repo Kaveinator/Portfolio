@@ -26,7 +26,7 @@ namespace WebServer.Http {
         public bool IsListening => Socket?.IsListening ?? false;
         // HttpCallbacks[domainName (lowercase)][path (lowercase)] => Func<in request, out response>
         Dictionary<string, Dictionary<string, Func<HttpListenerRequest, Task<HttpResponse>>>> HttpCallbacks = new Dictionary<string, Dictionary<string, Func<HttpListenerRequest, Task<HttpResponse>>>>();
-        
+        public List<HttpEndpointHandler> HttpEndpointsHandlers = new List<HttpEndpointHandler>();
         // So in staticDomainDirectory, it searched for the domain name, if not found, returns
         public string ProductionDirectory => Config.GetValueOrDefault(nameof(ProductionDirectory), "Static");
         public string DefaultDomain => Config.GetValueOrDefault(nameof(DefaultDomain), "localhost");
@@ -194,7 +194,7 @@ namespace WebServer.Http {
                                 response = await callback(context.Request);
                             }
                             catch (Exception ex) {
-                                Dictionary<string, string> additionalParams = new Dictionary<string, string>();
+                                Dictionary<string, object> additionalParams = new Dictionary<string, object>();
                                 if (ShowExceptionsOnErrorPages) {
                                     additionalParams.Add("Title", ex.GetType().Name.AddSpacesToSentence());
                                     additionalParams.Add("Subtitle", $"{ex.Message}<br />{ex.StackTrace.Replace("\n", "<br />")}");
@@ -345,6 +345,13 @@ namespace WebServer.Http {
             return null;
         }
 
+        public bool TryRegisterEndpointHandler<T>(Func<T> handlerInitilizer, out T handler) where T : HttpEndpointHandler {
+            handler = handlerInitilizer?.Invoke() ?? default!;
+            if (handler == null) return false;
+            HttpEndpointsHandlers.Add(handler);
+            return true;
+        }
+
         public Dictionary<HttpStatusCode, Tuple<string, string>> GenericStatus = new Dictionary<HttpStatusCode, Tuple<string, string>>() {
             { HttpStatusCode.OK, new Tuple<string, string>("OK", "The request succeeded") },
             { HttpStatusCode.BadRequest, new Tuple<string, string>("Bad Request", "The server cannot or will not process the request due to something that is perceived to be a client error") },
@@ -356,7 +363,7 @@ namespace WebServer.Http {
             { HttpStatusCode.NotImplemented, new Tuple<string, string>("Not Implemented", "he server has encountered a situation it does not know how to handle.") },
             { HttpStatusCode.ServiceUnavailable, new Tuple<string, string>("Service Unavailable", "The server is not ready to handle the request") }
         };
-        public HttpResponse GetGenericStatusPage(HttpStatusCode statusCode, Dictionary<string, string> additionalParameters = null, string host = null, string defaultHost = null) {
+        public HttpResponse GetGenericStatusPage(HttpStatusCode statusCode, Dictionary<string, object> additionalParameters = null, string host = null, string defaultHost = null) {
             string title = statusCode.ToString(),
                 subTitle = "Great! Something happened, not sure what though";
 
@@ -367,7 +374,7 @@ namespace WebServer.Http {
             }
 
             if (additionalParameters == null)
-                additionalParameters = new Dictionary<string, string>();
+                additionalParameters = new Dictionary<string, object>();
             if (!additionalParameters.ContainsKey("StatusCode"))
                 additionalParameters.Add("StatusCode", $"{(int)statusCode}");
             if (!additionalParameters.ContainsKey("Title"))
@@ -436,7 +443,6 @@ namespace WebServer.Http {
         }
     }
     public class HttpResponse {
-
         public HttpStatusCode StatusCode = HttpStatusCode.NoContent;
         public bool IsSuccessStatusCode => (int)StatusCode >= 200 && (int)StatusCode <= 299;
         public string MimeString = MimeTypeMap.GetMimeType(".txt");

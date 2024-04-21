@@ -28,7 +28,7 @@ namespace WebServer.Http {
             return File.ReadAllText(path);
         }*/
 
-        public static bool TryGet(string path, out string result, Dictionary<string, string> parameters = null) {
+        public static bool TryGet(string path, out string result, Dictionary<string, object> parameters = null) {
             result = string.Empty;
             if (string.IsNullOrEmpty(path))
                 return false;
@@ -42,7 +42,7 @@ namespace WebServer.Http {
                 foreach (string key in parameters.Keys) {
                     string keyString = $"{{?:{key}}}";
                     //if (result.IndexOf(keyString) != -1)
-                        result = result.Replace(keyString, parameters[key]);
+                        result = result.Replace(keyString, parameters[key].ToString());
                 }
             }
             if (MimeTypeMap.GetMimeType(path).ToLower().Contains("text"))
@@ -50,11 +50,11 @@ namespace WebServer.Http {
             return true;
         }
 
-        public static string Format(string content, Dictionary<string, string> parameters) {
+        public static string Format(string content, Dictionary<string, object> parameters) {
             foreach (string key in parameters.Keys) {
                 string keyString = $"{{?:{key}}}";
                 //if (result.IndexOf(keyString) != -1)
-                content = content.Replace(keyString, parameters[key]);
+                content = content.Replace(keyString, parameters[key].ToString());
             }
             return content;
         }
