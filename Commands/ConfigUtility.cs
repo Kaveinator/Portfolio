@@ -6,7 +6,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebServer.Commands {
+namespace Portfolio.Commands {
     internal struct ConfigUtility : ICommand {
         // - Reload command
         // - Save command

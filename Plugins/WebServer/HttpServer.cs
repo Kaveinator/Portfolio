@@ -10,6 +10,7 @@ using SimpleJSON;
 using Timer = System.Timers.Timer;
 using System.Reflection;
 using System.Reflection.Metadata;
+using Portfolio;
 
 namespace WebServer.Http {
     /* Notes
@@ -25,7 +26,7 @@ namespace WebServer.Http {
         static Type Type = typeof(HttpServer);
         public bool IsListening => Socket?.IsListening ?? false;
         // HttpCallbacks[domainName (lowercase)][path (lowercase)] => Func<in request, out response>
-        Dictionary<string, Dictionary<string, Func<HttpListenerRequest, Task<HttpResponse>>>> HttpCallbacks = new Dictionary<string, Dictionary<string, Func<HttpListenerRequest, Task<HttpResponse>>>>();
+        Dictionary<string, Dictionary<string, Func<HttpListenerRequest, Task<HttpResponse?>>>> HttpCallbacks = new Dictionary<string, Dictionary<string, Func<HttpListenerRequest, Task<HttpResponse?>>>>();
         public List<HttpEndpointHandler> HttpEndpointsHandlers = new List<HttpEndpointHandler>();
         // So in staticDomainDirectory, it searched for the domain name, if not found, returns
         public string ProductionDirectory => Config.GetValueOrDefault(nameof(ProductionDirectory), "Static");
@@ -156,68 +157,80 @@ namespace WebServer.Http {
                     catch { }
                 };
                 timer.Start();
-                if (Program.Mode == Mode.Development) {
-                    Dictionary<string, Func<HttpListenerRequest, Task<HttpResponse>>> domainCallbacks = null;
-                    string domainKey = FormatCallbackKey(host);
-                    if (HttpCallbacks.ContainsKey(domainKey))
-                        domainCallbacks = HttpCallbacks[domainKey];
-                    else if (HttpCallbacks.ContainsKey(domainKey = FormatCallbackKey(DefaultDomain)))
-                        domainCallbacks = HttpCallbacks[domainKey];
-                    if (IsRequestTimedOut) return;
-                    //string catchAllKey = path.Substring(0, path.LastIndexOf('/') + 1) + "*"; // Kaveman: create catch all keys, each time going up a directory
+                #region Event Callbacks
 
-                    Queue<string> catchAllKeys = new Queue<string>();
-                    if (string.IsNullOrEmpty(path)) catchAllKeys.Enqueue("/*");
-                    //else catchAllKeys.Enqueue(path.Substring(0, path.LastIndexOf('/') + 1) + "*");
-                    else catchAllKeys.Enqueue(path);
+                Dictionary<string, Func<HttpListenerRequest, Task<HttpResponse>>> domainCallbacks = null;
+                string domainKey = FormatCallbackKey(host);
+                if (HttpCallbacks.ContainsKey(domainKey))
+                    domainCallbacks = HttpCallbacks[domainKey];
+                else if (HttpCallbacks.ContainsKey(domainKey = FormatCallbackKey(DefaultDomain)))
+                    domainCallbacks = HttpCallbacks[domainKey];
+                if (IsRequestTimedOut) return;
+                //string catchAllKey = path.Substring(0, path.LastIndexOf('/') + 1) + "*"; // Kaveman: create catch all keys, each time going up a directory
 
-                    string lastKey = catchAllKeys.Last();
-                    while (!lastKey.Equals("/*")) {
-                        string newKey = lastKey.Substring(0, lastKey.Length - 2);
-                        newKey = newKey.Substring(0, newKey.LastIndexOf('/') + 1) + "*";
-                        if (!newKey.Contains('/') || lastKey.Equals(newKey))
-                            break;
-                        lastKey = newKey;
-                        catchAllKeys.Enqueue(newKey);
-                    }
+                Queue<string> catchAllKeys = new Queue<string>();
+                if (string.IsNullOrEmpty(path)) catchAllKeys.Enqueue("/*");
+                //else catchAllKeys.Enqueue(path.Substring(0, path.LastIndexOf('/') + 1) + "*");
+                else catchAllKeys.Enqueue(path);
 
-                    if (domainCallbacks != null) {
-                        //domainCallbacks.ContainsKey(catchAllKey)
-                        while (response is null && catchAllKeys.Count > 0) {
-                            string key = catchAllKeys.Dequeue();
-                            if (!domainCallbacks.ContainsKey(key))
-                                continue;
-                            var callback = domainCallbacks[key];
-                            if (callback is null) continue;
-                            try {
-                                methodUsed = callback.Method;
-                                response = await callback(context.Request);
-                            }
-                            catch (Exception ex) {
-                                Dictionary<string, object> additionalParams = new Dictionary<string, object>();
-                                if (ShowExceptionsOnErrorPages) {
-                                    additionalParams.Add("Title", ex.GetType().Name.AddSpacesToSentence());
-                                    additionalParams.Add("Subtitle", $"{ex.Message}<br />{ex.StackTrace.Replace("\n", "<br />")}");
-                                }
-                                methodUsed = Type.GetMethod(nameof(GetGenericStatusPage));
-                                response = GetGenericStatusPage(HttpStatusCode.InternalServerError, additionalParams, host, DefaultDomain);
-                            }
+                string lastKey = catchAllKeys.Last();
+                while (!lastKey.Equals("/*"))
+                {
+                    string newKey = lastKey.Substring(0, lastKey.Length - 2);
+                    newKey = newKey.Substring(0, newKey.LastIndexOf('/') + 1) + "*";
+                    if (!newKey.Contains('/') || lastKey.Equals(newKey))
+                        break;
+                    lastKey = newKey;
+                    catchAllKeys.Enqueue(newKey);
+                }
 
+                if (domainCallbacks != null)
+                {
+                    //domainCallbacks.ContainsKey(catchAllKey)
+                    while (response is null && catchAllKeys.Count > 0)
+                    {
+                        string key = catchAllKeys.Dequeue();
+                        if (!domainCallbacks.ContainsKey(key))
+                            continue;
+                        var callback = domainCallbacks[key];
+                        if (callback is null) continue;
+                        try
+                        {
+                            methodUsed = callback.Method;
+                            response = await callback(context.Request);
                         }
+                        catch (Exception ex)
+                        {
+                            Dictionary<string, object> additionalParams = new Dictionary<string, object>();
+                            if (ShowExceptionsOnErrorPages)
+                            {
+                                additionalParams.Add("Title", ex.GetType().Name.AddSpacesToSentence());
+                                additionalParams.Add("Subtitle", $"{ex.Message}<br />{ex.StackTrace.Replace("\n", "<br />")}");
+                            }
+                            methodUsed = Type.GetMethod(nameof(GetGenericStatusPage));
+                            response = GetGenericStatusPage(HttpStatusCode.InternalServerError, additionalParams, host, DefaultDomain);
+                        }
+
                     }
-                    // End Get Callback stuff
-                    if (IsRequestTimedOut) return;
+                }
+                // End Get Callback stuff
+                if (IsRequestTimedOut) return;
+                #endregion
+                if (Program.Mode == Mode.Development) {
                     // If no response try getting a static file
                     if (response is null) {
                         methodUsed = Type.GetMethod(nameof(GetStaticFile));
-                        response = GetStaticFile(context.Request, HttpTemplates.PublicPath);
+                        response = GetStaticFile(context.Request);
                     }
                     // Since in dev mode, prevent caching
                     context.Response.Headers.Add("cache-control:no-store, no-cache, must-revalidate");
                 }
                 else { // Production mode (static site)
-                    response = GetStaticFile(context.Request, StaticDomainDirectoryInfo);
-                    context.Response.Headers.Add("cache-control: max-age=360000, s-max-age=900, stale-while-revalidate=120, stale-if-error=86400");
+                    if (response is null) {
+                        methodUsed = Type.GetMethod(nameof(GetStaticFile));
+                        response = GetStaticFile(context.Request);
+                        context.Response.Headers.Add("cache-control: max-age=360000, s-max-age=900, stale-while-revalidate=120, stale-if-error=86400");
+                    }
                 }
                 timer.Stop();
 
@@ -277,7 +290,8 @@ namespace WebServer.Http {
         }
 
         List<string> UriFillers = new List<string>() { "index.html", "index.htm" };
-        public HttpResponse GetStaticFile(HttpListenerRequest request, DirectoryInfo directory) {
+        public HttpResponse GetStaticFile(HttpListenerRequest request) {
+            DirectoryInfo directory = Program.Mode.HasFlag(Mode.Development) ? HttpTemplates.PublicPath : StaticDomainDirectoryInfo;
             // Works on windows, but on linux, the domain folder will need to be lowercase
             string targetDomain = request.Url.Host.ToLower(),
                    basePath = Path.Combine(directory.FullName, targetDomain);
@@ -404,13 +418,13 @@ namespace WebServer.Http {
             return false;
         }
 
-        public HttpServer AddEventCallback(Uri uri, Func<HttpListenerRequest, Task<HttpResponse>> callback) {
+        public HttpServer AddEventCallback(Uri uri, Func<HttpListenerRequest, Task<HttpResponse?>> callback) {
             if (uri != null && !string.IsNullOrEmpty(uri.Host) && !string.IsNullOrEmpty(uri.LocalPath) && callback != null) {
                 string host = FormatCallbackKey(uri.Host),
                     path = FormatCallbackKey(uri.LocalPath);
 
                 if (!HttpCallbacks.ContainsKey(host)) {
-                    HttpCallbacks.Add(host, new Dictionary<string, Func<HttpListenerRequest, Task<HttpResponse>>>());
+                    HttpCallbacks.Add(host, new Dictionary<string, Func<HttpListenerRequest, Task<HttpResponse?>>>());
                     // Make a command to view http callbacks
                     //EventLogger.LogDebug($"Added callback for '{uri}'");
                 }

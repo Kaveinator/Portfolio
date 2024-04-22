@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <StartupObject>WebServer.Program</StartupObject>
+    <StartupObject>Portfolio.Program</StartupObject>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -15,9 +15,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Plugins\" />
-	  <Folder Include="PublicTemplates\kavemans.dev\src\sprites\Battle-of-the-Forces\" />
-	  <Folder Include="PublicTemplates\kavemans.dev\src\sprites\Tanki-X-Revive\" />
+	  <Folder Remove="Static\" />
+	  <Folder Remove="PublicTemplates\" />
+	  <Folder Remove="PrivateTemplates\" />
+	  <Folder Include="Data\" />
 	</ItemGroup>
   <ItemGroup>
     <None Include="configs/**">
@@ -34,5 +35,19 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
+  <ItemGroup>
+    <Compile Remove="PrivateTemplates\**" />
+    <Compile Remove="PublicTemplates\**" />
+    <Compile Remove="Static\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>_Dependancies\System.Data.SQLite.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

@@ -1,7 +1,6 @@
 ﻿using SimpleJSON;
-using System.Runtime.CompilerServices;
 
-namespace WebServer {
+namespace Portfolio {
     public static class Properties {
         public static Dictionary<string, JSONFile> Configs = new Dictionary<string, JSONFile>();
         static EventLogger Logger = EventLogger.GetOrCreate(typeof(Properties));

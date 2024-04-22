@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebServer.Http;
 
-namespace WebServer.Commands {
+namespace Portfolio.Commands {
     internal struct CacheControl : ICommand {
         static EventLogger Logger = EventLogger.GetOrCreate<CacheControl>(true);
         enum Action { Purge, View, MaxAge }

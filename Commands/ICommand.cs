@@ -1,4 +1,4 @@
-﻿namespace WebServer.Commands {
+﻿namespace Portfolio.Commands {
     public interface ICommand {
         string Name { get; }
         string Description { get; }

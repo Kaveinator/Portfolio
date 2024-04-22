@@ -106,10 +106,12 @@ main .intro .linksBox > a::before {
 main .credits {
   position: absolute;
   left: 8px;
+  right: 8px;
   color: #fff;
   bottom: 8px;
   padding-bottom: 5px;
   text-shadow: #000 0 0 5px, #000 0 0 2.5px;
+  text-align: left;
 }
 
 .announcementsContainer {
@@ -157,7 +159,7 @@ main .credits {
 }
 
 #knownLanguagesAndTech .container .item::after {
-  content: attr(label);
+  content: attr(data-label);
   max-height: 20px;
   /*top: 0px;
   position: relative;*/
@@ -221,7 +223,7 @@ main .credits {
 }
 
 #projects .row:hover {
-  box-shadow: inset rgb(255 255 255 / 10%) 0 0 0 3px;
+  box-shadow: inset rgb(255 255 255 / 20%) 0 0 0 1px;
   background-color: #242d3c;
 }
 
@@ -325,6 +327,10 @@ main .credits {
   main .intro:not(.forceLandscape) #mainRoleThing {
     display: block;
     color: #3bd671;
+  }
+
+  main .credits {
+    text-align: center;
   }
 
   #projects .row {

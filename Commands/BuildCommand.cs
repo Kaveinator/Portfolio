@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebServer.Http;
 
-namespace WebServer.Commands {
+namespace Portfolio.Commands {
     public struct BuildCommand : ICommand {
         static EventLogger Logger = EventLogger.GetOrCreate<BuildCommand>();
         public string Name => "Site Compiler";

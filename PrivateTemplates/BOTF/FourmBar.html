@@ -1,0 +1,21 @@
+<div id="AccountSettings" class="AccountSettings" onMouseLeave="CloseNav();" onClick="CloseNav();">
+    <a href="#Account">My Account</a>
+    <a href="#Settings">Settings</a>
+</div>
+<script>
+    document.getElementsByTagName("nav")[0].innerHTML += "<a class=\"pfp centerize\" onClick=\"OpenNav();\"><i id=\"AccountButton\" class=\"far fa-user-circle\"></i></a>";
+    const OpenNav = async () => {
+        AccountSettings.style.display = "block";
+        AccountButton.style.backgroundColor = "rgba(73, 73, 73, 1)";
+        await sleep(10);
+        AccountSettings.style.height = (AccountSettings.childElementCount * 40) + "px";
+        AccountSettings.style.opacity = "1"; }
+    const CloseNav = async () => { 
+        AccountSettings.style.height = "0px";
+        AccountSettings.style.opacity = "0";
+        AccountButton.style.backgroundColor = "rgba(73, 73, 73, 0)";
+        await sleep(300);
+        AccountSettings.style.display = "none";
+    }
+    function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+</script>

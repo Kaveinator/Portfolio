@@ -13,7 +13,7 @@ namespace WebServer.Http {
         public HttpResponse GetGenericStatusPage(HttpStatusCode statusCode, Dictionary<string, object> additionalParameters = null)
             => HttpServer.GetGenericStatusPage(statusCode, additionalParameters, Host);
 
-        public HttpServer AddEventCallback(string path, Func<HttpListenerRequest, Task<HttpResponse>> callback)
+        public HttpServer AddEventCallback(string path, Func<HttpListenerRequest, Task<HttpResponse?>> callback)
             => HttpServer.AddEventCallback(BuildUri(path), callback);
 
         protected Uri BuildUri(string path) {

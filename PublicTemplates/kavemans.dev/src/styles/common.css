@@ -122,22 +122,73 @@ main, .container {
   margin-block-start: 0;
 }
 
-.contentWrapper {
+body:not(.stickyFooter) .contentWrapper {
   padding-bottom: 90px;
 }
 
 footer {
+  padding-top: 0 !important;
   box-shadow: rgb(255 255 255 / 30%) 0 -3px 0;
   background-color: rgb(0 0 0 / 30%);
-  position: absolute;
   bottom: 0;
   width: 100%;
+  box-sizing: border-box;
+}
+
+footer > .content {
+  height: 100%;
+}
+
+footer > .content::before {
+  content: '';
+  display: block;
+  float: left;
+  background-image: url('/src/sprites/KeyFireLogo.webp');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: calc(100%);
+  width: 52px;
 }
 
 footer h2 {
   font-size: 12pt !important;
   font-weight: normal;
 }
+
+body.largeFooter footer {
+  padding: 5px 0 !important;
+  color: #fff;
+  height: 120px;
+}
+
+body.largeFooter footer > .content {
+  --height: 100px;
+  height: var(--height);
+}
+
+body.largeFooter > .content::before {
+  width: 52px;
+}
+
+body.stickyFooter footer {
+  position: fixed;
+  bottom: 0;
+}
+
+footer.sticky > .content > div {
+  height: var(--height);
+  width: auto;
+  margin: 0;
+}
+
+/*Footer: text container */
+body.largeFooter > footer > div {
+  text-align: left;
+  align-items: flex-start;
+  margin-left: 85px;
+}
+
 
 @media (max-width: 765px), (orientation: portrait) {
   header .logo::before {

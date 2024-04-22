@@ -1,8 +1,8 @@
 ﻿using SimpleJSON;
 using WebServer.Http;
-using WebServer.Commands;
+using Portfolio.Commands;
 
-namespace WebServer {
+namespace Portfolio {
     public enum Mode { Development, Production }
     internal class Program {
         static EventLogger Logger = EventLogger.GetOrCreate("", true);
@@ -33,6 +33,8 @@ namespace WebServer {
             }
             UpdateTitle();
             _ = Endpoint.Start();
+
+            Logger.Log($"PortfollioEndpoint binded? {Endpoint.TryRegisterEndpointHandler<PortfolioEndpoint>(() => new PortfolioEndpoint(Endpoint), out var _)}");
             EventLog.AddCommand<ProgramMode>();
             EventLog.AddCommand<BuildCommand>();
             EventLog.AddCommand<BrowserCommands>();

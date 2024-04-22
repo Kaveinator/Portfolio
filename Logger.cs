@@ -1,16 +1,9 @@
-﻿using WebServer.Commands;
-using SimpleJSON;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using SimpleJSON;
 using System.Diagnostics.Tracing;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading;
+using Portfolio.Commands;
 
-namespace WebServer {
+namespace Portfolio {
     public static class EventLog {
         static JSONFile Config = Properties.GetOrCreate(typeof(EventLog));
         static string DateTimeFormat => Config.GetValueOrDefault(nameof(DateTimeFormat), "M-dd-yyyy HH:mm:ss").Value;

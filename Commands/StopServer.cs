@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebServer.Commands {
+namespace Portfolio.Commands {
     public struct StopCommand : ICommand {
         public string Name => "Stop command";
         public string Description => "Stops the program and exit";

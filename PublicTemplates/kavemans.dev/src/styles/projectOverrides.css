@@ -90,9 +90,9 @@ main {
   --graphic-width: 120px;
   --content-height: 100%;
   --content-width: calc(100% - var(var(--graphic-width)));
-  --border-width: 1px;
-  --border-color: #f00;
-  --inner-border-width: 1px;
+  --border-width: 2px;
+  --border-color: rgb(58 66 80 / 80%);
+  --inner-border-width: 2px;
   height: var(--size);
   max-height: var(--size);
   border-radius: var(--border-radius);
@@ -109,8 +109,9 @@ main {
 
 .projectEntry:hover {
   --background-color: #242d3c;
-  --border-width: 3px;
-  --inner-border-width: 2px;
+  ---border-width: 1px;
+  --border-color: rgb(80 87 99 / 80%);
+  ---inner-border-width: 1px;
 }
 
 .projectEntry .content,
@@ -127,7 +128,7 @@ main {
   content: "";
   border-radius: var(--border-radius);
   pointer-events: none;
-  box-shadow: inset rgb(58 66 80 / 80%) 0 0 0 var(--border-width);
+  box-shadow: inset var(--border-color) 0 0 0 var(--border-width);
 }
 
 .projectEntry > .graphic {
@@ -187,7 +188,7 @@ main {
   transition: box-shadow var(--animation-duration) ease-in-out,
     height var(--animation-duration) ease-in-out,
     top var(--animation-duration) ease-in-out;
-  box-shadow: inset rgb(58 66 80 / 80%) var(--inner-border-width) 0 0 0;
+  box-shadow: inset var(--border-color) var(--inner-border-width) 0 0 0;
 }
 
 .projectEntry > .content {

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+		<meta charset="UTF-8">
+		<title>Contact Kaveman</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/src/styles/framework.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/common.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/main.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/contact.css" type="text/css" rel="stylesheet" />
+    <model src="kavemans.dev/captchaClassicV3/head.html"></model>
+    <model src="kavemans.dev/FontAwesome"></model>
+  </head>
+  <body class="stickyFooter" onload="Start();">
+    <model src="kavemans.dev/header.html"></model>
+    <div class="contentWrapper" style="height: 100vh;">
+      <main id="simpleParallaxEffect" class="centerize darken" style="min-height: 100%; box-sizing: border-box; background-image: url('/src/images/TankiX/thumbnail/RisingSchool.Preview.png')">
+        <!-- Unused, seems a bit weird
+        <div class="contactBackgroundArt">
+          <div class="circle1 fillScreen"></div>
+          <div class="circle3 fillScreen"></div>
+          <div class="circle4 fillScreen"></div>
+        </div>-->
+        <div class="announcementsContainer">
+          <model src="kavemans.dev/announcements"></model>
+        </div>
+        <div class="form">
+          <form id="contact" class="centerize verticalLayout" action="" method="POST">
+              <h3>Contact Kaveman</h3>
+              <input name="name" type="text" minlength="2" placeholder="Name or Nickname" required />
+              <input name="email" type="email" minlength="2" placeholder="Email Address (optional)" />
+              <textarea name="message" placeholder="C'mon say something :D"></textarea>
+              <div class="horizontalGroup centerize">
+                <span class="error">Error, do the capcha</span>
+                <button type="submit" disabled>Submit</button>
+              </div>
+          </form>
+          <div class="submittedView centerize">
+            <img src="/src/sprites/icons8-verified-account-94.png" />
+            <span>Thanks! Your response has<br />been recorded!</span>
+            <div class="line"></div>
+            <span style="font-size: 10pt;">You can also find me on...</span>
+            <div class="horizontalGroup centerize">
+              <a style="background-image: url('/src/sprites/platforms/icons8-linkedin-188.png'); --color: #196fbc;" href="http://linkedin.com"></a>
+              <a style="background-image: url('/src/sprites/langs/github.png'); --color: #b4b8bf;" href="http://github.com"></a>
+              <a style="background-image: url('/src/sprites/platforms/icons8-discord-188.png'); --color: #567ea2;" href="https://discordapp.com/users/596233653332344842"></a>
+            </div>
+          </div>
+        </div>
+      </main>
+      <script type="text/javascript">
+        const FormContainer = document.querySelector(".form"),
+            FormElem = FormContainer.querySelector("form#contact"),
+            SubmitBtn = FormElem.querySelector("button[type=\"submit\"]"),
+            ErrorField = FormElem.querySelector("span.error"),
+            IsNullOrUndefined = obj => !(obj && obj !== 'null' && obj !== 'undefined'), // Method name from C#
+            IsNullOrEmpty = str => IsNullOrUndefined(str) || str.length == 0,
+            TryParse = jsonString => {
+              try { return { success: true, json: JSON.parse(jsonString) }; }
+              catch (e) { return { success: false, json: null }; }
+            },
+            Delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+        function Start() {
+          FormElem.addEventListener("submit", OnFormSubmit);
+          SubmitBtn.removeAttribute("disabled");
+        }
+
+        function OnFormSubmit(e) {
+          e.preventDefault();
+          SubmitBtn.setAttribute("disabled", '');
+          grecaptcha.ready(function() {
+            grecaptcha.execute(SiteKey, { action: 'submit' }).then(function(token) {
+              // Send the token along with other form data to the backend server using AJAX
+              var formData = new FormData(FormElem);
+              formData.append('recaptchaToken', token);
+              // Make an AJAX POST request to your backend server
+              var xhr = new XMLHttpRequest();
+              xhr.open(FormElem.getAttribute("method"), FormElem.getAttribute("action"));
+              xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+              xhr.onload = function() {
+                let parseResult = TryParse(xhr.responseText);
+                if (!parseResult.success)
+                  ShowError("Server Failure. Try again later");
+                else ProcessResponse(parseResult.json);
+              };
+              xhr.send(new URLSearchParams(formData));
+             
+            })
+          });
+          console.log([FormElem, SubmitBtn, e]);
+          return false;
+        }
+
+        async function ProcessResponse(response) {
+          if (response.success) {
+            FormContainer.classList.add("completed");
+            return;
+          }
+          ShowError(response.errorMessage);
+        }
+
+        async function ShowError(msg) {
+          if (ErrorField.classList.contains("show")) {
+            ErrorField.classList.remove("show");
+            await Delay(300);
+          }
+          ErrorField.innerText = msg;
+          ErrorField.classList.add("show");
+          SubmitBtn.removeAttribute("disabled");
+        }
+      </script>
+      <model src="kavemans.dev/stickyFooter.html"></model>
+    </body>
+</html>

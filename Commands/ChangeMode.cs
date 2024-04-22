@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebServer.Commands {
+namespace Portfolio.Commands {
     public struct ProgramMode : ICommand {
         static EventLogger Logger = EventLogger.GetOrCreate<ProgramMode>();
         public string Name => "Change Mode";
