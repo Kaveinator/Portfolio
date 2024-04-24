@@ -16,21 +16,13 @@
     <div class="contentWrapper">
       <main id="projects" class="container centerize">
         <model src="kavemans.dev/announcements"></model>
-        <h2>Projects</h2>
+        <h2>Organizations
+          <span>Individual projects are under their respective organizations</span>
+        </h2>
         <div class="feed dynamicMargin centerize">
           <div class="row">
-            <img src="/src/sprites/logo/BattleOfTheForces.png" />
-            <a href="#">Fullstack Developer - Battle of the Forces</a>
-            <span>
-              A game built with Unity3D using the C# language. On server side, uses Entity Framework with
-              SQLite as the storage engine. Client authentication works by sending a RESTful API to the
-              AuthServer that then returns a AuthToken and Guid combination to log into game servers. This
-              project is still in development
-            </span>
-          </div>
-          <div class="row">
-            <img src="/src/sprites/logo/ReviveTankiX.png" />
-            <a href="/projects/TankiX">Programmer/Level Designer - Revive Tanki X</a>
+            <img src="https://txrevive.net/src/sprites/Logo.webp" />
+            <a href="/orgs/TankiX">Unity Developer - Revive Tanki X</a>
             <span>
               Built a server with a team of 4 members for Tanki X. Was in charge of building in-game client
               authentication, cross-server communication and central server. Used Entity Framework with MySQL as the storage
@@ -39,6 +31,22 @@
               dashboard to keep track of statistics.
             </span>
           </div>
+          <!--<div class="row">
+            <img src="/src/sprites/logo/BattleOfTheForces.png" />
+            <a href="#">Fullstack Developer - Battle of the Forces</a>
+            <span>
+              A game built with Unity3D using the C# language. On server side, uses Entity Framework with
+              SQLite as the storage engine. Client authentication works by sending a RESTful API to the
+              AuthServer that then returns a AuthToken and Guid combination to log into game servers. This
+              project is still in development
+            </span>
+          </div>-->
+        </div>
+        <br />
+        <h2>Loose Projects
+          <span>Projects not directly tied to any originization</span>
+        </h2>
+        <div class="feed dynamicMargin centerize">
           <div class="row">
             <img src="/src/sprites/logo/SkyChat.png" />
             <a href="#">UI/UX Engineer - SkyChat</a>
@@ -77,12 +85,19 @@
           </div>
           <div class="row">
             <img src="/src/sprites/logo/icons8-web-48.png" />
-            <a href="#">Endless Runner - Personal Project</a>
-            <span>
-              
-            </span>
+            <a href="/projects/{?:OrgId}">Endless Runner - Personal Project</a>
+            <span></span>
           </div>
-        </div>
+          <div class="row">
+            <img src="/src/sprites/logo/icons8-web-48.png" />
+            <a href="/orgs/{?:OrgId}">{?:PrimaryRole} - {?:OrgName}</a>
+            <span>{?:Brief}</span>
+          </div>
+          <div class="row">
+            <img src="/src/sprites/logo/icons8-web-48.png" />
+            <a href="/projects/{?:OrgId}">{?:ProjectName} - Personal Project</a>
+            <span>{?:Brief}</span>
+          </div>
         </div>
       </main>
     </div>

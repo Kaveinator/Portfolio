@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "WebServer": {
+      "commandName": "Project",
+      "workingDirectory": "./"
+    }
+  }
+}

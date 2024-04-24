@@ -58,6 +58,7 @@ div[class^="circle"] {
 .form.completed div.submittedView {
   transform: translateX(0px);
   opacity: 1;
+  display: block;
 }
 
 .form > div.submittedView {
@@ -70,6 +71,7 @@ div[class^="circle"] {
   height: 100%;
   opacity: 0;
   pointer-events: none;
+  display: none;
 }
 
 .form > div.submittedView > img {

@@ -122,6 +122,17 @@ main, .container {
   margin-block-start: 0;
 }
 
+.container > h2 > span {
+  display: block;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.55em;
+  font-weight: normal;
+}
+
+.container, .feed {
+  margin-bottom: 1.25em;
+}
+
 body:not(.stickyFooter) .contentWrapper {
   padding-bottom: 90px;
 }
