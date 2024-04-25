@@ -58,7 +58,7 @@ div[class^="circle"] {
 .form.completed div.submittedView {
   transform: translateX(0px);
   opacity: 1;
-  display: block;
+  display: flex;
 }
 
 .form > div.submittedView {
