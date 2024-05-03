@@ -32,6 +32,7 @@ namespace Portfolio {
             string errorMessage = default!;
             string name = query[nameof(name)]?.Trim() ?? string.Empty;
             string? email = query[nameof(email)]?.Trim();
+            string subject = query[nameof(subject)]?.Trim() ?? string.Empty;
             string message = query[nameof(message)]?.Trim() ?? string.Empty;
             string? recaptchaToken = query[nameof(recaptchaToken)];
             string remoteIp = request.Headers["CF-Connecting-IP"] ?? request.RemoteEndPoint.Address.ToString();
@@ -52,6 +53,11 @@ namespace Portfolio {
                 errorMessage = "Name is too short!";
                 goto shipResponse;
             }
+            if (subject.Length < 2) {
+                success = false;
+                errorMessage = "Subject is too short!";
+                goto shipResponse;
+            }
             if (message.Length < 10) {
                 success = false;
                 errorMessage = "Message is too short!";
@@ -64,7 +70,7 @@ namespace Portfolio {
             }
 
             success = true;
-            var info = new ContactInfo(Database.ContactInfoTable, name, email ?? "", message).Push();
+            var info = new ContactInfo(Database.ContactInfoTable, name, email ?? "", subject, message).Push();
         shipResponse:
             jsonResponse.Add(nameof(success), success);
             jsonResponse.Add(nameof(errorMessage), errorMessage);
@@ -72,9 +78,9 @@ namespace Portfolio {
             if (Program.Mode == Mode.Development) {
                 JSONNode dump = new JSONObject();
                 dump.Add(nameof(name), name);
-                dump.Add(nameof(email), email);
+                dump.Add(nameof(email), email!);
                 dump.Add(nameof(message), message);
-                dump.Add(nameof(recaptchaToken), recaptchaToken);
+                dump.Add(nameof(recaptchaToken), recaptchaToken!);
                 dump.Add(nameof(remoteIp), remoteIp);
                 dump.Add(nameof(captchaValid), captchaValid);
                 jsonResponse.Add(nameof(dump), dump);
@@ -104,5 +110,4 @@ namespace Portfolio {
             }
         }
     }
-    
 }

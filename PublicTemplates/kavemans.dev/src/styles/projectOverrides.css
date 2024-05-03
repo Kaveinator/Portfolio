@@ -1,169 +1,55 @@
 @charset "UTF-8";
 
 main {
-  --background-y-anchor: 60%;
-  padding: 80px 0 20px 0;
-  min-height: 80px;
-  background-position: 0 var(--background-y-anchor);
-  background-image:
-    linear-gradient(
-      -90deg,
-      rgba(10, 15, 22, 0.2) 0%,
-      rgba(10, 15, 22, 1) 100%
-    ),
-    var(--background-image);
+  padding-bottom: 40px;
+  min-height: 25vh;
 }
 
-@media (max-width: 765px), (orientation: portrait) {
-  main {
-    background-position-x: 50%;
-  }
+#projects .row img {
+  filter: drop-shadow(0 0 5px #000);
 }
 
-:root {
-  --animation-duration: 200ms;
+.mediaContent {
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
-.subProjectEntry {
-  height: auto;
-  min-height: 40px;
-  overflow: hidden;
-  transition: 300ms all ease-in-out;
-  background-color: #242d3c;
-  border: 3px solid rgb(255 255 255 / 10%);
-  border-radius: 6px;
-  margin-bottom: 8px;
+.mediaContent:empty::after {
+  content: "No media";
+  opacity: 0.5;
 }
 
-.subProjectEntry > header,
-.subProjectEntry > summary {
+.mediaContent > .mediaTile {
+  width: 250px;
+  max-width: 46.25%;
+  background-color: #000;
   position: relative;
-  text-align: left;
-  padding: 4px 16px;
-  background-color: rgba(0, 0, 0, 0.3);
-  box-sizing: border-box;
-  min-height: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  margin: 15px 2.5%;
+  margin-right: 2.5%;
+  background-color: #000;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-right: 1.25%;
   z-index: 2;
-  color: rgb(255, 255, 255);
-  height: auto;
 }
 
-.subProjectEntry > div {
-  text-align: left;
-  box-sizing: border-box;
-  height: 0px;
-  padding: 0px 0px;
-  transition: 200ms max-height ease-in-out;
-  max-height: 0px;
-}
-
-.subProjectEntry.open > div {
-  padding: 4px 16px;
-  max-height: 1000px;
-  height: auto;
-  max-height: 800px;
-}
-
-.subProjectEntry.open > header,
-.subProjectEntry.open > summary {
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
-}
-
-.subProjectEntry > header:hover,
-.subProjectEntry > summary:hover {
-  color: rgb(118, 233, 52);
-}
-
-.subProjectEntry.open {
-  max-height: 1000%;
-}
-
-.projectEntry {
-  --size: 80px;
-  --border-radius: 6px;
-  --background-color: rgb(31, 38, 49);
-  --graphic-height: 100%;
-  --graphic-width: 120px;
-  --content-height: 100%;
-  --content-width: calc(100% - var(var(--graphic-width)));
-  --border-width: 2px;
-  --border-color: rgb(58 66 80 / 80%);
-  --inner-border-width: 2px;
-  height: var(--size);
-  max-height: var(--size);
-  border-radius: var(--border-radius);
-  background-color: #242d3c;
-  transition: all var(--animation-duration) ease-in-out;
-  margin: 10px 0;
-  background-position: 0 60%;
-  background-size: 120px 100%;
-  background-color: var(--background-color);
-  /*background-image: linear-gradient(-90deg, rgb(31, 38, 49) 1%, #00000000 90%), var(--background-image);*/
-  background-repeat: no-repeat;
-  position: relative;
-}
-
-.projectEntry:hover {
-  --background-color: #242d3c;
-  ---border-width: 1px;
-  --border-color: rgb(80 87 99 / 80%);
-  ---inner-border-width: 1px;
-}
-
-.projectEntry .content,
-.projectEntry::after {
-  position: absolute;
-  top: 0;
-  transition: all var(--animation-duration) ease-in-out;
-  content: "";
-}
-
-.projectEntry::after {
-  height: 100%;
+.mediaContent > .mediaTile > img:nth-child(1) {
   width: 100%;
-  content: "";
-  border-radius: var(--border-radius);
+  height: auto;
+  opacity: 0;
+}
+
+.mediaContent > .mediaTile::after {
+  content: '';
+  background: rgba(0, 0, 0, 0) !important;
+  box-shadow: inset 0 0 0 2px rgba(77, 90, 132, 1), inset 0 0 10px 2px rgba(0, 0, 0, 1);
   pointer-events: none;
-  box-shadow: inset var(--border-color) 0 0 0 var(--border-width);
+  border-radius: 10px;
 }
 
-.projectEntry > .graphic {
-  width: var(--graphic-width);
-  height: var(--graphic-height);
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: all var(--animation-duration) ease-in-out;
-  border-radius: var(--border-radius) 0 0 var(--border-radius);
-  background-color: rgba(10, 15, 22, 0.8);
-  overflow: hidden;
-}
-
-.projectEntry > .graphic::before {
-  height: 100%;
-  width: 100%;
-  content: "No Image";
-  font-size: 12pt;
-  color: rgba(255, 255, 255, 0.5);
-  /*color: rgb(58 66 80 / 80%);*/
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  position: absolute;
-  top: 0;
-}
-
-.projectEntry > .graphic > img { border-radius: var(--border-radius) 0 0 var(--border-radius); }
-
-.projectEntry > .graphic > img:nth-child(1) { display: none; }
-
-.projectEntry > .graphic > *:not(:nth-child(1)) {
+.mediaContent > .mediaTile::after,
+.mediaContent > .mediaTile > *:not(:nth-child(1)) {
+  transition: 200ms ease-in-out;
   position: absolute;
   width: 100%;
   top: 0;
@@ -172,179 +58,73 @@ main {
   background-color: #000;
   color: #fff;
   object-fit: cover;
+  color: rgb(232, 230, 227);
 }
 
-.projectEntry > .graphic > img:not(:nth-child(1)) { object-fit: cover; }
+.mediaContent > .mediaTile > *:not(:nth-child(1)) {
+  transition: 200ms ease-in-out;
+}
 
-.projectEntry > .content::before {
+.mediaContent > .mediaTile       > img:not(:nth-child(1)) { transform: scale(1.2); }
+.mediaContent > .mediaTile:hover > img:not(:nth-child(1)) { transform: scale(1); }
+
+.mediaContent > .mediaTile > p.caption {
   position: absolute;
-  bottom: var(--border-width);
-  height: calc(100% - calc(var(--border-width) * 2));
-  width: var(--inner-border-width);
-  left: 0;
-  /*background-color: #f00;*/
-  content: '';
-  object-fit: cover;
-  transition: box-shadow var(--animation-duration) ease-in-out,
-    height var(--animation-duration) ease-in-out,
-    top var(--animation-duration) ease-in-out;
-  box-shadow: inset var(--border-color) var(--inner-border-width) 0 0 0;
-}
-
-.projectEntry > .content {
-  height: var(--content-height);
-  width: var(--content-width);
-  padding: 5px 8px;
-  left: 120px;
+  width: 100%;
+  top: auto;
+  bottom: 0;
+  height: auto;
+  margin: 0;
+  background-color: rgba(0, 0, 0, 0.8);
   box-sizing: border-box;
-  text-shadow: #000 0 0 3px;
+  padding: 4px 6px;
+  text-align: center;
+  transform: translateY(100%);
+}
+.mediaContent > .mediaTile:hover > p.caption {
+  transform: translateY(0%);
 }
 
-.projectEntry > .content > .title {
-  font-weight: bold;
+.lightbox {
+  position: fixed;
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+}
+
+.issueEntry {
+  border-radius: 8px;
   overflow: hidden;
-  white-space: normal;
-  text-overflow: ellipsis;
-  cursor: pointer;
+  box-shadow: rgb(13, 14, 14) 0px 0px 4px;
 }
 
-.projectEntry > .content > .labels > .label {
+.issueEntry > h3 {
+  background-color: #046da3;
+  padding: 12px 15px;
+  margin: 0;
+  font-size: 16px;
+}
+
+.issueEntry > h3::before {
+  font-family: var(--font-awesome-version);
+  font-weight: 600;
+  content: "\f386";
+  margin-right: 8px;
   display: inline-block;
-  object-fit: contain;
-  --size: 18pt;
-  height: 12pt;
-  width: 14pt;
-  position: relative;
-  text-align: left;
-  margin-left: 5px;
 }
 
-.projectEntry > .content > .labels > .label > img {
-  position: absolute;
-  height: var(--size);
-  width: auto;
-  position: absolute; 
-  top: -1pt;
-  filter: drop-shadow(0 0 3px #000);
-  transition: filter var(--animation-duration) ease-in-out;
+.issueEntry > .content {
+  background-color: rgb(34, 37, 38);
+  margin: 0;
+  font-size: 14px;
+  padding: 12px 15px;
 }
-
-.projectEntry > .content > .labels > .label:hover > img {
-  filter: drop-shadow(0 0 5px #000) ;
-}
-
-.projectEntry > .content > .description { 
-  overflow: hidden;
-  white-space: normal;
-  text-overflow: ellipsis;
-  color: #fff;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
 
 @media (max-width: 765px), (orientation: portrait) {
-  .projectEntry { 
-    --graphic-height: 200px;
-    --graphic-width: 100%;
-    --content-height: 122.5px;
-    --content-width: 100%;
-    --size: calc(122.5px + 200px); /* For some reason, using var(--content-height) + car(--graphic-height) doesn't work here */
-    max-height: unset;
-    height: auto;
+  main .linksBox {
+    text-align: center !important;
   }
-
-  .projectEntry > .content {
-    width: 100%;
-    height: 122.5px;
-    top: 0;/*var(--graphic-height);*/
-    left: 0;
-    /*background-color: rgba(10, 15, 22, 0.8);*/
-    /*backdrop-filter: blur(3px);*/
-    position: relative;
-  }
-  
-  .projectEntry > .graphic {
-    /* For gradient effect: Didn't look good enough so disabled it
-    --mask: linear-gradient(90deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
-    -webkit-mask-image: var(--mask);
-    mask-image: var(--mask);
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;*/
-    /* Effect: Make the thumbnail as background */
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
-    position: relative;
-    height: auto;
-  }
-
-  .projectEntry > .graphic > img { border-radius: var(--border-radius) var(--border-radius) 0 0; }
-
-  .projectEntry > .content::before {
-    position: absolute;
-    top: 0px;
-    right: var(--border-width);
-    margin-left: var(--border-width);
-    width: calc(100% - calc(var(--border-width) * 2));
-    height: var(--inner-border-width);
-    box-shadow: inset rgb(58 66 80 / 80%) 0 var(--inner-border-width) 0 0;
-    display: inline-block;
-    transition: box-shadow var(--animation-duration) ease-in-out,
-      width var(--animation-duration) ease-in-out;
-  }
-
-  .projectEntry > .content > .description { -webkit-line-clamp: 4; }
-
-  .projectEntry > .graphic > img:nth-child(1) { 
-    width: 100%;
-    height: auto;
-    opacity: 0;
-    display: block;
-  }
-  
-  .projectEntry > .graphic > *:not(:nth-child(1)) {
-    position: absolute;
-    width: 100%;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background-color: #000;
-    color: #fff;
-    object-fit: cover;
-  }
-}
-
-.label .tooltiptext {
-  width: 120px;
-  background-color: #131a26;
-  color: #fff;
-  text-align: center;
-  border-radius: var(--border-radius);
-  padding: 5px 0;
-  position: absolute;
-  z-index: 1;
-  bottom: 150%;
-  left: -50%;
-  margin-left: -38px;
-  opacity: 0;
-  transition: opacity 100ms ease-in-out;
-  pointer-events: none;
-  box-shadow: inset rgb(58 66 80 / 80%) 0 0 0 3px,
-    rgba(0, 0, 0, 0.6) 0 0 3px 0;
-}
-
-.label .tooltiptext::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: rgb(58 66 80 / 80%)  transparent transparent transparent;
-}
-
-.label:hover .tooltiptext {
-  pointer-events: auto;
-  opacity: 1;
 }

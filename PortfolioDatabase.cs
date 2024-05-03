@@ -29,11 +29,12 @@ namespace Portfolio {
         }
     }
     public class ContactInfo : ContactTable.SQLiteRow {
-        public override IEnumerable<IDbCell> Fields => new IDbCell[] { Id, Timestamp, Name, Email, Message };
+        public override IEnumerable<IDbCell> Fields => new IDbCell[] { Id, Timestamp, Name, Email, Subject, Message };
         public readonly DbPrimaryCell Id = new DbPrimaryCell();
         public readonly DbCell<DateTime> Timestamp = new DbCell<DateTime>(nameof(Timestamp), DbType.DateTime, DateTime.Now, constraints: DbCellFlags.NotNull);
         public readonly DbCell<string> Name = new DbCell<string>(nameof(Name), DbType.String, constraints: DbCellFlags.NotNull);
         public readonly DbCell<string> Email = new DbCell<string>(nameof(Email), DbType.String, constraints: DbCellFlags.NotNull);
+        public readonly DbCell<string> Subject = new DbCell<string>(nameof(Subject), DbType.String, constraints: DbCellFlags.NotNull);
         public readonly DbCell<string> Message = new DbCell<string>(nameof(Message), DbType.String, constraints: DbCellFlags.NotNull);
         public override bool IsInDb => Id != -1L;
 
@@ -41,9 +42,10 @@ namespace Portfolio {
         public ContactInfo() : base(null) { }
 
         /// <summary>Call to create this</summary>
-        public ContactInfo(ContactTable table, string name, string email, string message) : base(table) {
+        public ContactInfo(ContactTable table, string name, string email, string subject, string message) : base(table) {
             Name.Value = name;
             Email.Value = email;
+            Subject.Value = subject;
             Message.Value = message;
         }
     }
