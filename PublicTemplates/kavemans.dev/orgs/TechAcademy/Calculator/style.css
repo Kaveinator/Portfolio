@@ -1,0 +1,155 @@
+@charset "UTF-8";
+
+@font-face {
+  /* Used font from my website */
+	font-family: 'Open Sans Light';
+	src: url('/src/fonts/OpenSans/Light.eot');
+	src: local('Open Sans Light'),
+         url('/src/fonts/OpenSans/Light.woff') format('woff'),
+         url('/src/fonts/OpenSans/Light.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: "Seven Segment";
+	src: url('/tta/beeper/Seven Segment.ttf');
+}
+
+html, body {
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans Light", sans-serif;
+  color: #fff;
+  background-color: #131a26;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 70%;
+  box-sizing: border-box;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  box-sizing: border-box;
+  z-index: 5;
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+}
+
+header > a {
+  font-size: 16pt;
+  position: absolute;
+  top: 0;
+  left: 15px;
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  transition: 200ms ease-in-out;
+}
+
+header a {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  transition: 200ms ease-in-out;
+}
+
+header a:hover {
+  color: rgba(255, 255, 255, 1);
+  text-decoration: none;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+.calculator {
+  border: 1.2px solid darkslategray;
+  border-radius: 7px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+}
+ 
+.calculatorScreen {
+  width: 100%;
+  font-size: 5rem;
+  height: 80px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  text-align: right;
+  padding-right: 20px;
+  padding-left: 20px;
+  border-radius: 7px 7px 0px 0px;
+  font-family: 'Seven Segment', sans-serif;
+}
+
+button {
+  height: 70px;
+  border-radius: 3px;
+  border: 1px solid darkslategray;
+  background-color: transparent;
+  font-size: 3.2rem;
+  background-image: linear-gradient(to bottom, transparent, transparent 50%, rgba(0,0,0,0.6));
+  text-shadow: 0 1px rgba(255, 255, 255, 4);
+  /*Each value below is separated by a comma ',' after the rgba values*/
+  box-shadow: inset rgb(47 79 79 / 0%) 0 0 0 3px;
+  transition: all 100ms ease-in-out;
+}
+
+button:hover {
+  box-shadow: inset rgb(47 79 79 / 50%) 0 0 0 1px;
+}
+
+.operator {
+  color: #000;
+  background-image: linear-gradient(to bottom, transparent, transparent 50%, rgba(0,0,0,0.5));
+  background-color: lightgray;
+}
+
+button:not(.operator):not(.compute):not(.clearAll){
+  background-color: #242d3c;
+  color: #cacaca;
+}
+
+.clearAll {
+  background-color: red;
+  border-color:darkslategray;
+  color: #ffffff;
+}
+
+.compute {
+  background-color: blue;
+  border-color:darkslategray;
+  color: #fff;
+  height: 100%;
+  grid-area: 2/4/6/5;
+}
+
+.compute:hover { background-color:darkblue; }
+
+.calculatorKeys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+  padding: 20px;
+}

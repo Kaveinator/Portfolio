@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Calculator</title>
+    <meta charset="UTF-8" />
+    <link href="./style.css" type="text/css" rel="stylesheet" />
+    <script defer src="./script.js"></script>  
+    <meta name="description" content="A basic calculator in HTML/CSS/JS" />
+    <meta name="author" content="kaveman" />
+  </head>
+  <body>
+    <header>
+      <a href="#">Calculator</a>
+    </header>
+    <!-- This is the main div container that will display the calculator -->
+    <div class="calculator">
+      <!-- This input displays the result of the calculation -->
+      <input type="text" class="calculatorScreen" value="0" disabled>
+      <!-- This section displays all buttons that a user can press to make a calculation -->
+      <div class="calculatorKeys">
+        <button type="button" class="operator" value="+">+</button>
+        <button type="button" class="operator" value="-">-</button>
+        <button type="button" class="operator" value="*">&times;</button>
+        <button type="button" class="operator" value="/">&divide;</button>
+        <button type="button" value="7">7</button>
+        <button type="button" value="8">8</button>
+        <button type="button" value="9">9</button>
+        <button type="button" value="4">4</button>
+        <button type="button" value="5">5</button>
+        <button type="button" value="6">6</button>
+        <button type="button" value="1">1</button>
+        <button type="button" value="2">2</button>
+        <button type="button" value="3">3</button>
+        <button type="button" value="0">0</button>
+        <button type="button" class="decimal function" value=".">.</button>
+        <button type="button" class="clearAll function" value="all-clear">AC</button>
+        <button type="button" class="compute operator" value="=">=</button>
+      </div>
+    </div>
+  </body>
+</html>

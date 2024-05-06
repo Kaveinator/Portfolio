@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Beeper - kavemans.dev</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href="./style.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body>
+		<div id="textComponent" class="fillScreen centerize" style="font-size: 32pt; flex-direction: row;">
+			SomeInt
+		</div>
+		<audio id="audioSource">
+			<!--<source src="./beeper/beep.mp3" type="audio/mpeg">-->
+			<source src="./chime.mp3" type="audio/mpeg">
+			Your browser does not support the audio element
+		</audio>
+		<button onClick="InvokeButton(this);">Start</button>
+		<script>
+			let i = 0,
+					stop = 9 * 60,
+					audioSource = document.getElementById("audioSource"),
+					textComponent = document.getElementById("textComponent"),
+					timerId;
+			stop =
+				((getParameterByName("h") ? parseInt(getParameterByName("h")) : 0) * 60 * 60) +
+				((getParameterByName("m") ? parseInt(getParameterByName("m")) : 0) * 60) +
+				(getParameterByName("s") ? parseInt(getParameterByName("s")) : 0);
+       if (stop < 1) stop = 1;
+			textComponent.innerHTML = formatTime(stop);
+			
+			function Start() {
+				timerId = setInterval(() => {
+					i++;
+					if (i == stop) {
+						i = 0;
+						audioSource.play();
+					}
+					textComponent.innerHTML = formatTime(stop - i);
+				}, 1000);
+			}
+
+			function Stop() {
+				if (timerId == undefined) return;
+				clearInterval(timerId);
+				timerId = undefined;
+				i = 0;
+				textComponent.innerHTML = formatTime(stop);
+			}
+
+			function InvokeButton(btn) {
+				if (timerId == undefined) {
+					Start();
+					btn.innerHTML = "Reset";
+				}
+				else {
+					Stop();
+					btn.innerHTML = "Start";
+				}
+			}
+
+			function formatTime(time) {
+				let _seconds = time % 60;
+				let _minutes = Math.floor(time / 60);
+				let _result = "";
+				if (_minutes == 0)
+					_result += '<span class="fade">0:</span>';
+				else _result += _minutes + ":";
+				if (_seconds > 9) _result += _seconds;
+				else if (_minutes == 0)
+					_result += '<span class="fade">0</span>' + _seconds;
+				else
+					_result += '0' + _seconds;
+				return _result; 
+				//return _result + (_seconds > 9 || _minutes != 0 ? _seconds : _seconds == 0 ? '<span class="fade">00</span>' : '<span class="fade">0</span>' + _seconds);
+			}
+
+			function getParameterByName(name, url = window.location.href) {
+				name = name.replace(/[\[\]]/g, '\\$&');
+				var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+						results = regex.exec(url);
+				if (!results) return null;
+				if (!results[2]) return '';
+				return decodeURIComponent(results[2].replace(/\+/g, ' '));
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tic Tac Toe</title>
+    <meta charset="UTF-8" />
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
+    <link href="./style.css" type="text/css" rel="stylesheet" />
+    <script defer src="./script.js"></script>  
+  </head>
+  <body onload="Reset();">
+    <header>
+      <a href="#">Tic Tac Toe</a>
+    </header>
+    <div class="boardContainer">
+      <canvas id="WinLines" width="608" height="608"></canvas>
+      <table>
+        <tr>
+          <td id="0" class="square" onclick="Play(this)"></td>
+          <td id="1" class="square" onclick="Play(this)"></td>
+          <td id="2" class="square" onclick="Play(this)"></td>
+        </tr>
+        <tr>
+          <td id="3" class="square" onclick="Play(this)"></td>
+          <td id="4" class="square" onclick="Play(this)"></td>
+          <td id="5" class="square" onclick="Play(this)"></td>
+        </tr>
+        <tr>
+          <td id="6" class="square" onclick="Play(this)"></td>
+          <td id="7" class="square" onclick="Play(this)"></td>
+          <td id="8" class="square" onclick="Play(this)"></td>
+        </tr>
+      </table>
+    </div>
+    <h3 id="ResultText" onclick="Reset();">SampleText</h3>
+  </body>
+</html>

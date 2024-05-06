@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Todo List</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="./style.css" type="text/css" rel="stylesheet" />
+    <script defer src="./script.js"></script> 
+    <model src="kavemans.dev/FontAwesome"></model> 
+  </head>
+  <body onload="Start();" onunload="OnDestroy();">
+    <header>
+      <a href="#">Persistent Task Manager</a>
+    </header>
+    <div class="body centerize">
+      <div id="Prefabs">
+        <div class="item dynamicMargin">
+          <div class="checkbox centerize"></div>
+          <div class="timer centerize">0:00</div>
+          <div class="text">Hello World</div>
+          <div class="actionsContainer centerize">
+            <i class="start fa-solid fa-play"></i>
+            <i class="stop fa-solid fa-stop"></i>
+            <i class="edit fa-solid fa-pencil"></i>
+            <i class="delete fa-solid fa-xmark"></i>
+          </div>
+        </div>
+      </div>
+      <h3 class="dynamicMargin">Ongoing</h3>
+      <div class="feed centerize ongoing"></div>
+      <h3 class="dynamicMargin">Task Pool<i class="fa-solid fa-plus" onclick="CreateTask(prompt('What do you need to do?'))"></i></h3>
+      <div class="feed centerize queued"></div>
+      <h3 class="dynamicMargin">Complete</i></h3>
+      <div class="feed centerize done"></div>
+    </div>
+    <!--<script src="https://kit.fontawesome.com/7d3a235ca6.js" crossorigin="anonymous"></script>-->
+  </body>
+</html>

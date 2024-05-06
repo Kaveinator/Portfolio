@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+		<meta charset="UTF-8">
+		<title>Beeper - Tech Academy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/src/styles/framework.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/common.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/main.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/orgOverrides.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/projectOverrides.css" type="text/css" rel="stylesheet" />
+    <model src="kavemans.dev/FontAwesome"></model>
+  </head>
+  <body>
+    <model src="kavemans.dev/header.html"></model>
+    <div class="contentWrapper">
+      <main id="simpleParallaxEffect" class="centerize" style="--background-image: url('/src/images/generic/background11.jpg'); --background-y-anchor: 40%;">
+        <div class="intro dynamicMargin" style="--background-image: url('/src/images/TechAcademy/Logo.webp');">
+          <span>Beeper</span>
+          <span class="linksBox centerize">
+            <a href="./Beeper/demo?m=1">Live Demo</a>
+            <span style="display: block;">A simple web app that chimes on a predefined interval. I used it to keep myself on track (interval configurable via URL query)</span>
+          </span>
+        </div>
+      </main>
+      <div class="container showBorder centerize" style="margin-bottom: 0;">
+        <div class="dynamicMargin">
+          <a href="/">Home</a> / <a href="/projects">Projects</a> / <a href="/orgs/TechAcademy">Tech Academy</a> / Beeper App
+        </div>
+      </div>
+      <div class="container centerize">
+        <h2>Overview<span>The motive behind this project</span></h2>
+        <div class="dynamicMargin">
+          This project was not an assignment given by the instructors or the learning platform.
+          I originally came up with the idea when I was grilling and wanted a timer that restarted as soon as it elapsed, while still playing a tone.
+          The site visuals were built with HTML and CSS, with a seven segment font. It would be pretty much impossible to make a configurable timer without
+          the user of Javascript, I didn't use any frameworks or libraries, the client-side script parses the query in the URL and sets the timer, from there
+          you can start and stop the restarting timer as you'd like. You can see the live demo <a href="./Beeper/demo?m=1">here</a>.
+        </div>
+      </div>
+      <div id="projects" class="container centerize hr">
+        <h2>Technologies Used<span>What engines, frameworks and tools were used</span></h2>
+        <div class="row dynamicMargin">
+          <img src="/src/sprites/langs/html.png" />
+          <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTML">Hypertext Markup Language (HTML)</a>
+          <span>
+            HTML is used to define the general hierarchy and relationships between elements on a webpage.
+            HTML itself, usually doesn't look very presentable and looks like a something you'd find in the 90s, so you'll need to use CSS to add color.
+          </span>
+        </div>
+        <div class="row dynamicMargin">
+          <img src="/src/sprites/langs/css.png" />
+          <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS">Cascading Style Sheets (CSS)</a>
+          <span>
+            CSS is used in combination with HTML, it is used to "paint" the canvas that was built with HTML.
+            However, CSS is not a programming language and does not provide any programmable functionality.
+          </span>
+        </div>
+        <div class="row dynamicMargin">
+          <img src="/src/sprites/langs/javascript.png" />
+          <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">Javascript (JS)</a>
+          <span>
+            Javascript can be utilized to provide functionality and programmable logic to webpages, 
+            it can make a popup open alerting that you have unsaved changes or process a login request.
+            Javascript can also be utilized on the backend (server) that can process data sent by clients,
+            this project only utilized client-side javascript.
+          </span>
+          <p style="padding-bottom:0;">I used Javascript to ..</p>
+          <ul style="margin-top:0;">
+            <li>.. parse and read the query string (including hours, minutes and seconds)</li>
+            <li>.. make a loop that gets called every second to countdown and update the virtual display</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <model src="kavemans.dev/footer.html"></model>
+    <script src="/src/scripts/KeyFirePlugin.js"></script>
+    <script defer>
+      var fixedDeltaTime = 1000 / 60; // 1000ms (1sec) / 60 (fps)
+      var simpleParallaxEffect = setInterval(
+        () => Object3DTransform("simpleParallaxEffect", 0, 0, -100, "calc(var(--background-y-anchor) - {0}"),
+        fixedDeltaTime
+      );
+    </script>
+  </body>
+</html>

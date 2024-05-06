@@ -1,0 +1,222 @@
+@charset "UTF-8";
+
+@font-face {
+  /* Used font from my website */
+	font-family: 'Open Sans Light';
+	src: url('/src/fonts/OpenSans/Light.eot');
+	src: local('Open Sans Light'),
+         url('/src/fonts/OpenSans/Light.woff') format('woff'),
+         url('/src/fonts/OpenSans/Light.ttf') format('truetype');
+}
+
+/* From font awesome plugin */
+/*:root { --font-awesome-version: "Font Awesome 6 Free", "Font Awesome 5 Brands"; }*/
+
+html, body {
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans Light", sans-serif;
+  color: #fff;
+  background-color: #131a26;
+}
+
+/* Prafabs, terminology from Unity3D, basically a template, don't display them*/
+#Prefabs { display: none; }
+
+/* This class basically makes things center, both via x and y */
+.centerize {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Header and nav.. */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  box-sizing: border-box;
+  z-index: 5;
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+}
+
+header > a {
+  font-size: 1.2em;
+  position: absolute;
+  top: 0;
+  left: 15px;
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  transition: 200ms ease-in-out;
+}
+
+header a {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  transition: 200ms ease-in-out;
+}
+
+header a:hover {
+  color: rgba(255, 255, 255, 1);
+  text-decoration: none;
+}
+
+.dynamicMargin {
+  max-width: 1000px;
+  width: calc(100% - 30px);
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.body {
+  width: 100%;
+  padding-top: 60px;
+}
+
+.feed { width: 100%; }
+
+.feed:empty::after {
+  color: rgba(255, 255, 255, 0.5);
+  content: "C'mon do something";
+}
+
+.ongoing:empty::after { content: "Start something"; }
+.done:empty::after { content: "Finish something"; }
+
+.item {
+  background-color: #212937;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  justify-content: left;
+}
+
+.done .item { opacity: 0.5; }
+.item, .item .timer { transition: all 200ms ease-in-out; }
+
+.item:hover {
+  box-shadow: inset #3a4250 0 0 0 3px;
+  background-color: #242d3c;
+  opacity: 1;
+}
+
+/* Since timer uses a solid color, add an inset shadow too, to simulate as if the element is getting selected*/
+.items .timer      { box-shadow: inset #3a4250 0 3px 0 0, inset #3a4250 0 -3px 0 0; }
+.item:hover .timer { box-shadow: inset #3a4250 0 3px 0 0, inset #3a4250 0 -3px 0 0; }
+
+.checkbox {
+  height: 20px;
+  width: 20px;
+  margin: 10px 10px 10px 13px;
+}
+
+.checkbox::before {
+  font-family: var(--font-awesome-version);
+  content: '\f0c8';
+  font-weight: normal;
+  width: 20px;
+  height: 20px;
+  max-width: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 12pt;
+  cursor: pointer;
+}
+
+/* When to show the checkmark */
+.done .checkbox::before,
+.checkbox:hover::before
+{ content: '\f14a'; }
+.done .checkbox::before { cursor: default; }
+
+/* The timer */
+.timer {
+  background-color: #10141b;
+  height: 40px;
+  width: 100px;
+  min-width: 100px;
+}
+
+.text {
+  font-size: 1em;
+  font-weight: bold;
+  padding: 10px 8px;
+  height: 20px;
+  display: block;
+  margin: 0;
+  cursor: pointer;
+  overflow: hidden ;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The actions on the right */
+.actionsContainer {
+  /*padding: 5px 8px 3px 0;*/
+  height: 40px;
+  border-radius: 5px;
+  margin: 0 -5px 0 auto;
+  padding-left: 7.5px;
+  text-align: right;
+  flex-direction: row;
+  opacity: 0;
+  transition: margin 100ms ease-in-out, opacity 100ms ease-in-out, padding-left 100ms ease-in-out;
+}
+.item:hover .actionsContainer { margin: 0 2.5px 0 auto; opacity: 1; padding-left: 0px; }
+
+.actionsContainer i {
+  height: 30px;
+  width: 30px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: row;
+  margin-right: 5px;
+  cursor: pointer;
+  display: none;
+}
+.actionsContainer i:hover { background-color: rgba(255, 255, 255, 0.1);}
+
+/* Changes when each action is shown */
+.ongoing .actionsContainer i.stop,
+.queued .actionsContainer i.edit,
+.queued .actionsContainer i.delete,
+.queued .actionsContainer i.start,
+.done .actionsContainer i.delete
+{ display: flex; }
+
+
+/* The add button */
+h3 i {
+  float: right;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 100ms ease-in-out;
+  margin-right: 10px;
+}
+h3 i:hover { opacity: 0.8; }

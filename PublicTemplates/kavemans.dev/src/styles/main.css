@@ -253,7 +253,6 @@ main .credits {
 #projects .row > a {
   font-size: 1em;
   font-weight: bold;
-  padding-right: 5px;
   padding-top: 15px;
   height: 20px;
   display: block;
@@ -338,6 +337,7 @@ main .credits {
   }
 
   #projects .row {
+    padding-right: 5px;
     height: auto;
   }
 
