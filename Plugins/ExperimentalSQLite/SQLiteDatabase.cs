@@ -89,7 +89,7 @@ namespace ExperimentalSQLite {
             where TRow : SQLiteTable<TTable, TRow>.SQLiteRow, new()
             => RegisterTable<TTable, TRow>(tableInitilizer, () => new TRow());
 
-        public TTable RegisterTable<TTable, TRow>(Func<TTable> tableInitilizer, Func<TRow> tempRowConstructor)
+        public TTable RegisterTable<TTable, TRow>(Func<TTable> tableInitilizer, Func<TRow> schemaConstructor)
             where TTable : SQLiteTable<TTable, TRow>
             where TRow : SQLiteTable<TTable, TRow>.SQLiteRow
         {
@@ -100,12 +100,12 @@ namespace ExperimentalSQLite {
             ITable? cachedTable = RegistedTables.FirstOrDefault(otherTable => table.TableName == otherTable?.TableName, null);
             if (cachedTable != null)
                 throw new Exception($"Failed to register table '{table.TableName}'. Another table with that name was already registed with that name. [ table: {typeof(TTable).FullName}; cachedTable: {cachedTable.GetType().FullName} ]");
+            TRow schema = table.Schema = schemaConstructor();
             if (!TableExists(table.TableName)) {
                 string cmdText = $"CREATE TABLE IF NOT EXISTS `{table.TableName}` (";
-                TRow row = tempRowConstructor();
-
+                
                 // Construct the table schema
-                foreach (IDbCell cell in row.Fields) {
+                foreach (IDbCell cell in schema.Fields) {
                     cmdText += $"`{cell.ColumnName}` {cell.DataType.GetDbTypeAsString()}";
                     cmdText += (cell.Constraints.HasFlag(DbCellFlags.PrimaryKey) ? " PRIMARY KEY" : "");
                     cmdText += (cell.Constraints.HasFlag(DbCellFlags.UniqueKey) ? " UNIQUE" : "");
@@ -116,7 +116,8 @@ namespace ExperimentalSQLite {
 
                 using (SQLiteCommand cmd = new SQLiteCommand(cmdText, Connection)) {
                     int rowsAffected = cmd.ExecuteNonQuery();
-                    Console.WriteLine($"Table '{table.TableName}' created. Rows affected: {rowsAffected}");
+                    OnLog(new SQLog($"Table '{table.TableName}' created. Rows affected: {rowsAffected}"));
+                    //Console.WriteLine($"Table '{table.TableName}' created. Rows affected: {rowsAffected}");
                 }
             }
             RegistedTables.Add(table);

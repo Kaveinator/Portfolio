@@ -240,6 +240,9 @@ namespace WebServer.Http {
                 if (IsRequestTimedOut) return;
                 // Set final headers
                 context.Response.StatusCode = (int)response.StatusCode;
+                if (response.StatusCode == HttpStatusCode.Redirect) {
+                    context.Response.Redirect(response.ContentString);
+                }
                 bool omitBody = new[] { "HEAD", "PUT", "DELETE" }.Contains(context.Request.HttpMethod.ToUpper()) ||
                     (100 <= (int)response.StatusCode && (int)response.StatusCode <= 199) ||
                     response.StatusCode == HttpStatusCode.NoContent ||
@@ -300,7 +303,7 @@ namespace WebServer.Http {
                 targetDomain = DefaultDomain;
                 basePath = Path.Combine(directory.FullName, DefaultDomain);
             }
-            string resourceIdentifier = $"{targetDomain}{request.Url.LocalPath}".ToLower().Trim();
+            string resourceIdentifier = $"{targetDomain}{request.Url.LocalPath}".ToLower().Trim().TrimEnd('/');
             CachedResource resource = CachedResource.GetOrCreate(this, resourceIdentifier);
             if (!resource.NeedsUpdate) {
                 resource.StatusCode = HttpStatusCode.OK;

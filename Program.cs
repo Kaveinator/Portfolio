@@ -18,6 +18,8 @@ namespace Portfolio {
                 UpdateTitle();
             }
         }
+        public static PortfolioEndpoint PortfolioEndpoint;
+        public static TechAcademyDemoEndpoint TTADemoEndpoint;
 
         static void Main(string[] args) {
             Console.Title = "Initilizing...";
@@ -34,7 +36,8 @@ namespace Portfolio {
             UpdateTitle();
             _ = Endpoint.Start();
 
-            Logger.Log($"PortfollioEndpoint binded? {Endpoint.TryRegisterEndpointHandler<PortfolioEndpoint>(() => new PortfolioEndpoint(Endpoint), out var _)}");
+            Logger.Log($"PortfollioEndpoint binded? {Endpoint.TryRegisterEndpointHandler<PortfolioEndpoint>(() => new PortfolioEndpoint(Endpoint), out PortfolioEndpoint)}");
+            Logger.Log($"TTADemo binded? {Endpoint.TryRegisterEndpointHandler<TechAcademyDemoEndpoint>(() => new TechAcademyDemoEndpoint(Endpoint), out TTADemoEndpoint)}");
             EventLog.AddCommand<ProgramMode>();
             EventLog.AddCommand<BuildCommand>();
             EventLog.AddCommand<BrowserCommands>();

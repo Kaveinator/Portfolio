@@ -14,6 +14,7 @@ namespace ExperimentalSQLite {
             where TRow : SQLiteTable<TTable, TRow>.SQLiteRow {
             public readonly TDatabase Database;
             public readonly string TableName;
+            public TRow Schema { get; internal set; }
             string ITable.TableName => TableName;
             protected List<TRow> CachedRows = new List<TRow>();
             public SQLiteTable(TDatabase db, string tableName) {

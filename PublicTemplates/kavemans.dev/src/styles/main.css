@@ -172,6 +172,7 @@ main .credits {
   /*bottom: 15px;
   position: relative;*/
   margin-bottom: 15px;
+  max-width: 48px;
 }
 
 #knownLanguagesAndTech .container .item .popupAnchor {

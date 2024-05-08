@@ -1,0 +1,9 @@
+<form action="./Unsubscribe" method="POST" onsubmit="return confirm('Remove \'{?:EmailAddress}\' from Newsletter?');">
+    <div class="row mb-3">
+        <input type="hidden" name="Id" value="{?:Id}">
+        <div class="col-2">{?:FirstName}</div>
+        <div class="col">{?:LastName}</div>
+        <div class="col-4">{?:EmailAddress}</div>
+        <div class="col"><button type="submit" class="btn btn-danger btn-block">Remove</button></div>
+    </div>
+</form>

@@ -25,6 +25,8 @@ namespace ExperimentalSQLite {
             if (value is TValue tValue)
                 CachedValue = Value = tValue;
         }
+
+        private TValue TemporaryForceSetCachedValue { set => CachedValue = value; }
         #endregion
 
         public readonly string ColumnName;

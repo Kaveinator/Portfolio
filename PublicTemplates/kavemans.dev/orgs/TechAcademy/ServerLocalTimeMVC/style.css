@@ -1,0 +1,89 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: 'Open Sans Light';
+  src: url('/src/fonts/OpenSans/Light.eot'),
+    local('Open Sans Light'),
+    url('/src/fonts/OpenSans/Light.woff') format('woff'),
+    url('/src/fonts/OpenSans/Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: "Seven Segment";
+  src: url('/src/fonts/SevenSegment/Regular.ttf');
+}
+
+html, body {
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans Light", sans-serif;
+  color: #fff;
+  background-color: #131a26;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  box-sizing: border-box;
+  z-index: 5;
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+}
+
+header > a {
+  font-size: 16pt;
+  position: absolute;
+  top: 0;
+  left: 15px;
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  transition: 200ms ease-in-out;
+}
+
+header a {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  transition: 200ms ease-in-out;
+}
+
+header a:hover {
+  color: rgba(255, 255, 255, 1);
+  text-decoration: none;
+}
+
+.centerize {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+a {
+  color: #00baff;
+}
+
+span.font-ss {
+    font-family: 'Seven Segment';
+    font-size: 1.25em;
+  }

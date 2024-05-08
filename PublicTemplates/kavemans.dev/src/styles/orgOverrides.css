@@ -231,6 +231,8 @@ main {
   top: -1pt;
   filter: drop-shadow(0 0 3px #000);
   transition: filter var(--animation-duration) ease-in-out;
+  max-width: 24px;
+  max-height: 24px;
 }
 
 .projectEntry > .content > .labels > .label:hover > img {

@@ -1,0 +1,88 @@
+<form action="" method="POST">
+	<div class="form-horizontal">
+		<h4>Edit Insuree</h4>
+		<p class="text-danger">Do <strong>NOT</strong> enter <em>any</em> personal or sensitive information, this is a demo and data visibility is public!</p>
+		<hr />
+		<input name="Id" type="hidden" value="{?:Id}" />
+		<div class="form-group">
+			<label for="FirstName">First Name</label>
+			<div class="col-md-10">
+				<input name="FirstName" type="text" value="{?:FirstName}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="LastName">Last Name</label>
+			<div class="col-md-10">
+				<input name="LastName" type="text" value="{?:LastName}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="EmailAddress">Email Address</label>
+			<div class="col-md-10">
+				<input name="EmailAddress" type="email" value="{?:EmailAddress}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="DateOfBirth">Date of Birth (DOB)</label>
+			<div class="col-md-10">
+				<input name="DateOfBirth" type="date" value="{?:DateOfBirth}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="CarYear">Car Year</label>
+			<div class="col-md-10">
+				<input name="CarYear" type="number" value="{?:CarYear}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="CarMake">Car Make</label>
+			<div class="col-md-10">
+				<input name="CarMake" type="text" value="{?:CarMake}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="CarModel">Car Model</label>
+			<div class="col-md-10">
+				<input name="CarModel" type="text" value="{?:CarModel}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="HasDUI">Has DUI</label>
+			<div class="col-md-10">
+				<input name="HasDUI" type="checkbox" value="{?:HasDUI}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="SpeedingTickets">Speeding Tickets</label>
+			<div class="col-md-10">
+				<input name="SpeedingTickets" type="number" value="{?:SpeedingTickets}" />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="IsFullCoverage">Is Full Coverage </label>
+			<div class="col-md-10">
+				<div class="checkbox">
+					<input name="IsFullCoverage" type="checkbox" value="{?:IsFullCoverage}" />
+				</div>
+			</div>
+		</div>
+
+		<!-- Req 517.2: Remove quote field -->
+
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<input type="submit" value="Save" class="btn btn-primary" />
+				<a href="./demo" class="btn btn-secondary">Back to List</a>
+			</div>
+		</div>
+	</div>
+</form>

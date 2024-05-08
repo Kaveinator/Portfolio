@@ -60,7 +60,7 @@ namespace WebServer.Http {
             return content;
         }
 
-        public static string Get(string path, Dictionary<string, string> parameters = null, bool keepParameterNamesIfKeyNotFound = false) {
+        public static string Get(string path, Dictionary<string, object>? parameters = null, bool keepParameterNamesIfKeyNotFound = false) {
             StreamReader reader = GetStream(path);
             if (reader == null)
                 return string.Empty;
@@ -73,7 +73,7 @@ namespace WebServer.Http {
                     foreach (string key in parameters.Keys) {
                         string keyString = $"{{?:{key}}}";
                         if (line.IndexOf(keyString) != -1)
-                            line = line.Replace(keyString, parameters[key]);
+                            line = line.Replace(keyString, parameters[key]?.ToString() ?? string.Empty);
                     }
                     result.Append(line);
                 }
@@ -113,28 +113,28 @@ namespace WebServer.Http {
         }
         */
 
-        public static string Process(string file, bool keepModelTagsIfModelNotFound = false) {
+        public static string Process(string fileContents, bool keepModelTagsIfModelNotFound = false) {
             // Find all model tags
             string startTag = "<model",
                    endTag = "</model>",
                    attrName = "src=\"";
             int startIndex = 0;
             
-            while ((startIndex = file.IndexOf(startTag, startIndex)) != -1) {
+            while ((startIndex = fileContents.IndexOf(startTag, startIndex)) != -1) {
                 // Essentially replaces all tags of type <model src=""></model> with a model, without parameters
                 int attributeStartIndex = startIndex, // |<model...
-                    endIndex = file.IndexOf(endTag, startIndex) + endTag.Length, // ...</model>|
-                    srcAttributeStartIndex = file.IndexOf(attrName, attributeStartIndex, endIndex - startIndex) + attrName.Length, // <model ... src="| ... </model>
-                    srcAttributeEndIndex = file.IndexOf("\"", srcAttributeStartIndex, endIndex - srcAttributeStartIndex); // <model ... src=" ... |" ... </model>
+                    endIndex = fileContents.IndexOf(endTag, startIndex) + endTag.Length, // ...</model>|
+                    srcAttributeStartIndex = fileContents.IndexOf(attrName, attributeStartIndex, endIndex - startIndex) + attrName.Length, // <model ... src="| ... </model>
+                    srcAttributeEndIndex = fileContents.IndexOf("\"", srcAttributeStartIndex, endIndex - srcAttributeStartIndex); // <model ... src=" ... |" ... </model>
 
-                string modelPath = file.Substring(srcAttributeStartIndex, srcAttributeEndIndex - srcAttributeStartIndex);
+                string modelPath = fileContents.Substring(srcAttributeStartIndex, srcAttributeEndIndex - srcAttributeStartIndex);
                 if (TryGet(modelPath, out string modelContent))
-                    file = file.Substring(0, startIndex) + modelContent + file.Substring(endIndex);
+                    fileContents = fileContents.Substring(0, startIndex) + modelContent + fileContents.Substring(endIndex);
                 else if (!keepModelTagsIfModelNotFound)
-                    file = file.Substring(0, startIndex) + file.Substring(endIndex);
+                    fileContents = fileContents.Substring(0, startIndex) + fileContents.Substring(endIndex);
                 else startIndex = endIndex;
             }
-            return file;
+            return fileContents;
         }
     }
 }

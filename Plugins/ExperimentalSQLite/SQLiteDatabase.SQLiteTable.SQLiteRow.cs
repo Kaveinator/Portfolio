@@ -23,7 +23,7 @@ namespace ExperimentalSQLite {
                 /// <summary>Push/commit the changes to DB. you'll need to override this method if you have more than one primary key or if you have no primary/unique keys</summary>
                 /// <returns>The row with the updated primary key if it was inserted</returns>
                 /// <exception cref="InvalidOperationException">Thrown when no primary/unique keys are found</exception>
-                public virtual TRow Push()  {
+                public virtual TRow Push() {
                     IEnumerable<IDbCell> schema = Fields;
 
                     // Filter out auto-increment primary key cells and unique key cells
@@ -112,11 +112,12 @@ namespace ExperimentalSQLite {
 
                         foreach (IDbCell cell in dirtyCells) {
                             string cachedParamName = $"@{cell.ColumnName}";
-                            setClause += $" `{cell.ColumnName}` = {cachedParamName}";
+                            setClause += $" `{cell.ColumnName}` = {cachedParamName},";
                             parameters.Add(new SQLiteParameter(cachedParamName, cell.DataType) {
                                 Value = cell.Value
                             });
                         }
+                        setClause = setClause.TrimEnd(',');
 
                         using (SQLiteCommand cmd = new SQLiteCommand(
                             $"UPDATE `{Table.TableName}` SET{setClause} WHERE{whereClause};",
@@ -126,7 +127,8 @@ namespace ExperimentalSQLite {
 
                             // Execute the update command
                             int rowsAffected = cmd.ExecuteNonQuery();
-                            Console.WriteLine($"Row updated. Rows affected: {rowsAffected}");
+                            Table.Database.OnLog(new SQLog($"Row updated. Rows affected: {rowsAffected}"));
+                            //Console.WriteLine($"Row updated. Rows affected: {rowsAffected}");
                             foreach (IDbCell cell in dirtyCells)
                                 cell.OnSaved(); // Will reset cached values
                         }
