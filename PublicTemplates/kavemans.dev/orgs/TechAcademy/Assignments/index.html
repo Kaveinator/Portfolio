@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
 		<meta charset="UTF-8">
-		<title>ServerLocalTimeMVC - Tech Academy</title>
+		<title>Assignments - Tech Academy</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/src/styles/framework.css" type="text/css" rel="stylesheet" />
     <link href="/src/styles/common.css" type="text/css" rel="stylesheet" />
@@ -14,59 +14,47 @@
   <body>
     <model src="kavemans.dev/header.html"></model>
     <div class="contentWrapper">
-      <main id="simpleParallaxEffect" class="centerize" style="--background-image: url('/orgs/TechAcademy/ServerLocalTimeMVC/Preview960x540.png'); --background-y-anchor: 40%;">
+      <main id="simpleParallaxEffect" class="centerize" style="--background-image: url('/orgs/TechAcademy/Assignments/Preview1920x1200.png'); --background-y-anchor: 25%;">
         <div class="intro dynamicMargin" style="--background-image: url('/src/images/TechAcademy/Logo.webp');">
-          <span>Server Local Time MVC</span>
+          <span>Assignments</span>
           <span class="linksBox centerize">
-            <a href="./ServerLocalTimeMVC/demo">Live Demo</a>
-            <a href="https://github.com/Kaveinator/Tech-Academy-CSharp-Projects/tree/main/Assignments/ServerLocalTimeMVC" target="_blank" style='--icon: "\f09b";'>Source Code</a>
+            <a href="https://github.com/Kaveinator/Tech-Academy-CSharp-Projects/tree/master/Assignments/Assignments" target="_blank" style='--icon: "\f09b";'>Source Code</a>
+            <span style="display: block; width: 100%;">A program I built while at Tech Academy aimed at helping instructors grade</span>
           </span>
         </div>
       </main>
       <div class="container showBorder centerize" style="margin-bottom: 0;">
         <div class="dynamicMargin">
-          <a href="/">Home</a> / <a href="/projects">Projects</a> / <a href="/orgs/TechAcademy">Tech Academy</a> / Server Local Time MVC
+          <a href="/">Home</a> / <a href="/projects">Projects</a> / <a href="/orgs/TechAcademy">Tech Academy</a> / Assignments
         </div>
       </div>
       <div class="container centerize">
         <h2>Overview<span>The motive behind this project</span></h2>
         <div class="dynamicMargin">
-          This was a project to publish a .NET Core MVC Application onto the Azure Cloud. The application within itself was not complicated, it consisted of a single page showing the local server's time in the center of the screen, you also got a visit counter/metric.
+          I made this project when I got frustrated having to create a new project per assignment.
+          From my perspective <em>(as a student)</em> it be a more practical to grade assignment when they were in a single C# project instead of switching between projects to evaluate each assignment.
+          <p>
+            Each assignment is a class that must inherit <kbd>IAssignment</kbd>, and define its StepId and Name. Once the user wants to test an assignment, <kbd>Invoke()</kbd> is called to run the assignment
+          </p>
+          <p>
+            I made this program from a students perspective, what seems practical in my sense did not seem practical from a instructors viewpoint. I reverted to making separate projects per assignment, but I assume the instructors had an automated method for testing and in this context it was impractical to use an application with non-constant indexes (since the latest assignment would become the first assignment in the listing, bumping all other assignments lower)
+          </p>
         </div>
       </div>
       <div id="projects" class="container centerize hr">
         <h2>Technologies Used<span>What engines, frameworks and tools were used</span></h2>
         <div class="row dynamicMargin">
-          <img src="/src/sprites/langs/html.png" />
-          <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/HTML">Hypertext Markup Language (HTML)</a>
-          <span>
-            HTML is used to define the general hierarchy and relationships between elements on a webpage.
-            HTML itself, usually doesn't look very presentable and looks like a something you'd find in the 90s, so you'll need to use CSS to add color.
-          </span>
-        </div>
-        <div class="row dynamicMargin">
-          <img src="/src/sprites/langs/css.png" />
-          <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS">Cascading Style Sheets (CSS)</a>
-          <span>
-            CSS is used in combination with HTML, it is used to "paint" the canvas that was built with HTML.
-            However, CSS is not a programming language and does not provide any programmable functionality.
-          </span>
-        </div>
-        <div class="row dynamicMargin">
           <img src="/src/sprites/langs/csharp.png" />
-          <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript">CSharp</a>
+          <a target="_blank" href="https://dotnet.microsoft.com/en-us/languages/csharp">C# Programming Language</a>
           <span>
             C# <em>(pronounced Sea-Sharp)</em> is an <a href="https://www.techtarget.com/searchapparchitecture/definition/object-oriented-programming-OOP" target="_blank">Object Oriented Programming <em>(OOP)</em></a> language that was developed by Microsoft in 1999.
-            The Unity3D engine can be programmed using C# targetting .NET Framework 4.7.2.
-            In this project, used C# along with ASP.NET to make a dynamic page. 
           </span>
-          <p style="padding-bottom:0;">I used Javascript to ..</p>
+          <p style="padding-bottom:0;">I utilized C# in this project by writing ..</p>
           <ul style="margin-top:0;">
-            <li>.. listen for button presses on the virtual calculator</li>
-            <li>.. process buttons that were pressed and update the display</li>
-            <li>.. perform basic arithmetic on the given numbers (add/subtract/multiply/divide)</li>
+            <li>.. an interface that you can interact and launch individual assignments</li>
+            <li>.. creating a Blackjack game controller, player and dealer (which is also a player)</li>
+            <li>.. wrote a Console Extension allowing to read Enums and Numerals from the console <em>with</em> validation</li>
           </ul>
-          <em>Note: The code that was used for the </em>
         </div>
         <div class="row dynamicMargin">
           <img src="/src/sprites/langs/github.png" />
@@ -75,7 +63,7 @@
             Git is a Version Control System (VCS), which is used to track changes to a codebase over time.
             GitHub is a centralized service owned by Microsoft that lets developers easily collaborate with each other.
             This project pushed changed to a central repository where I kept C# Projects. It is public, so you can see the source code
-            <a href="https://github.com/Kaveinator/Tech-Academy-CSharp-Projects/tree/main/Assignments/ServerLocalTimeMVC" target="_blank">here</a>.  
+            <a href="https://github.com/Kaveinator/Tech-Academy-CSharp-Projects/tree/master/Assignments/Assignments" target="_blank">here</a>.  
           </span>
         </div>
       </div>

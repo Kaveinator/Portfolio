@@ -135,7 +135,13 @@ a {
     color: #00baff;
 }
 
-a:hover {
+a[disabled] {
+    color: #cacaca;
+    cursor: text;
+    pointer-events: none;
+}
+
+a:not([disabled]):hover {
     text-decoration: underline;
 }
 

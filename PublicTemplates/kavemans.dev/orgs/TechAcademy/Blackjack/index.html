@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+		<meta charset="UTF-8">
+		<title>Blackjack - Tech Academy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/src/styles/framework.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/common.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/main.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/orgOverrides.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/projectOverrides.css" type="text/css" rel="stylesheet" />
+    <model src="kavemans.dev/FontAwesome"></model>
+  </head>
+  <body>
+    <model src="kavemans.dev/header.html"></model>
+    <div class="contentWrapper">
+      <main id="simpleParallaxEffect" class="centerize" style="--background-image: url('/orgs/TechAcademy/Blackjack/Preview1920x1200.png'); --background-y-anchor: 35%;">
+        <div class="intro dynamicMargin" style="--background-image: url('/src/images/TechAcademy/Logo.webp');">
+          <span>Blackjack</span>
+          <span class="linksBox centerize">
+            <a href="https://github.com/Kaveinator/Tech-Academy-CSharp-Projects/tree/master/Assignments/Blackjack" target="_blank" style='--icon: "\f09b";'>Source Code</a>
+            <span style="display: block; width: 100%;">A classic game of 21, where your goal is to get cards totaling up to - but not over - the sum of 21. This was built in a console application.</span>
+          </span>
+        </div>
+      </main>
+      <div class="container showBorder centerize" style="margin-bottom: 0;">
+        <div class="dynamicMargin">
+          <a href="/">Home</a> / <a href="/projects">Projects</a> / <a href="/orgs/TechAcademy">Tech Academy</a> / Blackjack
+        </div>
+      </div>
+      <div class="container centerize">
+        <h2>Overview<span>The motive behind this project</span></h2>
+        <div class="dynamicMargin">
+          Initially the app is in a main menu state, asking for your name and what balance you want to start off with. Since we didn't implement any other game it creates a round of Blackjack, every player is then asked to hit or stay. The player with the highest hand that is not over 21 wins
+          <ul>
+            <li><strong>Abstract Player Implementation</strong> - There are multiple layers of abstraction, from the base Player class that is tied to each Game<T1, T2> object. This lets the BlackjackDealer also be a Blackjack player and able to hit/stay without extra logic in the core game itself</li>
+            <li><strong>Input Validation</strong> - Players can interact with the game through a simple text-based interface, which has support to parse any value from a bool to a enum with a custom ReadNumeral<T> extension</li>
+            <li><strong>Card Handling</strong> - The game simulates a standard deck of 52 playing cards, with functionalities for shuffling and dealing cards to players and the dealer</li>
+            <li><strong>Scoring System</strong> - The game is aware of the Ace card that can either be a one or eleven</li>
+            <li><strong>Error Prevention</strong> - Basic error handling ensures that the game gracefully handles invalid user input and other unexpected situations through TryDraw(out) methods, which also helps nested try/catches and makes handling much easier</li>
+            <li><strong>Error Handling</strong> - In the event of an error, the application self-reports exceptions (including unhandled/uncaught) onto a SQL Server via ADO.NET</li>
+          </ul>
+        </div>
+      </div>
+      <div id="projects" class="container centerize hr">
+        <h2>Technologies Used<span>What engines, frameworks and tools were used</span></h2>
+        <div class="row dynamicMargin">
+          <img src="/src/sprites/langs/csharp.png" />
+          <a target="_blank" href="https://dotnet.microsoft.com/en-us/languages/csharp">C# Programming Language</a>
+          <span>
+            C# <em>(pronounced Sea-Sharp)</em> is an <a href="https://www.techtarget.com/searchapparchitecture/definition/object-oriented-programming-OOP" target="_blank">Object Oriented Programming <em>(OOP)</em></a> language that was developed by Microsoft in 1999.
+          </span>
+          <p style="padding-bottom:0;">I utilized C# in this project by writing ..</p>
+          <ul style="margin-top:0;">
+            <li>.. creating abstract game, player and dealer classes</li>
+            <li>.. creating a Blackjack game controller, player and dealer (which is also a player)</li>
+            <li>.. wrote a Console Extension allowing to read Enums and Numerals from the console <em>with</em> validation</li>
+          </ul>
+        </div>
+        <div class="row dynamicMargin">
+          <img src="/src/sprites/langs/github.png" />
+          <a target="_blank" href="https://github.com">GitHub (Version Control)</a>
+          <span>
+            Git is a Version Control System (VCS), which is used to track changes to a codebase over time.
+            GitHub is a centralized service owned by Microsoft that lets developers easily collaborate with each other.
+            This project pushed changed to a central repository where I kept C# Projects. It is public, so you can see the source code
+            <a href="https://github.com/Kaveinator/Tech-Academy-CSharp-Projects/tree/master/Assignments/Blackjack" target="_blank">here</a>.  
+          </span>
+        </div>
+      </div>
+    </div>
+    <model src="kavemans.dev/footer.html"></model>
+    <script src="/src/scripts/KeyFirePlugin.js"></script>
+    <script defer>
+      var fixedDeltaTime = 1000 / 60; // 1000ms (1sec) / 60 (fps)
+      var simpleParallaxEffect = setInterval(
+        () => Object3DTransform("simpleParallaxEffect", 0, 0, -100, "calc(var(--background-y-anchor) - {0}"),
+        fixedDeltaTime
+      );
+    </script>
+  </body>
+</html>

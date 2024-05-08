@@ -14,12 +14,12 @@
   <body>
     <model src="kavemans.dev/header.html"></model>
     <div class="contentWrapper">
-      <main id="simpleParallaxEffect" class="centerize" style="--background-image: url('/src/images/generic/background11.jpg'); --background-y-anchor: 40%;">
+      <main id="simpleParallaxEffect" class="centerize" style="--background-image: url('/orgs/TechAcademy/Todo/Preview1920x1200.png'); --background-y-anchor: 25%;">
         <div class="intro dynamicMargin" style="--background-image: url('/src/images/TechAcademy/Logo.webp');">
           <span>Todo App</span>
           <span class="linksBox centerize">
             <a href="./Todo/demo">Live Demo</a>
-            <a href="https://github.com/Kaveinator/Tech-Academy-Projects/tree/main/5Javascript/BasicJavascriptProjects/Project11TicTacToe" target="_blank" style='--icon: "\f09b";'>Source Code</a>
+            <a href="https://github.com/Kaveinator/Tech-Academy-Projects/tree/main/5Javascript/BasicJavascriptProjects/Project17TodoApp" target="_blank" style='--icon: "\f09b";'>Source Code</a>
             <span style="display: block;">A web app to keep track of things you need to do, also shows how long it took to complete a task</span>
           </span>
         </div>
@@ -32,7 +32,16 @@
       <div class="container centerize">
         <h2>Overview<span>The motive behind this project</span></h2>
         <div class="dynamicMargin">
-          Needs Content
+          This project focused more on states, you can create, modify, start, pause, close and reopen tasks.
+          The point of this project was to learn how to store persistent states in the browser.
+          Generally, browsers do not store information about the site state when you restart.
+          You can store persistent data in the browser by using the browsers <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage">Local Storage</a> which
+          allows information to be stored in the browser instead of a server.
+          There are a few things I would fix if I was going to reimplement or update this page.
+          Some browsers pause execution of scripts on tabs that are inactive, this causes the stopwatch to not be reliable since events are not getting fired.
+          Another issue is with how I store data, I store the time elapsed, but if you have a task "ongoing" its timer wouldn't be counting, since that relied on
+          the stopwatch events which are not available when the site is closed. A more reliable approch, would be to store the datetime of the last recorded state
+          and time elapsed so that it can fast forward and update the time after you load the page.  
         </div>
       </div>
       <div id="projects" class="container centerize hr">
@@ -68,6 +77,16 @@
             <li>.. save and recall the tasks with their states</li>
             <li>.. ability to add/edit/delete/modify tasks</li>
           </ul>
+        </div>
+        <div class="row dynamicMargin">
+          <img src="/src/sprites/langs/github.png" />
+          <a target="_blank" href="https://github.com">GitHub (Version Control)</a>
+          <span>
+            Git is a Version Control System (VCS), which is used to track changes to a codebase over time.
+            GitHub is a centralized service owned by Microsoft that lets developers easily collaborate with each other.
+            This project pushed changed to a central repository where I kept C# Projects. It is public, so you can see the source code
+            <a href="https://github.com/Kaveinator/Tech-Academy-Projects/tree/main/5Javascript/BasicJavascriptProjects/Project17TodoApp" target="_blank">here</a>.  
+          </span>
         </div>
       </div>
     </div>
