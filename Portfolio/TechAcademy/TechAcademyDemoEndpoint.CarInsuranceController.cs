@@ -1,18 +1,15 @@
-using System.Net;
-using System.Web;
 using System.Collections.Specialized;
-using WebServer.Http;
-using SimpleJSON;
-using Portfolio.Commands;
-using System.Text.RegularExpressions;
-using System.Text;
-using System.Security.Cryptography;
-using ExperimentalSQLite;
 using System.Data;
-using System.Data.SQLite;
 using System.Data.Common;
+using System.Data.SQLite;
+using System.Text;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Web;
+using WebServer.Http;
+using ExperimentalSQLite;
 
-namespace Portfolio {
+namespace Portfolio.TechAcademy {
     internal partial class TechAcademyDemoEndpoint { // ServerLocalTimeController.cs
         class CarInsuranceController {
             public const string StandardPath = "/orgs/TechAcademy/CarInsuranceMVC";

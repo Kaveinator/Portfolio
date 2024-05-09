@@ -1,18 +1,14 @@
+using System.Collections.Specialized;
+using System.Data;
+using System.Data.Common;
+using System.Text.RegularExpressions;
+using System.Data.SQLite;
 using System.Net;
 using System.Web;
-using System.Collections.Specialized;
 using WebServer.Http;
-using SimpleJSON;
-using Portfolio.Commands;
-using System.Text.RegularExpressions;
-using System.Text;
-using System.Security.Cryptography;
 using ExperimentalSQLite;
-using System.Data;
-using System.Data.SQLite;
-using System.Data.Common;
 
-namespace Portfolio {
+namespace Portfolio.TechAcademy {
     internal partial class TechAcademyDemoEndpoint { // ServerLocalTimeController.cs
         class NewsLetterController {
             static NewsletterSubscriptionTable Table;

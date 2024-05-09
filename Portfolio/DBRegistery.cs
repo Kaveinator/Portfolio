@@ -11,7 +11,7 @@ using ExperimentalSQLite;
 namespace WebServer {
     public class DBRegistery<TDatabase, TTable, TRow, TValue> : SQLiteDatabase<TDatabase>.SQLiteTable<TTable, TRow>
         where TDatabase : SQLiteDatabase<TDatabase>
-        where TTable : DBRegistery<TDatabase, TTable, TRow, TValue>//SQLiteDatabase<TDatabase>.SQLiteTable<TTable, TRow>
+        where TTable : DBRegistery<TDatabase, TTable, TRow, TValue>
         where TRow : DBRegistery<TDatabase, TTable, TRow, TValue>.Row {
         protected DBRegistery(TDatabase db, string tableName) : base(db, tableName) { }
 

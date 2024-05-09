@@ -1,20 +1,12 @@
-using System.Net;
-using System.Web;
-using System.Collections.Specialized;
-using WebServer.Http;
-using SimpleJSON;
-using Portfolio.Commands;
-using System.Text.RegularExpressions;
-using System.Text;
-using System.Security.Cryptography;
-using WebServer;
-using ExperimentalSQLite;
 using System.Data;
 using System.Data.Common;
-using System.ComponentModel.DataAnnotations;
 using System.Data.SQLite;
+using System.Net;
+using WebServer;
+using WebServer.Http;
+using ExperimentalSQLite;
 
-namespace Portfolio {
+namespace Portfolio.TechAcademy {
     internal partial class TechAcademyDemoEndpoint { // ServerLocalTimeController.cs
         class ServerLocalTimeController {
             readonly TimestampsTable Registry;

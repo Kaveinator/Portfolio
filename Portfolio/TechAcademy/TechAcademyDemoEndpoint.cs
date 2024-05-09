@@ -1,15 +1,7 @@
-using System.Net;
-using System.Web;
-using System.Collections.Specialized;
 using WebServer.Http;
-using SimpleJSON;
-using Portfolio.Commands;
-using System.Text.RegularExpressions;
-using System.Text;
-using System.Security.Cryptography;
 using ExperimentalSQLite;
 
-namespace Portfolio {
+namespace Portfolio.TechAcademy {
     internal partial class TechAcademyDemoEndpoint : HttpEndpointHandler {
         public readonly TechAcademyDemoDatabase DemoDatabase;
         readonly ServerLocalTimeController ServerLocalTimeMVCDemo;

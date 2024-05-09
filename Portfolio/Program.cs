@@ -1,6 +1,7 @@
 ﻿using SimpleJSON;
-using WebServer.Http;
 using Portfolio.Commands;
+using WebServer.Http;
+using Portfolio.TechAcademy;
 
 namespace Portfolio {
     public enum Mode { Development, Production }
@@ -51,7 +52,6 @@ namespace Portfolio {
                 _ = EventLog.LaunchCommandfromInput(input);
             }
             EventLog.LaunchCommand<StopCommand>();
-
         }
 
         public static void UpdateTitle()
