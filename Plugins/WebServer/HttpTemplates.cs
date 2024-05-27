@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using WebServer.Models;
 using Portfolio;
 
 namespace WebServer.Http {
@@ -29,7 +30,8 @@ namespace WebServer.Http {
             return File.ReadAllText(path);
         }*/
 
-        public static bool TryGet(string path, out string result, Dictionary<string, object> parameters = null) {
+        public static bool TryGet(string path, out string result, IPageModel? pageModel = null) {
+            Dictionary<string, object>? parameters = pageModel?.Values;
             result = string.Empty;
             if (string.IsNullOrEmpty(path))
                 return false;
@@ -51,23 +53,27 @@ namespace WebServer.Http {
             return true;
         }
 
-        public static string Format(string content, Dictionary<string, object> parameters) {
-            foreach (string key in parameters.Keys) {
-                string keyString = $"{{?:{key}}}";
-                //if (result.IndexOf(keyString) != -1)
-                content = content.Replace(keyString, parameters[key].ToString());
+        public static string Format(string content, IPageModel? pageModel = null) {
+            Dictionary<string, object>? parameters = pageModel?.Values;
+            if (parameters != null) {
+                foreach (string key in parameters.Keys) {
+                    string keyString = $"{{?:{key}}}";
+                    //if (result.IndexOf(keyString) != -1)
+                    content = content.Replace(keyString, parameters[key].ToString());
+                }
             }
             return content;
         }
 
-        public static string Get(string path, Dictionary<string, object>? parameters = null, bool keepParameterNamesIfKeyNotFound = false) {
+        public static string Get(string path, IPageModel? pageModel = null) {
+            Dictionary<string, object>? parameters = pageModel?.Values;
             StreamReader reader = GetStream(path);
             if (reader == null)
                 return string.Empty;
 
             StringBuilder result = new StringBuilder();
             // Read line by line  
-            string line;
+            string? line;
             if (parameters != null && parameters.Count > 0) {
                 while ((line = reader.ReadLine()) != null) {
                     foreach (string key in parameters.Keys) {

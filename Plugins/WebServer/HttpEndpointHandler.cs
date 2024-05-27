@@ -1,4 +1,5 @@
 using System.Net;
+using WebServer.Models;
 
 namespace WebServer.Http {
     public abstract class HttpEndpointHandler {
@@ -10,14 +11,23 @@ namespace WebServer.Http {
             HttpServer = server;
         }
 
-        public HttpResponse GetGenericStatusPage(HttpStatusCode statusCode, Dictionary<string, object>? additionalParameters = null)
-            => HttpServer.GetGenericStatusPage(statusCode, additionalParameters, Host);
+        public HttpResponse GetGenericStatusPage(HttpStatusCode statusCode) => GetGenericStatusPage(new StatusPageModel(statusCode));
 
-        public string GetTemplate(string path, Dictionary<string, object>? parameters = null, bool keepParamNamesIfKeyNotFound = false)
-            => HttpTemplates.Get(Host + path, parameters, keepParamNamesIfKeyNotFound);
+        public HttpResponse GetGenericStatusPage(StatusPageModel statusModel)
+            => HttpServer.GetGenericStatusPage(statusModel, Host);
 
-        public bool TryGetTemplate(string path, out string content, Dictionary<string, object>? parameters = null)
-            => HttpTemplates.TryGet(Host + path, out content, parameters);
+        public string GetTemplate(string path, IPageModel pageModel)
+            => HttpTemplates.Get(Host + path, pageModel);
+
+        public bool TryGetTemplate(string path, out string content, out StatusPageModel statusModel, IPageModel? pageModel = null) {
+            path = Host + path;
+            bool success = HttpTemplates.TryGet(path, out content, pageModel);
+            statusModel = !success ? new(
+                HttpStatusCode.InternalServerError,
+                subtitle: $"The '{path}' View was not found"
+            ) : new StatusPageModel(HttpStatusCode.OK);
+            return success;
+        }
 
         public HttpServer AddEventCallback(string path, Func<HttpListenerRequest, Task<HttpResponse?>> callback)
             => HttpServer.AddEventCallback(BuildUri(path), callback);

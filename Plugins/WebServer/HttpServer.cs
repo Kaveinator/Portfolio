@@ -11,6 +11,7 @@ using Timer = System.Timers.Timer;
 using System.Reflection;
 using System.Reflection.Metadata;
 using Portfolio;
+using WebServer.Models;
 
 namespace WebServer.Http {
     /* Notes
@@ -208,7 +209,7 @@ namespace WebServer.Http {
                                 additionalParams.Add("Subtitle", $"{ex.Message}<br />{ex.StackTrace.Replace("\n", "<br />")}");
                             }
                             methodUsed = Type.GetMethod(nameof(GetGenericStatusPage));
-                            response = GetGenericStatusPage(HttpStatusCode.InternalServerError, additionalParams, host, DefaultDomain);
+                            response = GetGenericStatusPage(new StatusPageModel(HttpStatusCode.InternalServerError), host);
                         }
 
                     }
@@ -337,7 +338,7 @@ namespace WebServer.Http {
                         return resource;
                     }
                 }
-                return GetGenericStatusPage(Directory.Exists(filePath) ? HttpStatusCode.Forbidden : HttpStatusCode.NotFound, host: request.Url.Host, defaultHost: DefaultDomain);
+                return GetGenericStatusPage(new StatusPageModel(Directory.Exists(filePath) ? HttpStatusCode.Forbidden : HttpStatusCode.NotFound), host: request.Url.Host);
             }/*
             else if (Directory.Exists(filePath = Path.Combine(filePath, "..")) && filePath.Contains(basePath)) {
                 foreach (string filler in UriFillers) {
@@ -355,7 +356,7 @@ namespace WebServer.Http {
                 }
                 //return GetGenericStatusPage(HttpStatusCode.Forbidden, host: request.Url.Host, defaultHost: DefaultDomainName);
             }*/
-            return GetGenericStatusPage(HttpStatusCode.NotFound, host: request.Url.Host, defaultHost: DefaultDomain);
+            return GetGenericStatusPage(new StatusPageModel(HttpStatusCode.NotFound), host: request.Url.Host);
         }
 
         public HttpResponse ShowIndexOf(string directoryPath) {
@@ -369,43 +370,14 @@ namespace WebServer.Http {
             return true;
         }
 
-        public Dictionary<HttpStatusCode, Tuple<string, string>> GenericStatus = new Dictionary<HttpStatusCode, Tuple<string, string>>() {
-            { HttpStatusCode.OK, new Tuple<string, string>("OK", "The request succeeded") },
-            { HttpStatusCode.BadRequest, new Tuple<string, string>("Bad Request", "The server cannot or will not process the request due to something that is perceived to be a client error") },
-            { HttpStatusCode.Unauthorized, new Tuple<string, string>("Unauthorized", "Authorization Required") },
-            { HttpStatusCode.Forbidden, new Tuple<string, string>("Forbidden", "Access to this resource has been revoked") },
-            { HttpStatusCode.NotFound, new Tuple<string, string>("Not Found", "Object or Resource not Found") },
-            { HttpStatusCode.PreconditionFailed, new Tuple<string, string>("Precondition Failed!", "The server has indicated preconditions which the client does not meet") },
-            { HttpStatusCode.InternalServerError, new Tuple<string, string>("Internal Server Error", "The server has encountered a situation it does not know how to handle") },
-            { HttpStatusCode.NotImplemented, new Tuple<string, string>("Not Implemented", "he server has encountered a situation it does not know how to handle.") },
-            { HttpStatusCode.ServiceUnavailable, new Tuple<string, string>("Service Unavailable", "The server is not ready to handle the request") }
-        };
-        public HttpResponse GetGenericStatusPage(HttpStatusCode statusCode, Dictionary<string, object> additionalParameters = null, string host = null, string defaultHost = null) {
-            string title = statusCode.ToString(),
-                subTitle = "Great! Something happened, not sure what though";
-
-            if (GenericStatus.ContainsKey(statusCode)) {
-                Tuple<string, string> tuple = GenericStatus[statusCode];
-                title = tuple.Item1;
-                subTitle = tuple.Item2;
-            }
-
-            if (additionalParameters == null)
-                additionalParameters = new Dictionary<string, object>();
-            if (!additionalParameters.ContainsKey("StatusCode"))
-                additionalParameters.Add("StatusCode", $"{(int)statusCode}");
-            if (!additionalParameters.ContainsKey("Title"))
-                additionalParameters.Add("Title", title);
-            if (!additionalParameters.ContainsKey("Subtitle"))
-                additionalParameters.Add("Subtitle", subTitle);
-
-            if (!(HttpTemplates.TryGet($"{host}/ErrorPage.html", out string result, additionalParameters) ||
-                HttpTemplates.TryGet($"{defaultHost}/ErrorPage.html", out result, additionalParameters) ||
-                HttpTemplates.TryGet($"Generic/ErrorPage.html", out result, additionalParameters)))
-                result = HttpTemplates.Format("{?:StatusCode} {?:Title}: {?:Subtitle}", additionalParameters);
+        public HttpResponse GetGenericStatusPage(StatusPageModel pageModel, string? host = null) {
+            if (!((host != null && HttpTemplates.TryGet($"{host}/ErrorPage.html", out string result, pageModel)) ||
+                HttpTemplates.TryGet($"{DefaultDomain}/ErrorPage.html", out result, pageModel) ||
+                HttpTemplates.TryGet($"Generic/ErrorPage.html", out result, pageModel)))
+                result = HttpTemplates.Format("{?:StatusCode} {?:Title}: {?:Subtitle}", pageModel);
 
             return new HttpResponse() {
-                StatusCode = statusCode,
+                StatusCode = pageModel.StatusCode,
                 MimeString = MimeTypeMap.GetMimeType(".html"),
                 ContentString = result
             };
