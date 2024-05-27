@@ -49,6 +49,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MarkDig" Version="0.37.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
   </ItemGroup>
 </Project>
