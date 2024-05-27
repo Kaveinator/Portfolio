@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,12 +85,7 @@ namespace ExperimentalSQLite {
             }
         }
 
-        public TTable RegisterTable<TTable, TRow>(Func<TTable> tableInitilizer)
-            where TTable : SQLiteTable<TTable, TRow>
-            where TRow : SQLiteTable<TTable, TRow>.SQLiteRow, new()
-            => RegisterTable<TTable, TRow>(tableInitilizer, () => new TRow());
-
-        public TTable RegisterTable<TTable, TRow>(Func<TTable> tableInitilizer, Func<TRow> schemaConstructor)
+        public TTable RegisterTable<TTable, TRow>(Func<TTable> tableInitilizer, Func<TRow>? schemaConstructor = null)
             where TTable : SQLiteTable<TTable, TRow>
             where TRow : SQLiteTable<TTable, TRow>.SQLiteRow
         {
@@ -100,18 +96,22 @@ namespace ExperimentalSQLite {
             ITable? cachedTable = RegistedTables.FirstOrDefault(otherTable => table.TableName == otherTable?.TableName, null);
             if (cachedTable != null)
                 throw new Exception($"Failed to register table '{table.TableName}'. Another table with that name was already registed with that name. [ table: {typeof(TTable).FullName}; cachedTable: {cachedTable.GetType().FullName} ]");
-            TRow schema = table.Schema = schemaConstructor();
+            TRow schema = table.Schema = schemaConstructor?.Invoke() ?? table.ConstructRow();
             if (!TableExists(table.TableName)) {
                 string cmdText = $"CREATE TABLE IF NOT EXISTS `{table.TableName}` (";
                 
                 // Construct the table schema
+                StringBuilder foreignCellClause = new StringBuilder();
                 foreach (IDbCell cell in schema.Fields) {
                     cmdText += $"`{cell.ColumnName}` {cell.DataType.GetDbTypeAsString()}";
-                    cmdText += (cell.Constraints.HasFlag(DbCellFlags.PrimaryKey) ? " PRIMARY KEY" : "");
-                    cmdText += (cell.Constraints.HasFlag(DbCellFlags.UniqueKey) ? " UNIQUE" : "");
-                    cmdText += (cell.Constraints.HasFlag(DbCellFlags.NotNull) ? " NOT NULL" : "");
+                    cmdText += cell.Constraints.HasFlag(DbCellFlags.PrimaryKey) ? " PRIMARY KEY" : "";
+                    cmdText += cell.Constraints.HasFlag(DbCellFlags.UniqueKey) ? " UNIQUE" : "";
+                    cmdText += cell.Constraints.HasFlag(DbCellFlags.NotNull) ? " NOT NULL" : "";
                     cmdText += ",";
+                    if (cell is IDbForeignCell foreignCell)
+                        foreignCellClause.Append($"FOREIGN KEY (`{cell.ColumnName}`) REFERENCES `{foreignCell.ForeignTableRefrence.TableName}`(`{foreignCell.ForeignCellRefrence.ColumnName}`),");
                 }
+                cmdText += foreignCellClause;
                 cmdText = cmdText.TrimEnd(',') + ");";
 
                 using (SQLiteCommand cmd = new SQLiteCommand(cmdText, Connection)) {
@@ -123,7 +123,6 @@ namespace ExperimentalSQLite {
             RegistedTables.Add(table);
             return table;
         }
-
         #endregion
     }
 }

@@ -45,6 +45,8 @@ namespace Portfolio.TechAcademy {
                 public TimestampsTable(TechAcademyDemoDatabase db)
                     : base(db, "ServerLocalTimeRegistry") { }
 
+                public override RecordedTimestamp ConstructRow() => new RecordedTimestamp(this);
+
                 public long GetCount() {
                     using SQLiteCommand command = new SQLiteCommand($"SELECT COUNT(1) FROM `{TableName}`", Database.Connection);
                     return (long)command.ExecuteScalar();
@@ -63,6 +65,8 @@ namespace Portfolio.TechAcademy {
             }
             class Int64Registry : DBRegistery<TechAcademyDemoDatabase, Int64Registry, RegistryField, long> {
                 public Int64Registry(TechAcademyDemoDatabase db) : base(db, "ServerLocalTimeRegistry") { }
+
+                public override RegistryField ConstructRow() => new RegistryField(this);
             }
             class RegistryField : Int64Registry.Row {
                 public RegistryField(Int64Registry table, string key) : base(table,

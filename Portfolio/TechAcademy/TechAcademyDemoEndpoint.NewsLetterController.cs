@@ -122,6 +122,8 @@ namespace Portfolio.TechAcademy {
             public class NewsletterSubscriptionTable : TechAcademyDemoDatabase.SQLiteTable<NewsletterSubscriptionTable, NewsletterSubscription> {
                 public NewsletterSubscriptionTable(TechAcademyDemoDatabase db) : base(db, nameof(NewsletterSubscriptionTable)) { }
 
+                public override NewsletterSubscription ConstructRow() => new NewsletterSubscription(this);
+
                 public async Task<IEnumerable<NewsletterSubscription>> GetAllAsync() {
                     Queue<NewsletterSubscription> queue = new Queue<NewsletterSubscription>();
                     var dummy = new NewsletterSubscription();

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
+using System.Data.SQLite;
+using Markdig.Extensions.Tables;
 
 namespace ExperimentalSQLite {
     public interface IDbCell {
@@ -12,6 +15,7 @@ namespace ExperimentalSQLite {
 
         void OnSaved();
         void SetValue(object value);
+        void FromReader(DbDataReader reader);
     }
     public class DbCell<TValue> : IDbCell {
         #region IDbCell Implementation
@@ -38,6 +42,13 @@ namespace ExperimentalSQLite {
             DataType = type;
             CachedValue = Value = defaultValue;
             Constraints = constraints;
+        }
+
+        public virtual void FromReader(DbDataReader reader) {
+            int ordinal = reader.GetOrdinal(ColumnName);
+            if (!reader.IsDBNull(ordinal)) {
+                Value = (TValue)reader.GetValue(ordinal);
+            }
         }
 
         public static implicit operator TValue(DbCell<TValue> cell) => cell.Value;
@@ -81,5 +92,22 @@ namespace ExperimentalSQLite {
         public DbPrimaryCell(string name = "Id", bool autoIncrement = true) 
             : base(name, DbType.Int64, -1L, autoIncrement ? PrimaryAutoFlags : PrimaryBaseFlags) 
             { }
+    }
+    public interface IDbForeignCell : IDbCell {
+        ITable ForeignTableRefrence { get; }
+        IDbCell ForeignCellRefrence { get; }
+    }
+    public class DbForeignCell<TValue> : DbCell<TValue>, IDbForeignCell {
+        public readonly DbCell<TValue> Refrence;
+        public readonly ITable TableRefrence;
+        IDbCell IDbForeignCell.ForeignCellRefrence => Refrence;
+        ITable IDbForeignCell.ForeignTableRefrence => TableRefrence;
+
+        public DbForeignCell(string name, ITable table, DbCell<TValue> schemaRefrence, TValue? defaultValue = default, DbCellFlags constraints = DbCellFlags.None) 
+            : base(name, schemaRefrence.DataType, defaultValue, constraints)
+        {
+            TableRefrence = table;
+            Refrence = schemaRefrence;
+        }
     }
 }

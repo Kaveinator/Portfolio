@@ -10,9 +10,6 @@ using System.Web;
 using WebServer.Http;
 using ExperimentalSQLite;
 using WebServer.Models;
-using System.Configuration;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using Markdig.Renderers;
 
 namespace Portfolio.TechAcademy {
     internal partial class TechAcademyDemoEndpoint { // ServerLocalTimeController.cs
@@ -197,6 +194,8 @@ namespace Portfolio.TechAcademy {
                     }
                     return null;
                 }
+
+                public override Insuree ConstructRow() => new Insuree(this);
             }
             public class Insuree : InsuranceEntities.SQLiteRow, IPageModel {
                 public override IEnumerable<IDbCell> Fields => new IDbCell[] {

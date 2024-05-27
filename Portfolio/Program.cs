@@ -2,6 +2,7 @@
 using Portfolio.Commands;
 using WebServer.Http;
 using Portfolio.TechAcademy;
+using ExperimentalSQLite;
 
 namespace Portfolio {
     public enum Mode { Development, Production }
