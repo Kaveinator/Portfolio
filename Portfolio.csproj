@@ -41,11 +41,6 @@
     <Compile Remove="Static\**" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Data.SQLite">
-      <HintPath>_Dependancies\System.Data.SQLite.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <None Update="Data\PortfolioDatabase.db3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -55,5 +50,8 @@
     <None Update="SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
   </ItemGroup>
 </Project>
