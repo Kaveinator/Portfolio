@@ -7,5 +7,8 @@ namespace System {
                 if (item?.Equals(obj) ?? false) return true;
             return false;
         }
+
+        public static bool HasAnyFlags<T>(this T obj, params T[] array) where T : Enum
+            => array.Any(flag => obj.HasFlag(flag));
     }
 }
