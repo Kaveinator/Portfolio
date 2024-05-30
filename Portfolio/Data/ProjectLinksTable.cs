@@ -9,9 +9,14 @@ namespace Portfolio.Projects {
     }
     
     public class ProjectLinkInfo : ProjectLinksTable.Row {
-        public override IEnumerable<IDbCell> Fields => new List<IDbCell>(base.Fields) { IsLiveDemo };
+        public override IEnumerable<IDbCell> Fields => base.Fields.Include(ProjectId, IsLiveDemo);
+
+        public readonly DbForeignCell<long> ProjectId;
         public readonly DbCell<bool> IsLiveDemo = new DbCell<bool>(nameof(IsLiveDemo), DbType.Boolean, false, DbCellFlags.NotNull);
 
-        public ProjectLinkInfo(ProjectLinksTable table) : base(table) { }
+        public ProjectLinkInfo(ProjectLinksTable table) : base(table) {
+            ProjectsTable projects = table.Database.ProjectsTable;
+            ProjectId = new DbForeignCell<long>(nameof(ProjectId), projects, projects.Schema.ProjectId, constraints: DbCellFlags.NotNull);
+        }
     }
 }
