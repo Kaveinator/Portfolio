@@ -45,7 +45,7 @@ namespace WebServer.Http {
                 foreach (string key in parameters.Keys) {
                     string keyString = $"{{?:{key}}}";
                     //if (result.IndexOf(keyString) != -1)
-                        result = result.Replace(keyString, parameters[key].ToString());
+                        result = result.Replace(keyString, parameters[key]?.ToString() ?? string.Empty);
                 }
             }
             if (MimeTypeMap.GetMimeType(path).ToLower().Contains("text"))

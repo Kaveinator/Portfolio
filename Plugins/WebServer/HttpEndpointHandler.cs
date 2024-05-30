@@ -16,7 +16,7 @@ namespace WebServer.Http {
         public HttpResponse GetGenericStatusPage(StatusPageModel statusModel)
             => HttpServer.GetGenericStatusPage(statusModel, Host);
 
-        public string GetTemplate(string path, IPageModel pageModel)
+        public string GetTemplate(string path, IPageModel? pageModel = null)
             => HttpTemplates.Get(Host + path, pageModel);
 
         public bool TryGetTemplate(string path, out string content, out StatusPageModel statusModel, IPageModel? pageModel = null) {
