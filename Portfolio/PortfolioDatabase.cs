@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ExperimentalSQLite;
+using Portfolio.Commands;
 using Portfolio.Projects;
 
 namespace Portfolio {
@@ -32,7 +33,7 @@ namespace Portfolio {
         protected PortfolioDatabase() : base($"Data/{nameof(PortfolioDatabase)}") {
             OpenAsync().Wait();
             ContactInfoTable = RegisterTable<ContactTable, ContactInfo>(() => new ContactTable(this));
-            OrganizationTable = RegisterTable<OrganizationTable, OrginizationInfo>(() => new OrganizationTable(this));
+            OrganizationTable = RegisterTable<OrganizationTable, OrganizationInfo>(() => new OrganizationTable(this));
             ProjectsTable = RegisterTable<ProjectsTable, ProjectInfo>(() => new ProjectsTable(this));
 
             TechnologiesTable = RegisterTable<TechnologiesTable, TechnologyInfo>(() => new TechnologiesTable(this));
@@ -40,6 +41,7 @@ namespace Portfolio {
 
             ProjectLinksTable = RegisterTable<ProjectLinksTable, ProjectLinkInfo>(() => new ProjectLinksTable(this));
             OrganizationLinksTable = RegisterTable<OrganizationLinksTable, OrganizationLinkInfo>(() => new OrganizationLinksTable(this));
+            EventLog.AddCommand<SeedDatabase>();
             Logger.Log("Initilized Database");
         }
     }
