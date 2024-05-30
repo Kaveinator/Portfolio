@@ -138,13 +138,13 @@ namespace ExperimentalSQLite {
                 }
 
                 public virtual TRow PullHeader(DbDataReader reader) {
-                    foreach (IDbCell cell in Fields.Where(cell => cell.Constraints.IsOfAny<DbCellFlags>(DbCellFlags.PrimaryKey, DbCellFlags.UniqueKey)))
+                    foreach (IDbCell cell in Fields.Where(cell => cell.Constraints.HasAnyFlags<DbCellFlags>(DbCellFlags.PrimaryKey, DbCellFlags.UniqueKey)))
                         cell.FromReader(reader);
                     return this as TRow;
                 }
 
                 public virtual TRow Pull(DbDataReader reader) {
-                    foreach (IDbCell cell in Fields.Where(cell => !cell.Constraints.IsOfAny(DbCellFlags.PrimaryKey, DbCellFlags.UniqueKey)))
+                    foreach (IDbCell cell in Fields)
                         cell.FromReader(reader);
                     return this as TRow;
                 }
@@ -154,8 +154,8 @@ namespace ExperimentalSQLite {
                         return false;
                     // Get own primary/unique keys
                     // Get other primary/unique keys
-                    IEnumerable<IDbCell> ownKeys = Fields.Where(cell => cell.Constraints.IsOfAny<DbCellFlags>(DbCellFlags.PrimaryKey, DbCellFlags.UniqueKey)),
-                        otherKeys = other.Fields.Where(cell => cell.Constraints.IsOfAny<DbCellFlags>(DbCellFlags.PrimaryKey, DbCellFlags.UniqueKey));
+                    IEnumerable<IDbCell> ownKeys = Fields.Where(cell => cell.Constraints.HasAnyFlags<DbCellFlags>(DbCellFlags.PrimaryKey, DbCellFlags.UniqueKey)),
+                        otherKeys = other.Fields.Where(cell => cell.Constraints.HasAnyFlags<DbCellFlags>(DbCellFlags.PrimaryKey, DbCellFlags.UniqueKey));
                     if (ownKeys.Count() != otherKeys.Count())
                         return false;
                     

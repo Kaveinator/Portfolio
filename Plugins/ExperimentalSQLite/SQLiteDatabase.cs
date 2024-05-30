@@ -97,17 +97,15 @@ namespace ExperimentalSQLite {
             if (cachedTable != null)
                 throw new Exception($"Failed to register table '{table.TableName}'. Another table with that name was already registed with that name. [ table: {typeof(TTable).FullName}; cachedTable: {cachedTable.GetType().FullName} ]");
             TRow schema = table.Schema = schemaConstructor?.Invoke() ?? table.ConstructRow();
+            if (table.CachedRows.Contains(schema))
+                table.CachedRows.Remove(schema);
             if (!TableExists(table.TableName)) {
                 string cmdText = $"CREATE TABLE IF NOT EXISTS `{table.TableName}` (";
                 
                 // Construct the table schema
                 StringBuilder foreignCellClause = new StringBuilder();
                 foreach (IDbCell cell in schema.Fields) {
-                    cmdText += $"`{cell.ColumnName}` {cell.DataType.GetDbTypeAsString()}";
-                    cmdText += cell.Constraints.HasFlag(DbCellFlags.PrimaryKey) ? " PRIMARY KEY" : "";
-                    cmdText += cell.Constraints.HasFlag(DbCellFlags.UniqueKey) ? " UNIQUE" : "";
-                    cmdText += cell.Constraints.HasFlag(DbCellFlags.NotNull) ? " NOT NULL" : "";
-                    cmdText += ",";
+                    cmdText += $"{cell.ToCreateTableString()},";
                     if (cell is IDbForeignCell foreignCell)
                         foreignCellClause.Append($"FOREIGN KEY (`{cell.ColumnName}`) REFERENCES `{foreignCell.ForeignTableRefrence.TableName}`(`{foreignCell.ForeignCellRefrence.ColumnName}`),");
                 }
