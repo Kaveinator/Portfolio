@@ -172,7 +172,7 @@ namespace WebServer.Http {
                             break;
                     } catch (Exception ex) {
                         response = GetGenericStatusPage(new StatusPageModel(HttpStatusCode.InternalServerError,
-                            subtitle: Program.Mode == Mode.Development ? ex.ToString() : null
+                            subtitle: Program.Mode == Mode.Development ? $"<code>{ex.ToString().Replace("\n", "<br />")}</code>" : null
                         ));
                         break;
                     }

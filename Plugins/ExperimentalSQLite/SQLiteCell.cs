@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
-using System.Data.SQLite;
-using Markdig.Extensions.Tables;
 
 namespace ExperimentalSQLite {
     public interface IDbCell {
@@ -54,8 +52,9 @@ namespace ExperimentalSQLite {
 
         public virtual void FromReader(DbDataReader reader) {
             int ordinal = reader.GetOrdinal(ColumnName);
+            Type valueType = typeof(TValue);
             Value = reader.IsDBNull(ordinal) ? default!
-                : (TValue)Convert.ChangeType(reader.GetValue(ordinal), typeof(TValue));
+                : (TValue)Convert.ChangeType(reader.GetValue(ordinal), Nullable.GetUnderlyingType(valueType) ?? valueType);
         }
 
         public override string ToString() => Value?.ToString() ?? string.Empty;
