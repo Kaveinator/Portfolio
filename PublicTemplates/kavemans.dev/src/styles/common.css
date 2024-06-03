@@ -144,6 +144,14 @@ footer {
   bottom: 0;
   width: 100%;
   box-sizing: border-box;
+  position: absolute;
+  margin-bottom: 0;
+}
+
+footer img.logo {
+  height: 40px;
+  float: left;
+  padding-right: 10px;
 }
 
 footer > .content {
