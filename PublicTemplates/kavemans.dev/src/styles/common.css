@@ -21,7 +21,7 @@ header .logo {
   justify-content: center;
   align-items: center;
   text-align: center;
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 header .logo::before {
