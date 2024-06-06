@@ -190,9 +190,9 @@ namespace WebServer.Http {
                     response = GetStaticFile(context.Request);
                 }
                 context.Response.Headers.Add("cache-control",
-                    response.AllowCaching
-                    ? "max-age=360000, s-max-age=900, stale-while-revalidate=120, stale-if-error=86400"
-                    : "no-store, no-cache, must-revalidate"
+                    !response.AllowCaching || Program.Mode == Mode.Development
+                    ? "no-store, no-cache, must-revalidate"
+                    : "max-age=360000, s-max-age=900, stale-while-revalidate=120, stale-if-error=86400"
                 );
 
                 if (!string.IsNullOrEmpty(response.AccessControlAllowOrigin))
@@ -228,7 +228,6 @@ namespace WebServer.Http {
         [Pure] static string FormatCallbackKey(string host, string path) => $"{host}/{path.TrimStart('/')}";
 
         [Pure] static string FormatCallbackKey(Uri? uri) => FormatCallbackKey(uri.Host, uri.LocalPath);
-
 
         [Pure] static List<string> GenerateCallbackKeys(string path) {
             var keys = new List<string>();
@@ -268,7 +267,7 @@ namespace WebServer.Http {
                 resource.MimeString = MimeTypeMap.GetMimeType(Path.GetExtension(filePath).ToLower());
                 resource.Content = File.ReadAllBytes(filePath);
                 resource.AllowCaching = true; // Since its static allow caching
-                if (resource.MimeString.ToLower().Contains("text") && Program.Mode == Mode.Development)
+                if (resource.MimeString.ToLower().Contains("text"))
                     resource.ContentString = HttpTemplates.Process(resource.ContentString);
                 resource.ClearFlag();
                 return resource;
@@ -280,7 +279,7 @@ namespace WebServer.Http {
                 resource.MimeString = MimeTypeMap.GetMimeType(Path.GetExtension(hitPath).ToLower());
                 resource.Content = File.ReadAllBytes(hitPath);
                 resource.AllowCaching = true;
-                if (resource.MimeString.ToLower().Contains("text") && Program.Mode == Mode.Development)
+                if (resource.MimeString.ToLower().Contains("text"))
                     resource.ContentString = HttpTemplates.Process(resource.ContentString);
                 resource.ClearFlag();
                 return resource;

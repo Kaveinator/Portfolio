@@ -4,7 +4,7 @@ main {
   min-height: 80vh;
   background-image: 
     /*linear-gradient(0deg, black 1%, transparent 10%),*/
-    url('/src/images/TankiX/MadnessUpdate/SpookyMadness.webp');
+    url('/src/orgs/TankiX/MadnessUpdate.Preview.webp');
     background-position: center 100%;
   position: relative;
 }
