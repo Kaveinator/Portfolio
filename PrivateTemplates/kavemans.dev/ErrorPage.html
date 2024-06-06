@@ -2,7 +2,7 @@
 <html>
     <head>
 		<meta charset="UTF-8">
-        <title>{?:StatusCode} - {?:Title}</title>
+        <title>{?:StatusCode} - {?:Header}</title>
         <link href="/src/styles/framework.css" type="text/css" rel="stylesheet" />
         <link href="/src/styles/common.css" type="text/css" rel="stylesheet" />
         <link href="/src/styles/main.css" type="text/css" rel="stylesheet" />
@@ -27,9 +27,9 @@
     <body class="centerize stickyFooter">
         <div class="ice centerize">
             <model src="kavemans.dev/header.html"></model>
-            <div style="font-size: 2em;">{?:Title}</div>
-            <span>{?:Subtitle}</span>
-            <model src="kavemans.dev/stickyFooter.html"></model>
+            <div style="font-size: 2em;">{?:Header}</div>
+            <span>{?:Details}</span>
+            <model src="kavemans.dev/footer.html"></model>
         </div>
     </body>
 </html>

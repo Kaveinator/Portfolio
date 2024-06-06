@@ -8,6 +8,10 @@ main {
   filter: drop-shadow(0 0 5px #000);
 }
 
+.dynamicMargin p:nth-of-type(1) {
+  margin-top: 0;
+}
+
 .mediaContent {
   flex-direction: row;
   flex-wrap: wrap;
@@ -67,7 +71,7 @@ main {
 .mediaContent > .mediaTile       > img:not(:nth-child(1)) { transform: scale(1.2); }
 .mediaContent > .mediaTile:hover > img:not(:nth-child(1)) { transform: scale(1); }
 
-.mediaContent > .mediaTile > p.caption {
+.mediaContent > .mediaTile > p:nth-of-type(1) {
   position: absolute;
   width: 100%;
   top: auto;
@@ -80,7 +84,7 @@ main {
   text-align: center;
   transform: translateY(100%);
 }
-.mediaContent > .mediaTile:hover > p.caption {
+.mediaContent > .mediaTile:hover > p:nth-of-type(1) {
   transform: translateY(0%);
 }
 

@@ -5,12 +5,19 @@ using System.Net;
 using WebServer;
 using WebServer.Http;
 using ExperimentalSQLite;
+using WebServer.Models;
 
 namespace Portfolio.TechAcademy {
     internal partial class TechAcademyDemoEndpoint { // ServerLocalTimeController.cs
-        class ServerLocalTimeController {
+        class ServerLocalTimeController : IPageModel { // I would not recommend to make the controller as the Page Model but here we are
             readonly TimestampsTable Registry;
             public readonly TechAcademyDemoEndpoint Endpoint;
+            public long RefreshCount;
+            public DateTime CurrentDateTime => DateTime.Now;
+            Dictionary<string, object> IPageModel.Values => new() {
+                { nameof(RefreshCount), RefreshCount },
+                { nameof(CurrentDateTime), CurrentDateTime }
+            };
             public ServerLocalTimeController(TechAcademyDemoEndpoint endpoint) {
                 Endpoint = endpoint;
                 Registry = Endpoint.DemoDatabase.RegisterTable(
@@ -18,19 +25,15 @@ namespace Portfolio.TechAcademy {
                     () => new RecordedTimestamp(null!)
                 );
                 RefreshCount = Registry.GetCount();
-                Endpoint.AddEventCallback("/orgs/TechAcademy/ServerLocalTimeMVC/demo", OnDemoRequest);
+                Endpoint.TryAddEventCallback(@"^/orgs/TechAcademy/ServerLocalTimeMVC/demo$", OnDemoRequest);
             }
-
-            static long RefreshCount;
+            
             HttpResponse? OnDemoRequest(HttpListenerRequest request) {
-                DateTime currentDateTime = DateTime.Now;
-                if (!Endpoint.TryGetTemplate("/orgs/TechAcademy/ServerLocalTimeMVC.View.html", out string content, new Dictionary<string, object>() {
-                    { nameof(RefreshCount), ++RefreshCount },
-                    { nameof(currentDateTime), currentDateTime }
-                })) return Endpoint.GetGenericStatusPage(HttpStatusCode.InternalServerError, new Dictionary<string, object>() {
-                    { "Subtitle", "The View for the Demo was not found" }
-                });
-                _ = new RecordedTimestamp(Registry, DateTime.Now).Push();
+                if (!Endpoint.TryGetTemplate("/orgs/TechAcademy/ServerLocalTimeMVC.View.html", out string content, out var statusModel, this))
+                    return Endpoint.GetGenericStatusPage(statusModel);
+                RefreshCount++;
+                _ = new RecordedTimestamp(Registry, CurrentDateTime).Push();
+                
                 return new HttpResponse() {
                     StatusCode = HttpStatusCode.OK,
                     AllowCaching = false,
@@ -41,6 +44,8 @@ namespace Portfolio.TechAcademy {
             class TimestampsTable : TechAcademyDemoDatabase.SQLiteTable<TimestampsTable, RecordedTimestamp> {
                 public TimestampsTable(TechAcademyDemoDatabase db)
                     : base(db, "ServerLocalTimeRegistry") { }
+
+                public override RecordedTimestamp ConstructRow() => new RecordedTimestamp(this);
 
                 public long GetCount() {
                     using SQLiteCommand command = new SQLiteCommand($"SELECT COUNT(1) FROM `{TableName}`", Database.Connection);
@@ -60,6 +65,8 @@ namespace Portfolio.TechAcademy {
             }
             class Int64Registry : DBRegistery<TechAcademyDemoDatabase, Int64Registry, RegistryField, long> {
                 public Int64Registry(TechAcademyDemoDatabase db) : base(db, "ServerLocalTimeRegistry") { }
+
+                public override RegistryField ConstructRow() => new RegistryField(this);
             }
             class RegistryField : Int64Registry.Row {
                 public RegistryField(Int64Registry table, string key) : base(table,

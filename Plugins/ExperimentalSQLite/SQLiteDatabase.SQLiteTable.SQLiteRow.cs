@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
@@ -134,6 +135,37 @@ namespace ExperimentalSQLite {
                         }
                     }
                     return this as TRow;
+                }
+
+                public virtual TRow PullHeader(DbDataReader reader) {
+                    foreach (IDbCell cell in Fields.Where(cell => cell.Constraints.HasAnyFlags<DbCellFlags>(DbCellFlags.PrimaryKey, DbCellFlags.UniqueKey)))
+                        cell.FromReader(reader);
+                    return this as TRow;
+                }
+
+                public virtual TRow Pull(DbDataReader reader) {
+                    foreach (IDbCell cell in Fields)
+                        cell.FromReader(reader);
+                    return this as TRow;
+                }
+
+                public virtual bool CompareHeader(object? obj) {
+                    if (!(obj is SQLiteRow other))
+                        return false;
+                    // Get own primary/unique keys
+                    // Get other primary/unique keys
+                    IEnumerable<IDbCell> ownKeys = Fields.Where(cell => cell.Constraints.HasAnyFlags<DbCellFlags>(DbCellFlags.PrimaryKey, DbCellFlags.UniqueKey)),
+                        otherKeys = other.Fields.Where(cell => cell.Constraints.HasAnyFlags<DbCellFlags>(DbCellFlags.PrimaryKey, DbCellFlags.UniqueKey));
+                    if (ownKeys.Count() != otherKeys.Count())
+                        return false;
+                    
+                    foreach (IDbCell ownCell in ownKeys) {
+                        IDbCell? otherCell = otherKeys.FirstOrDefault(cell => cell?.ColumnName == ownCell.ColumnName, null);
+                        if (otherCell == null || otherCell.Value != ownCell.Value)
+                            return false;
+                    }
+
+                    return true;
                 }
             }
         }

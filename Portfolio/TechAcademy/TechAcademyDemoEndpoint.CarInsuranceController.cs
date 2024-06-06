@@ -3,11 +3,13 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Text;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using WebServer.Http;
 using ExperimentalSQLite;
+using WebServer.Models;
 
 namespace Portfolio.TechAcademy {
     internal partial class TechAcademyDemoEndpoint { // ServerLocalTimeController.cs
@@ -18,30 +20,24 @@ namespace Portfolio.TechAcademy {
             public readonly TechAcademyDemoEndpoint Endpoint;
             static InsuranceEntities Table;
 
-
             public CarInsuranceController(TechAcademyDemoEndpoint endpoint) {
                 Endpoint = endpoint;
                 Table = Table ?? Endpoint.DemoDatabase.RegisterTable(
                     () => new InsuranceEntities(Endpoint.DemoDatabase),
                     () => new Insuree()
                 );
-                Endpoint.AddEventCallback($"{BindPath}/demo", async _ => await OnView(ViewType.Simple));
-                Endpoint.AddEventCallback($"{BindPath}/compact", async _ => await OnView(ViewType.Compact));
-                Endpoint.AddEventCallback($"{BindPath}/create", OnCreate);
-                Endpoint.AddEventCallback($"{BindPath}/edit", OnEdit);
-                Endpoint.AddEventCallback($"{BindPath}/details", async req => await OnDetails(req, DetailsView.Details));
-                Endpoint.AddEventCallback($"{BindPath}/delete", async req => await OnDetails(req, DetailsView.Delete));
+                Endpoint.TryAddEventCallback(@$"^{BindPath}/demo", async _ => await OnView(ViewType.Simple));
+                Endpoint.TryAddEventCallback(@$"^{BindPath}/compact", async _ => await OnView(ViewType.Compact));
+                Endpoint.TryAddEventCallback(@$"^{BindPath}/create", OnCreate);
+                Endpoint.TryAddEventCallback(@$"^{BindPath}/edit", OnEdit);
+                Endpoint.TryAddEventCallback(@$"^{BindPath}/details", async req => await OnDetails(req, DetailsView.Details));
+                Endpoint.TryAddEventCallback(@$"^{BindPath}/delete", async req => await OnDetails(req, DetailsView.Delete));
             }
 
-            public HttpResponse RenderLayout(string title, object content) {
+            HttpResponse? RenderLayout(string title, object content) {
                 int year = DateTime.Now.Year;
-                if (!Endpoint.TryGetTemplate($"{StandardPath}/_Layout.html", out var result, new() {
-                    { nameof(title), title },
-                    { nameof(year), year },
-                    { nameof(content), content }
-                })) return Endpoint.GetGenericStatusPage(HttpStatusCode.InternalServerError, new() {
-                    { "Subtitle", "The Layout View was not found" }
-                });
+                if (!Endpoint.TryGetTemplate($"{StandardPath}/_Layout.html", out var result, out var statusModel, new LayoutModel(title, content)))
+                    return Endpoint.GetGenericStatusPage(statusModel);
                 return new HttpResponse() {
                     StatusCode = HttpStatusCode.OK,
                     AllowCaching = false,
@@ -52,33 +48,29 @@ namespace Portfolio.TechAcademy {
 
             enum ViewType { Simple, Compact }
             async Task<HttpResponse?> OnView(ViewType type) {
-                StringBuilder rows = new StringBuilder();
-                foreach (var insuree in (await Table.GetAllAsync()).Where(i => !i.IsArchived.Value)) {
-                    rows.Append(Endpoint.GetTemplate($"{TemplatesPath}/{type}.Row.Html", new() {
-                        { nameof(insuree.Id), insuree.Id.Value },
-                        { nameof(insuree.FirstName), insuree.FirstName.Value },
-                        { nameof(insuree.LastName), insuree.LastName.Value },
-                        { nameof(insuree.EmailAddress), insuree.EmailAddress.Value },
-                        { nameof(insuree.DateOfBirth), DateOnly.FromDateTime(insuree.DateOfBirth.Value) },
-                        { nameof(insuree.CarYear), insuree.CarYear.Value },
-                        { nameof(insuree.CarMake), insuree.CarMake.Value },
-                        { nameof(insuree.CarModel), insuree.CarModel.Value },
-                        { nameof(insuree.HasDUI), insuree.HasDUI.Value },
-                        { nameof(insuree.SpeedingTickets), insuree.SpeedingTickets.Value },
-                        { nameof(insuree.IsFullCoverage), insuree.IsFullCoverage.Value },
-                        { nameof(insuree.Quote), insuree.Quote.Value }
-                    }));
-                }
+                StringBuilder rowsHtml = new StringBuilder();
+                foreach (Insuree insuree in (await Table.GetAllAsync()).Where(i => !i.IsArchived.Value))
+                    rowsHtml.Append(Endpoint.GetTemplate($"{TemplatesPath}/{type}.Row.Html", insuree));
                 
-                if (!Endpoint.TryGetTemplate($"{StandardPath}/{type}.html", out var content, new() {
-                    { nameof(rows), rows }
-                })) {
-                    return Endpoint.GetGenericStatusPage(HttpStatusCode.InternalServerError, new() {
-                        { "Subtitle", $"The {type} View was not found" }
-                    });
-                }
-
+                if (!Endpoint.TryGetTemplate(
+                    $"{StandardPath}/{type}.html", out var content, out var statusModel,
+                    new DetailsModel(this, $"{TemplatesPath}/{type}.Row.Html", (await Table.GetAllAsync()).Where(i => !i.IsArchived.Value))
+                )) return Endpoint.GetGenericStatusPage(statusModel);
                 return RenderLayout("Home", content);
+            }
+            public class DetailsModel : IPageModel {
+                Dictionary<string, object> IPageModel.Values => new() {
+                    { nameof(Rows), string.Join(string.Empty, Rows.Select(row => Controller.Endpoint.TryGetTemplate(RowModelPath, out var renderedHtml, out var _, row) ? renderedHtml : string.Empty)) }
+                };
+                readonly CarInsuranceController Controller;
+                public IEnumerable<Insuree> Rows;
+                readonly string RowModelPath;
+
+                public DetailsModel(CarInsuranceController controller, string rowModelPath, IEnumerable<Insuree> rows) {
+                    Controller = controller;
+                    RowModelPath = rowModelPath;
+                    Rows = rows;
+                }
             }
 
             HttpResponse? OnCreate(HttpListenerRequest request) {
@@ -91,9 +83,9 @@ namespace Portfolio.TechAcademy {
 
                     string header, message;
                     if (!new Insuree(Table).TryParse(formData, out Insuree insuree)) {
-                        return Endpoint.GetGenericStatusPage(HttpStatusCode.BadRequest, new() {
-                            { "Subtitle", "The information that was submitted was invalid or empty" }
-                        });
+                        return Endpoint.GetGenericStatusPage(new StatusPageModel(HttpStatusCode.BadRequest, 
+                            subtitle: "The information that was submitted was invalid or empty"
+                        ));
                     }
                     _ = insuree.Push();
 
@@ -103,20 +95,16 @@ namespace Portfolio.TechAcademy {
                         ContentString = Endpoint.BuildUri(request, $"{BindPath}/Details?id={insuree.Id}").ToString()
                     };
                 }
-                else if (!Endpoint.TryGetTemplate($"{TemplatesPath}/Create.html", out content)) {
-                    return Endpoint.GetGenericStatusPage(HttpStatusCode.InternalServerError, new() {
-                        { "Subtitle", "The Create View was not found" }
-                    });
-                }
-
+                else if (!Endpoint.TryGetTemplate($"{TemplatesPath}/Create.html", out content, out var statusModel))
+                    return Endpoint.GetGenericStatusPage(statusModel);
                 return RenderLayout("Home", content);
             }
 
             async Task<HttpResponse?> OnEdit(HttpListenerRequest request) {
                 NameValueCollection query = HttpUtility.ParseQueryString(request.Url?.Query ?? "");
-                Func<HttpResponse> genericResponse = () => Endpoint.GetGenericStatusPage(HttpStatusCode.BadRequest, new() {
-                    { "Subtitle", "The information that was submitted was invalid, empty or the row doesn't exist" }
-                });
+                Func<HttpResponse> genericResponse = () => Endpoint.GetGenericStatusPage(new StatusPageModel(HttpStatusCode.BadRequest,
+                    subtitle: "The information that was submitted was invalid, empty or the row doesn't exist"
+                ));
                 long id; Insuree? insuree;
                 if (!long.TryParse(query[nameof(id)] ?? string.Empty, out id)
                     || (insuree = await Table.Get(id)) is null
@@ -139,29 +127,15 @@ namespace Portfolio.TechAcademy {
                     };
                 }
 
-                return RenderLayout("Home", Endpoint.GetTemplate($"{TemplatesPath}/Edit.Html", new() {
-                    { nameof(insuree.Id), insuree.Id.Value },
-                    { nameof(insuree.FirstName), insuree.FirstName.Value },
-                    { nameof(insuree.LastName), insuree.LastName.Value },
-                    { nameof(insuree.EmailAddress), insuree.EmailAddress.Value },
-                    { nameof(insuree.DateOfBirth), insuree.DateOfBirth.Value.ToString("yyyy-MM-dd") },
-                    { nameof(insuree.CarYear), insuree.CarYear.Value },
-                    { nameof(insuree.CarMake), insuree.CarMake.Value },
-                    { nameof(insuree.CarModel), insuree.CarModel.Value },
-                    { nameof(insuree.HasDUI), insuree.HasDUI.Value },
-                    { nameof(insuree.SpeedingTickets), insuree.SpeedingTickets.Value },
-                    { nameof(insuree.IsFullCoverage), insuree.IsFullCoverage.Value },
-                    { nameof(insuree.Quote), insuree.Quote.Value },
-                    { nameof(insuree.IsArchived), insuree.IsArchived.Value }
-                }));
+                return RenderLayout("Home", Endpoint.GetTemplate($"{TemplatesPath}/Edit.Html", insuree));
             }
 
             enum DetailsView { Details, Delete }
             async Task<HttpResponse?> OnDetails(HttpListenerRequest request, DetailsView view) {
                 NameValueCollection query = HttpUtility.ParseQueryString(request.Url?.Query ?? "");
-                Func<HttpResponse> genericResponse = () => Endpoint.GetGenericStatusPage(HttpStatusCode.BadRequest, new() {
-                    { "Subtitle", "The information that was submitted was invalid, empty or the row doesn't exist" }
-                });
+                Func<HttpResponse> genericResponse = () => Endpoint.GetGenericStatusPage(new StatusPageModel(HttpStatusCode.BadRequest,
+                    subtitle: "The information that was submitted was invalid, empty or the row doesn't exist"
+                ));
                 long id; Insuree? insuree;
                 if (!long.TryParse(query[nameof(id)] ?? string.Empty, out id)
                     || (insuree = await Table.Get(id)) is null
@@ -175,18 +149,16 @@ namespace Portfolio.TechAcademy {
                     };
                 }
                 StringBuilder table = new StringBuilder();
-                foreach (var field in insuree.Fields.Where(f => f != insuree.IsArchived)) {
-                    table.Append(Endpoint.GetTemplate($"{TemplatesPath}/Details.Row.html", new() {
-                        { nameof(field.ColumnName), field.ColumnName },
-                        { nameof(field.Value), field.Value }
-                    }));
+                foreach (var field in insuree.Fields.Where(cell => cell != insuree.IsArchived)) {
+                    table.Append(Endpoint.GetTemplate($"{TemplatesPath}/Details.Row.html", new DynamicPageModel()
+                        .Add(nameof(field.ColumnName), field.ColumnName)
+                        .Add(nameof(field.Value), field.Value)
+                    ));
                 }
-                if (!Endpoint.TryGetTemplate($"{TemplatesPath}/{view}.html", out var content, new() {
-                    { nameof(insuree.Id), insuree.Id },
-                    { nameof(table), table }
-                })) return Endpoint.GetGenericStatusPage(HttpStatusCode.InternalServerError, new() {
-                    { "Subtitle", "The Details View was not found" }
-                });
+                if (!Endpoint.TryGetTemplate($"{TemplatesPath}/{view}.html", out var content, out var statusModel, new DynamicPageModel()
+                    .Add(nameof(insuree.Id), insuree.Id)
+                    .Add(nameof(table), table)
+                )) return Endpoint.GetGenericStatusPage(statusModel);
                 return RenderLayout("Home", content);
             }
 
@@ -222,14 +194,32 @@ namespace Portfolio.TechAcademy {
                     }
                     return null;
                 }
+
+                public override Insuree ConstructRow() => new Insuree(this);
             }
-            public class Insuree : InsuranceEntities.SQLiteRow {
+            public class Insuree : InsuranceEntities.SQLiteRow, IPageModel {
                 public override IEnumerable<IDbCell> Fields => new IDbCell[] {
                     Id, FirstName, LastName, EmailAddress, DateOfBirth,
                     CarYear, CarMake, CarModel,
                     HasDUI, SpeedingTickets, IsFullCoverage, Quote,
                     IsArchived
                 };
+                public IEnumerable<IDbCell> NonPublicFields => new IDbCell[] { IsArchived };
+                
+                Dictionary<string, object> IPageModel.Values {
+                    get {
+                        Dictionary<string, object> result = new();
+                        foreach (IDbCell cell in Fields) {
+                            if (cell == IsArchived) continue;
+                            object? value = null;
+                            if (cell == DateOfBirth)
+                                value = DateOfBirth.Value.ToString("yyyy-MM-dd");
+                            result.Add(cell.ColumnName, value ?? cell.Value);
+                        }
+                        return result;
+                        //return Fields.Where(cell => !NonPublicFields.Contains(cell)).ToDictionary(cell => cell.ColumnName, cell => cell == DateOfBirth ? DateOfBirth.Value.ToString("yyyy-MM-dd") : cell.Value);
+                    }
+                }
 
                 public override bool IsInDb => 0 < Id;
 
@@ -337,6 +327,23 @@ namespace Portfolio.TechAcademy {
                     using (SQLiteCommand cmd = new SQLiteCommand($"DELETE FROM `{Table.TableName}` WHERE `{Id.ColumnName}` = {Id.Value};", Database.Connection))
                         _ = await cmd.ExecuteNonQueryAsync();
                     Id.Value = -1;*/
+                }
+            }
+            
+            class LayoutModel : IPageModel {
+                public Dictionary<string, object> Values => new() {
+                    { nameof(Title), Title },
+                    { nameof(Year), Year },
+                    { nameof(Content), Content }
+                };
+
+                public string Title;
+                public int Year => DateTime.Now.Year;
+                public object Content;
+
+                public LayoutModel(string title, object content) {
+                    Title = title;
+                    Content = content;
                 }
             }
         }

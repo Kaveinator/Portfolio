@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using WebServer.Http;
 using ExperimentalSQLite;
+using WebServer.Models;
 
 namespace Portfolio.TechAcademy {
     internal partial class TechAcademyDemoEndpoint { // ServerLocalTimeController.cs
@@ -17,9 +18,9 @@ namespace Portfolio.TechAcademy {
 
             public NewsLetterController(TechAcademyDemoEndpoint endpoint) {
                 Endpoint = endpoint;
-                Endpoint.AddEventCallback("/orgs/TechAcademy/NewsLetterMVC/demo", OnDemoRequest);
-                Endpoint.AddEventCallback("/orgs/TechAcademy/NewsLetterMVC/Admin", OnAdminRequest);
-                Endpoint.AddEventCallback("/orgs/TechAcademy/NewsLetterMVC/Unsubscribe", OnDeleteRequest);
+                Endpoint.TryAddEventCallback(@"^/orgs/TechAcademy/NewsLetterMVC/demo$", OnDemoRequest);
+                Endpoint.TryAddEventCallback(@"^/orgs/TechAcademy/NewsLetterMVC/Admin$", OnAdminRequest);
+                Endpoint.TryAddEventCallback(@"^/orgs/TechAcademy/NewsLetterMVC/Unsubscribe$", OnDeleteRequest);
                 Table = Table ?? Endpoint.DemoDatabase.RegisterTable(
                     () => new NewsletterSubscriptionTable(Endpoint.DemoDatabase),
                     () => new NewsletterSubscription()
@@ -29,6 +30,7 @@ namespace Portfolio.TechAcademy {
             static Regex EmailValidator = new Regex(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
             HttpResponse? OnDemoRequest(HttpListenerRequest request) {
                 string? content;
+                StatusPageModel statusPageModel;
                 if (request.HttpMethod.Equals(HttpMethod.Post.Method, StringComparison.InvariantCultureIgnoreCase)) {
                     // Parse querystring? content;
                     NameValueCollection query;
@@ -51,22 +53,18 @@ namespace Portfolio.TechAcademy {
                         header = "Bad Request";
                         message = "<span class=\"text-danger\">Form had fields that were invalid and/or empty. <a href=\"./demo\">Go back</a></span>";
                     }
-                    content = Endpoint.TryGetTemplate($"{TemplatesPath}/Home.Result.html", out string _content, new Dictionary<string, object>() {
-                        { nameof(header), header },
-                        { nameof(message), message }
-                    }) ? _content : $"{header} - {message}";
+                    content = Endpoint.TryGetTemplate($"{TemplatesPath}/Home.Result.html", out string _content, out var _, new DynamicPageModel()
+                        .Add(nameof(header), header)
+                        .Add(nameof(message), message)
+                    ) ? _content : $"{header} - {message}";
                 }
-                else if (!Endpoint.TryGetTemplate($"{TemplatesPath}/Home.html", out content)) {
-                    return Endpoint.GetGenericStatusPage(HttpStatusCode.InternalServerError, new() {
-                        { "Subtitle", "The Home View was not found" }
-                    });
-                }
+                else if (!Endpoint.TryGetTemplate($"{TemplatesPath}/Home.html", out content, out statusPageModel))
+                    return Endpoint.GetGenericStatusPage(statusPageModel);
+                
+                if (!Endpoint.TryGetTemplate($"{TemplatesPath}/Layout.html", out var result, out statusPageModel, new DynamicPageModel()
+                    .Add(nameof(content), content)
+                )) return Endpoint.GetGenericStatusPage(statusPageModel);
 
-                if (!Endpoint.TryGetTemplate($"{TemplatesPath}/Layout.html", out var result, new() {
-                    { nameof(content), content }
-                })) return Endpoint.GetGenericStatusPage(HttpStatusCode.InternalServerError, new() {
-                    { "Subtitle", "The Layout View was not found" }
-                });
                 return new HttpResponse() {
                     StatusCode = HttpStatusCode.OK,
                     AllowCaching = false,
@@ -79,24 +77,17 @@ namespace Portfolio.TechAcademy {
                 string content = "";
                 // Get all content
                 var subs = (await Table.GetAllAsync()).Where(sub => !sub.IsDeleted.Value);
-                foreach (var sub in subs) {
-                    content += Endpoint.GetTemplate($"{TemplatesPath}/Admin.Row.html", new() {
-                        { nameof(sub.Id), sub.Id.Value },
-                        { nameof(sub.FirstName), sub.FirstName.Value },
-                        { nameof(sub.LastName), sub.LastName.Value },
-                        { nameof(sub.EmailAddress), sub.EmailAddress.Value }
-                    }, Program.Mode == Mode.Development);
+                foreach (NewsletterSubscription sub in subs) {
+                    content += Endpoint.GetTemplate($"{TemplatesPath}/Admin.Row.html", sub);
                 }
-                if (!Endpoint.TryGetTemplate($"{TemplatesPath}/Admin.html", out content, new() {
-                    { nameof(content), content }
-                })) return Endpoint.GetGenericStatusPage(HttpStatusCode.InternalServerError, new() {
-                    { "Subtitle", "The Admin View was not found" }
-                });
-                if (!Endpoint.TryGetTemplate($"{TemplatesPath}/Layout.html", out var result, new() {
-                    { nameof(content), content }
-                })) return Endpoint.GetGenericStatusPage(HttpStatusCode.InternalServerError, new() {
-                    { "Subtitle", "The Layout View was not found" }
-                });
+                if (!Endpoint.TryGetTemplate($"{TemplatesPath}/Admin.html", out content, out var statusPageModel, new DynamicPageModel()
+                    .Add(nameof(content), content)
+                )) return Endpoint.GetGenericStatusPage(statusPageModel);
+
+                if (!Endpoint.TryGetTemplate($"{TemplatesPath}/Layout.html", out var result, out statusPageModel, new DynamicPageModel()
+                    .Add(nameof(content), content)
+                )) return Endpoint.GetGenericStatusPage(statusPageModel);
+                
                 return new HttpResponse() {
                     StatusCode = HttpStatusCode.OK,
                     AllowCaching = false,
@@ -113,13 +104,13 @@ namespace Portfolio.TechAcademy {
                         query = HttpUtility.ParseQueryString(reader.ReadToEnd());
 
                     string id = query[nameof(id)] ?? string.Empty;
-                    if (!long.TryParse(id, out long idValue)) return Endpoint.GetGenericStatusPage(HttpStatusCode.BadRequest, new() {
-                        { "Subtitle", "Failed to parse Id" }
-                    });
+                    if (!long.TryParse(id, out long idValue)) return Endpoint.GetGenericStatusPage(new StatusPageModel(HttpStatusCode.BadRequest,
+                        subtitle: "Failed to parse Id"
+                    ));
                     NewsletterSubscription? sub = await Table.Get(idValue);
-                    if (sub == null) return Endpoint.GetGenericStatusPage(HttpStatusCode.BadRequest, new() {
-                        { "Subtitle", $"Couldn't row with Id of {idValue}" }
-                    });
+                    if (sub == null) return Endpoint.GetGenericStatusPage(new StatusPageModel(HttpStatusCode.NotFound,
+                        subtitle: $"Row with Id of {idValue} was not found"
+                    ));
                     await sub.DeleteAsync();
                 }
                 return new HttpResponse() {
@@ -130,6 +121,8 @@ namespace Portfolio.TechAcademy {
 
             public class NewsletterSubscriptionTable : TechAcademyDemoDatabase.SQLiteTable<NewsletterSubscriptionTable, NewsletterSubscription> {
                 public NewsletterSubscriptionTable(TechAcademyDemoDatabase db) : base(db, nameof(NewsletterSubscriptionTable)) { }
+
+                public override NewsletterSubscription ConstructRow() => new NewsletterSubscription(this);
 
                 public async Task<IEnumerable<NewsletterSubscription>> GetAllAsync() {
                     Queue<NewsletterSubscription> queue = new Queue<NewsletterSubscription>();
@@ -159,8 +152,9 @@ namespace Portfolio.TechAcademy {
                     return null;
                 }
             }
-            public class NewsletterSubscription : NewsletterSubscriptionTable.SQLiteRow {
+            public class NewsletterSubscription : NewsletterSubscriptionTable.SQLiteRow, IPageModel {
                 public override IEnumerable<IDbCell> Fields => new IDbCell[] { Id, FirstName, LastName, EmailAddress, IsDeleted };
+                Dictionary<string, object> IPageModel.Values => Fields.Where(cell => cell != IsDeleted).ToDictionary(cell => cell.ColumnName, cell => cell.Value);
                 public readonly DbPrimaryCell Id = new DbPrimaryCell();
                 public readonly DbCell<string> FirstName = new DbCell<string>(nameof(FirstName), DbType.String, constraints: DbCellFlags.NotNull);
                 public readonly DbCell<string> LastName = new DbCell<string>(nameof(LastName), DbType.String, constraints: DbCellFlags.NotNull);

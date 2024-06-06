@@ -9,6 +9,7 @@ namespace ExperimentalSQLite {
     public static class Extensions {
         public static string GetDbTypeAsString(this DbType dbType) {
             switch (dbType) {
+                case DbType.Byte:
                 case DbType.Boolean:
                 case DbType.Int16:
                 case DbType.Int32:

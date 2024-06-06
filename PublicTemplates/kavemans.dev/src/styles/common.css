@@ -21,7 +21,7 @@ header .logo {
   justify-content: center;
   align-items: center;
   text-align: center;
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 header .logo::before {
@@ -144,6 +144,14 @@ footer {
   bottom: 0;
   width: 100%;
   box-sizing: border-box;
+  position: absolute;
+  margin-bottom: 0;
+}
+
+footer img.logo {
+  height: 40px;
+  float: left;
+  padding-right: 10px;
 }
 
 footer > .content {

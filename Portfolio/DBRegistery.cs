@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using ExperimentalSQLite;
 
 namespace WebServer {
-    public class DBRegistery<TDatabase, TTable, TRow, TValue> : SQLiteDatabase<TDatabase>.SQLiteTable<TTable, TRow>
+    public abstract class DBRegistery<TDatabase, TTable, TRow, TValue> : SQLiteDatabase<TDatabase>.SQLiteTable<TTable, TRow>
         where TDatabase : SQLiteDatabase<TDatabase>
         where TTable : DBRegistery<TDatabase, TTable, TRow, TValue>
         where TRow : DBRegistery<TDatabase, TTable, TRow, TValue>.Row {
