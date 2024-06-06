@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Projects</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./src/styles/framework.css" type="text/css" rel="stylesheet" />
+    <link href="./src/styles/common.css" type="text/css" rel="stylesheet" />
+    <link href="./src/styles/main.css" type="text/css" rel="stylesheet" />
+    <link href="./src/styles/devlog.css" type="text/css" rel="stylesheet" />
+    <model src="kavemans.dev/FontAwesome"></model>
+  </head>
+  <body>
+    <model src="kavemans.dev/header.html"></model>
+    <div class="header"></div>
+    <div class="contentWrapper">
+      <main id="projects" class="container centerize">
+        <model src="kavemans.dev/announcements"></model>
+        <h2>Organizations<span>Individual projects are under their respective organizations</span></h2>
+        <div class="feed dynamicMargin centerize">{?:Organizations}</div>
+        <br />
+        <h2>Personal Projects<span>Projects not directly tied to any organization</span></h2>
+        <div class="feed dynamicMargin centerize">{?:LooseProjects}</div>
+      </main>
+    </div>
+    <model src="kavemans.dev/footer.html"></model>
+  </body>
+</html>

@@ -18,9 +18,9 @@ namespace Portfolio.TechAcademy {
 
             public NewsLetterController(TechAcademyDemoEndpoint endpoint) {
                 Endpoint = endpoint;
-                Endpoint.AddEventCallback("/orgs/TechAcademy/NewsLetterMVC/demo", OnDemoRequest);
-                Endpoint.AddEventCallback("/orgs/TechAcademy/NewsLetterMVC/Admin", OnAdminRequest);
-                Endpoint.AddEventCallback("/orgs/TechAcademy/NewsLetterMVC/Unsubscribe", OnDeleteRequest);
+                Endpoint.TryAddEventCallback(@"^/orgs/TechAcademy/NewsLetterMVC/demo$", OnDemoRequest);
+                Endpoint.TryAddEventCallback(@"^/orgs/TechAcademy/NewsLetterMVC/Admin$", OnAdminRequest);
+                Endpoint.TryAddEventCallback(@"^/orgs/TechAcademy/NewsLetterMVC/Unsubscribe$", OnDeleteRequest);
                 Table = Table ?? Endpoint.DemoDatabase.RegisterTable(
                     () => new NewsletterSubscriptionTable(Endpoint.DemoDatabase),
                     () => new NewsletterSubscription()

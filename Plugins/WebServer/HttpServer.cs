@@ -14,6 +14,7 @@ using Portfolio;
 using WebServer.Models;
 using System.Diagnostics.Contracts;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace WebServer.Http {
     /* Notes
@@ -29,7 +30,7 @@ namespace WebServer.Http {
         static Type Type = typeof(HttpServer);
         public bool IsListening => Socket?.IsListening ?? false;
         // HttpCallbacks[domainName (lowercase)][path (lowercase)] => Func<in request, out response>
-        Dictionary<string, Func<HttpListenerRequest, Task<HttpResponse?>>> HttpCallbacks = new();
+        Dictionary<string, Dictionary<Regex, Func<HttpListenerRequest, Task<HttpResponse?>>>> HttpCallbacks = new();
         public List<HttpEndpointHandler> HttpEndpointsHandlers = new List<HttpEndpointHandler>();
         // So in staticDomainDirectory, it searched for the domain name, if not found, returns
         public string ProductionDirectory => Config.GetValueOrDefault(nameof(ProductionDirectory), "Static");
@@ -126,8 +127,8 @@ namespace WebServer.Http {
                 context.Response.Headers.Add("server-environment", Program.Mode.ToString());
 
                 // Get Callback stuff
-                string host = context.Request.Url?.Host ?? DefaultDomain,
-                       path = FormatCallbackKey(context.Request.Url?.LocalPath ?? string.Empty);
+                string host = (context.Request.Url?.Host ?? DefaultDomain).Trim('/', ' ').ToLowerInvariant(),
+                       path = $"/{FormatCallbackKey(context.Request.Url?.LocalPath ?? string.Empty)}";
                 HttpResponse? response = null;
                 bool requestTimedOut = false;
                 Timer timeoutTimer = new Timer(RequestTimeout);
@@ -161,28 +162,31 @@ namespace WebServer.Http {
                 timeoutTimer.Start();
 
                 #region Event Callbacks
-                var callbackKeys = new[] { host, DefaultDomain }.Distinct()
-                    .SelectMany(domain => GenerateCallbackKeys(FormatCallbackKey(domain, path)));
-                foreach (var key in callbackKeys) {
-                    if (!HttpCallbacks.TryGetValue(key, out var callback) || callback == null)
-                        continue;
+                var domainNames = new[] { host, DefaultDomain }.Distinct();
+                var domainCallbackMatches = domainNames.Where(name => HttpCallbacks.ContainsKey(name));
+                var regexCallbacks = domainCallbackMatches.SelectMany(name => HttpCallbacks[name]);
+                /*var regexCallbacks = new[] { host, DefaultDomain }.Distinct()
+                    .Where(domain => HttpCallbacks.ContainsKey(domain))
+                    .SelectMany(domain => HttpCallbacks[domain]);*/
+                foreach (var kvp in regexCallbacks) {
+                    bool match = kvp.Key.IsMatch(path);
+                    if (!match) continue;
                     try {
-                        methodUsed = callback.Method;
-                        if ((response = await callback(context.Request)) != null)
-                            break;
+                        response = await kvp.Value(context.Request);
+                        methodUsed = kvp.Value.Method;
                     } catch (Exception ex) {
                         response = GetGenericStatusPage(new StatusPageModel(HttpStatusCode.InternalServerError,
                             subtitle: Program.Mode == Mode.Development ? $"<code>{ex.ToString().Replace("\n", "<br />")}</code>" : null
                         ));
-                        break;
                     }
+                    if (response != null) break;
                 }
                 // End Get Callback stuff
                 if (requestTimedOut) return;
                 timeoutTimer.Stop();
                 #endregion
                 if (response == null) {
-                    methodUsed = Type.GetMethod(nameof(GetStaticFile));
+                    methodUsed = MethodBase.GetCurrentMethod();
                     response = GetStaticFile(context.Request);
                 }
                 context.Response.Headers.Add("cache-control",
@@ -240,17 +244,19 @@ namespace WebServer.Http {
         }
 
         List<string> UriFillers = new List<string>() { "index.html", "index.htm" };
-        public HttpResponse GetStaticFile(HttpListenerRequest request) {
+        public HttpResponse GetStaticFile(HttpListenerRequest request) => GetStaticFile(request.Url?.Host, request.Url?.LocalPath);
+
+        public HttpResponse GetStaticFile(string? targetDomain, string? localPath) {
             DirectoryInfo directory = Program.Mode.HasFlag(Mode.Development) ? HttpTemplates.PublicPath : StaticDomainDirectoryInfo;
             // Works on windows, but on linux, the domain folder will need to be lowercase
-            string targetDomain = request.Url?.Host.ToLower() ?? DefaultDomain,
-                   basePath = Path.Combine(directory.FullName, targetDomain);
+            targetDomain = targetDomain?.ToLower() ?? DefaultDomain;
+            string basePath = Path.Combine(directory.FullName, targetDomain);
             bool usingFallbackDomain = !Directory.Exists(basePath);
             if (usingFallbackDomain) { // Only fallback to default if domain folder doesn't exist
                 targetDomain = DefaultDomain;
                 basePath = Path.Combine(directory.FullName, DefaultDomain);
             }
-            string resourceIdentifier = FormatCallbackKey(request.Url!.LocalPath);
+            string resourceIdentifier = FormatCallbackKey(localPath ?? string.Empty);
             CachedResource resource = CachedResource.GetOrCreate(this, resourceIdentifier);
             if (!resource.NeedsUpdate) {
                 resource.StatusCode = HttpStatusCode.OK;
@@ -279,7 +285,7 @@ namespace WebServer.Http {
                 resource.ClearFlag();
                 return resource;
             }
-            return GetGenericStatusPage(new StatusPageModel(Directory.Exists(filePath) ? HttpStatusCode.Forbidden : HttpStatusCode.NotFound), host: request.Url.Host);
+            return GetGenericStatusPage(new StatusPageModel(Directory.Exists(filePath) ? HttpStatusCode.Forbidden : HttpStatusCode.NotFound), host: targetDomain);
         }
 
         public HttpResponse ShowIndexOf(string directoryPath) => throw new NotImplementedException();
@@ -304,21 +310,29 @@ namespace WebServer.Http {
             };
         }
 
-        public bool ContainsEventCallback(Uri uri)
-            => HttpCallbacks.ContainsKey(FormatCallbackKey(uri));
-
-        public HttpServer AddEventCallback(Uri uri, Func<HttpListenerRequest, Task<HttpResponse?>> callback) {
-            string callbackKey = FormatCallbackKey(uri);
-            if (!string.IsNullOrEmpty(callbackKey) && callback != null)
-                HttpCallbacks[callbackKey] = callback;
-            return this;
+        public bool ContainsEventCallback(Task<HttpResponse?> callback) {
+            if (callback == null) return false;
+            return HttpCallbacks.Any(domainKvp => domainKvp.Value.Values.Any(v => v.Equals(callback)));
         }
 
-        public HttpServer RemoveEventCallback(Uri uri) {
-            string callbackKey = FormatCallbackKey(uri);
-            if (HttpCallbacks.ContainsKey(callbackKey))
-                HttpCallbacks.Remove(callbackKey);
-            return this;
+        public bool TryAddEventCallback(string host, Regex regex, Func<HttpListenerRequest, Task<HttpResponse?>> callback) {
+            if (string.IsNullOrEmpty(host) || regex == null || callback == null) return false;
+            host = FormatCallbackKey(host);
+            if (!HttpCallbacks.TryGetValue(host, out var domainCallbacks))
+                HttpCallbacks.Add(host, domainCallbacks = new());
+            domainCallbacks[regex] = callback;
+            return true;
+        }
+
+        public bool TryRemoveEventCallback(Func<HttpListenerRequest, Task<HttpResponse?>> method) {
+            if (method == null) return false;
+
+            ushort removeCount = 0;
+            HttpCallbacks.Values.Do(callbackDict => {
+                callbackDict.Where(kvp => kvp.Value == method)
+                    .Do(kvp => { callbackDict.Remove(kvp.Key); removeCount++; });
+            });
+            return removeCount > 0;
         }
     }
     public class HttpResponse {

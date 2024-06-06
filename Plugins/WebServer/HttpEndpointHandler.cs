@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.RegularExpressions;
 using WebServer.Models;
 
 namespace WebServer.Http {
@@ -29,13 +30,20 @@ namespace WebServer.Http {
             return success;
         }
 
-        public HttpServer AddEventCallback(string path, Func<HttpListenerRequest, Task<HttpResponse?>> callback)
-            => HttpServer.AddEventCallback(BuildUri(path), callback);
+        public bool TryAddEventCallback(Regex regex, Func<HttpListenerRequest, Task<HttpResponse?>> callback)
+            => HttpServer.TryAddEventCallback(Host, regex, callback);
 
-        public HttpServer AddEventCallback(string path, Func<HttpListenerRequest, HttpResponse?> callback)
-            => HttpServer.AddEventCallback(BuildUri(path), async ctx => callback(ctx));
+        public bool TryAddEventCallback(Regex regex, Func<HttpListenerRequest, HttpResponse?> callback)
+            => HttpServer.TryAddEventCallback(Host, regex, async ctx => callback(ctx));
 
-        protected Uri BuildUri(string path) {
+        public bool TryAddEventCallback(string regex, Func<HttpListenerRequest, Task<HttpResponse?>> callback)
+            => TryAddEventCallback(new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant), callback);
+
+        public bool TryAddEventCallback(string regex, Func<HttpListenerRequest, HttpResponse?> callback)
+            => TryAddEventCallback(new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant), callback);
+
+        // Now obsolete since path matching now uses Regex, could still use it to build hrefs though
+        public Uri BuildUri(string path) {
             string uriString = $"https://{Host}/";
             if (string.IsNullOrEmpty(path))
                 return new Uri(uriString);
@@ -46,7 +54,7 @@ namespace WebServer.Http {
             return new Uri(uriString);
         }
 
-        protected Uri BuildUri(HttpListenerRequest request, string path) {
+        public Uri BuildUri(HttpListenerRequest request, string path) {
             string uriString = $"{(request.IsSecureConnection ? "https" : "http")}://{request.UserHostName}/";
             if (string.IsNullOrEmpty(path))
                 return new Uri(uriString);

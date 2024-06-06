@@ -321,6 +321,7 @@ main {
 }
 
 .label .tooltiptext {
+  box-sizing: border-box;
   width: 120px;
   background-color: #131a26;
   color: #fff;

@@ -26,6 +26,8 @@ namespace Portfolio {
 
         public readonly ProjectLinksTable ProjectLinksTable;
         public readonly OrganizationLinksTable OrganizationLinksTable;
+
+        public readonly ProjectMediaTable ProjectMediaTable;
         #endregion
 
         protected override void OnLog(SQLog log) => Logger.Log(log.Message);
@@ -41,7 +43,11 @@ namespace Portfolio {
 
             ProjectLinksTable = RegisterTable<ProjectLinksTable, ProjectLinkInfo>(() => new ProjectLinksTable(this));
             OrganizationLinksTable = RegisterTable<OrganizationLinksTable, OrganizationLinkInfo>(() => new OrganizationLinksTable(this));
-            EventLog.AddCommand<SeedDatabase>();
+
+            ProjectMediaTable = RegisterTable<ProjectMediaTable, ProjectMediaInfo>(() => new ProjectMediaTable(this));
+
+            if (Program.Mode == Mode.Development)
+                EventLog.AddCommand<SeedDatabase>();
             Logger.Log("Initilized Database");
         }
     }

@@ -13,7 +13,7 @@ namespace Portfolio.Projects {
         public override bool IsInDb => EntryId.Value > 0;
         public readonly DbForeignCell<long> ProjectId;
         public readonly DbForeignCell<long> TechId;
-        public readonly DbCell<string> BadgeTextOverride = new DbCell<string>(nameof(BadgeTextOverride), DbType.String, null);
+        public readonly DbCell<string?> BadgeTextOverride = new DbCell<string?>(nameof(BadgeTextOverride), DbType.String, null);
         public readonly DbCell<string> DetailsMarkdown = new DbCell<string>(nameof(DetailsMarkdown), DbType.String, constraints: DbCellFlags.NotNull);
 
         public TechnologyUsedInfo(TechnologiesUsedTable table) : base(table) {

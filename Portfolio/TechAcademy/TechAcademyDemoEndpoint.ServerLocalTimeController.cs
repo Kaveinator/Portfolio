@@ -25,7 +25,7 @@ namespace Portfolio.TechAcademy {
                     () => new RecordedTimestamp(null!)
                 );
                 RefreshCount = Registry.GetCount();
-                Endpoint.AddEventCallback("/orgs/TechAcademy/ServerLocalTimeMVC/demo", OnDemoRequest);
+                Endpoint.TryAddEventCallback(@"^/orgs/TechAcademy/ServerLocalTimeMVC/demo$", OnDemoRequest);
             }
             
             HttpResponse? OnDemoRequest(HttpListenerRequest request) {

@@ -26,12 +26,12 @@ namespace Portfolio.TechAcademy {
                     () => new InsuranceEntities(Endpoint.DemoDatabase),
                     () => new Insuree()
                 );
-                Endpoint.AddEventCallback($"{BindPath}/demo", async _ => await OnView(ViewType.Simple));
-                Endpoint.AddEventCallback($"{BindPath}/compact", async _ => await OnView(ViewType.Compact));
-                Endpoint.AddEventCallback($"{BindPath}/create", OnCreate);
-                Endpoint.AddEventCallback($"{BindPath}/edit", OnEdit);
-                Endpoint.AddEventCallback($"{BindPath}/details", async req => await OnDetails(req, DetailsView.Details));
-                Endpoint.AddEventCallback($"{BindPath}/delete", async req => await OnDetails(req, DetailsView.Delete));
+                Endpoint.TryAddEventCallback(@$"^{BindPath}/demo", async _ => await OnView(ViewType.Simple));
+                Endpoint.TryAddEventCallback(@$"^{BindPath}/compact", async _ => await OnView(ViewType.Compact));
+                Endpoint.TryAddEventCallback(@$"^{BindPath}/create", OnCreate);
+                Endpoint.TryAddEventCallback(@$"^{BindPath}/edit", OnEdit);
+                Endpoint.TryAddEventCallback(@$"^{BindPath}/details", async req => await OnDetails(req, DetailsView.Details));
+                Endpoint.TryAddEventCallback(@$"^{BindPath}/delete", async req => await OnDetails(req, DetailsView.Delete));
             }
 
             HttpResponse? RenderLayout(string title, object content) {
