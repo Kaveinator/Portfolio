@@ -299,7 +299,9 @@ main {
       width var(--animation-duration) ease-in-out;
   }
 
-  .projectEntry > .content > .description { -webkit-line-clamp: 4; }
+  .projectEntry > .content > .labels { display: block; }
+
+  .projectEntry > .content > .description { -webkit-line-clamp: 3; }
 
   .projectEntry > .graphic > img:nth-child(1) { 
     width: 100%;

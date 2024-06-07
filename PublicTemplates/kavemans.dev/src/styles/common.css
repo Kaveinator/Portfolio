@@ -135,6 +135,7 @@ main, .container {
 
 body:not(.stickyFooter) .contentWrapper {
   padding-bottom: 90px;
+  overflow: hidden;
 }
 
 footer {
