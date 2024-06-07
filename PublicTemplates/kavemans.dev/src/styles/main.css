@@ -357,7 +357,7 @@ main .credits {
     height: auto;
   }
 
-  #projects .row > a {
+  #projects .row > p:nth-of-type(1) {
     font-size: 1em;
     font-weight: bold;
     padding-top: 10px;
