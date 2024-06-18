@@ -1,8 +1,7 @@
-
-      <div class="announcements centerize">
-        <div class="info dynamicMargin" onclick="this.remove();">
-          <strong>Maintainance Inbound!</strong>
-          Site is currently in its development stage!
-          <!--Some features/pages may not work properly-->
-        </div>
-      </div>
+<div class="announcements centerize">
+  <div class="info dynamicMargin" onclick="this.remove();">
+    <strong>Maintainance Inbound!</strong>
+    Site is currently in its development stage so some pages may not work properly.
+    There is also data is not public yet since it is either unpopulated or not ready to go public (such as requiring media)
+  </div>
+</div>

@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.SQLite;
 using ExperimentalSQLite;
 using WebServer.Models;
 
@@ -7,6 +8,17 @@ namespace Portfolio.Projects {
         public OrganizationTable(PortfolioDatabase database) : base(database, nameof(OrganizationInfo)) { }
 
         public override OrganizationInfo ConstructRow() => new OrganizationInfo(this);
+
+        public IEnumerable<OrganizationInfo> GetOrgInfoFromProjectInfo(IEnumerable<ProjectInfo> projInfo, bool ensureOrgPublised) {
+            // Since the values are all ints, I won't use SQL parameters here
+            if (!projInfo.Any()) return Array.Empty<OrganizationInfo>();
+            projInfo = projInfo.Where(projInfo => projInfo.OrganizationId.Value != null);
+            string whereClause = $"({string.Join(" OR ", projInfo.Select(techItem => $"`{Schema.OrganizationId.ColumnName}` = {techItem.OrganizationId.Value}"))})" +
+                $" AND `{Schema.IsPublished.ColumnName}` = {true};";
+            using (SQLiteCommand cmd = new($"SELECT * FROM `{TableName}` WHERE {whereClause};", Database.Connection)) {
+                return ReadFromReader(cmd.ExecuteReader());
+            }
+        }
     }
     public class OrganizationInfo : OrganizationTable.SQLiteRow, IPageModel {
         public override IEnumerable<IDbCell> Fields => new IDbCell[] { OrganizationId, UrlName, Name, Role, StartTimestamp, EndTimestamp, BriefText, OverviewSubheaderOverride, OverviewMarkdown, IsPublished };
