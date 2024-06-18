@@ -14,15 +14,24 @@ using Markdig.Parsers;
 namespace Portfolio.Controllers {
     public class ProjectsHomeModel : IPageModel {
         public Dictionary<string, object> Values => new() {
-            { nameof(Organizations), string.Join(string.Empty, Organizations?.Select(org => Controller.Endpoint.GetTemplate("/Projects.OrgItem.html", org)) ?? Array.Empty<string>()) },
-            { nameof(LooseProjects), string.Join(string.Empty, LooseProjects?.Select(project => Controller.Endpoint.GetTemplate("/Projects.ProjectItem.html", project)) ?? Array.Empty<string>()) }
+            { nameof(Organizations), string.Join(string.Empty, Organizations?.OrderByDescending(org => org.StartTimestamp.Value).Select(org => EndpointProvider.GetTemplate("/Projects.OrgItem.html", org)) ?? Array.Empty<string>()) },
+            { nameof(LooseProjects), string.Join(string.Empty, LooseProjects?.Select(project => EndpointProvider.GetTemplate("/Projects.ProjectItem.html", project)) ?? Array.Empty<string>()) }
         };
         readonly ProjectController Controller;
-        public IEnumerable<OrganizationInfo> Organizations;
-        public IEnumerable<ProjectInfo> LooseProjects;
+        readonly HttpEndpointHandler EndpointProvider;
+        public IEnumerable<OrganizationInfo> Organizations; // Assume this is assigned
+        public IEnumerable<ProjectInfo> LooseProjects; // Assume this is assigned
 
-        public ProjectsHomeModel(ProjectController controller) {
+        public ProjectsHomeModel(HttpEndpointHandler endpointProvider, ProjectController controller) {
+            EndpointProvider = endpointProvider;
             Controller = controller;
+        }
+
+        public HttpResponse Render() {
+            if (!EndpointProvider.TryGetTemplate("/Projects.html", out string content, out var statusModel, this))
+                return EndpointProvider.GetGenericStatusPage(statusModel);
+
+            return new HttpResponse(HttpStatusCode.OK, content, MimeTypeMap.GetMimeType(".html"), true);
         }
     }
     public class OrganizationPageModel : IPageModel {
