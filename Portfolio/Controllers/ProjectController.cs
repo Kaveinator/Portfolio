@@ -124,7 +124,8 @@ namespace Portfolio.Controllers {
             if (!proj.IsPublished) return Endpoint.GetGenericStatusPage(new StatusPageModel(HttpStatusCode.Forbidden,
                 subtitle: $"The '{proj.Name}' project page is not currently available"
             ));
-            OrganizationProjectPageModel pageModel = new OrganizationProjectPageModel(this, org, proj, request.Url);
+            var requestUri = new Uri($"http://{request.Headers["Host"]}{request.Url.PathAndQuery}");
+            OrganizationProjectPageModel pageModel = new OrganizationProjectPageModel(this, org, proj, requestUri);
             return new HttpResponse() {
                 StatusCode = HttpStatusCode.OK,
                 AllowCaching = true,
