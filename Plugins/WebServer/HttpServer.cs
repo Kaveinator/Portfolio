@@ -340,10 +340,26 @@ namespace WebServer.Http {
         public string MimeString = MimeTypeMap.GetMimeType(".txt");
         public byte[] Content = Array.Empty<byte>();
         public string ContentString {
-            get => Encoding.Default.GetString(Content);
-            set => Content = Encoding.Default.GetBytes(value);
+            get => Encoding.UTF8.GetString(Content);
+            set => Content = Encoding.UTF8.GetBytes(value);
         }
         public bool AllowCaching = false;
         public string AccessControlAllowOrigin = null;
+
+        public HttpResponse() { }
+
+        public HttpResponse(HttpStatusCode statusCode, byte[] content, string mimeString = "text/plain", bool allowCaching = true) {
+            StatusCode = statusCode;
+            Content = content;
+            MimeString = mimeString;
+            AllowCaching = allowCaching;
+        }
+
+        public HttpResponse(HttpStatusCode statusCode, string content, string mimeString = "text/plain", bool allowCaching = true) {
+            StatusCode = statusCode;
+            ContentString = content;
+            MimeString = mimeString;
+            AllowCaching = allowCaching;
+        }
     }
 }
