@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace ExperimentalSQLite {
     public interface ITable {
@@ -54,7 +55,6 @@ namespace ExperimentalSQLite {
             public virtual IEnumerable<TRow> Query(params WhereClause[] whereClauses) => Query(0, whereClauses);
             public virtual IEnumerable<TRow> Query(int limit, params WhereClause[] whereClauses) {
                 if (whereClauses.Length == 0) throw new Exception("Attempting to execute command with no where clauses. Since this will retrieve all records from DB, this has been disallowed. Use GetAll instead");
-                Queue<TRow> queue = new Queue<TRow>();
                 whereClauses = whereClauses.Where(clause => clause != null).ToArray();
                 // Build the query
                 string command = $"SELECT * FROM `{TableName}`";
@@ -67,20 +67,24 @@ namespace ExperimentalSQLite {
                 using (SQLiteCommand cmd = new SQLiteCommand(command, Database.Connection)) {
                     foreach (var sqlParam in whereClauses.Select(wc => wc.ToParameter()))
                         cmd.Parameters.Add(sqlParam);
-                
-                    // Execute the command and read the results
-                    using (SQLiteDataReader reader = cmd.ExecuteReader()) {
-                        while (reader.Read()) {
-                            Schema.PullHeader(reader); // Reads primary/unique keys
-                            TRow? row = CachedRows.FirstOrDefault(cachedRow => Schema.CompareHeader(cachedRow));
-                            if (row == null) {
-                                row = ConstructRow();
-                                CachedRows.Add(row);
-                            }
-                            row.Pull(reader);
-                            queue.Enqueue(row);
-                        }
+
+                    // Then read it and return :D
+                    return ReadFromReader(cmd.ExecuteReader());
+                }
+            }
+
+            public IEnumerable<TRow> ReadFromReader(SQLiteDataReader reader) {
+                // Read all rows from reader and updates existing/cached rows
+                Queue<TRow> queue = new Queue<TRow>();
+                while (reader.Read()) {
+                    Schema.PullHeader(reader); // Reads primary/unique keys, the used to see if row is cached
+                    TRow? row = CachedRows.FirstOrDefault(cachedRow => Schema.CompareHeader(cachedRow));
+                    if (row == null) {
+                        row = ConstructRow();
+                        CachedRows.Add(row);
                     }
+                    row.Pull(reader);
+                    queue.Enqueue(row);
                 }
                 return queue;
             }

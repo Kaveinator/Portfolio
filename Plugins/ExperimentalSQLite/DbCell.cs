@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
+using System.Globalization;
 
 namespace ExperimentalSQLite {
     public interface IDbCell {
@@ -59,7 +60,7 @@ namespace ExperimentalSQLite {
 
         public override string ToString() => Value?.ToString() ?? string.Empty;
 
-        public override int GetHashCode() => Value.GetHashCode();
+        public override int GetHashCode() => Value?.GetHashCode() ?? default;
 
         public override bool Equals(object other) {
             if (other is DbCell<TValue> otherCell)
@@ -93,12 +94,38 @@ namespace ExperimentalSQLite {
         NotNull = 1 << 2,
         AutoIncrement = 1 << 3,
     }
+    public class DbDateTimeCell<TDateTime> : DbCell<TDateTime> {
+        protected List<string> Formats = new List<string>() { "yyyy-MM-dd HH:mm:ss.ffffff", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd" };
+        public DbDateTimeCell(string name, TDateTime defaultValue = default, string? customFormat = null, DbCellFlags constraints = DbCellFlags.None)
+            : base(name, DbType.DateTime, defaultValue, constraints) 
+        {
+            if (!string.IsNullOrEmpty(customFormat) && !Formats.Contains(customFormat))
+                Formats.Insert(0, customFormat);
+        }
+
+        public override void FromReader(DbDataReader reader) {
+            int ordinal = reader.GetOrdinal(ColumnName);
+            if (reader.IsDBNull(ordinal)) {
+                Value = default;
+                return;
+            }
+
+            string unparsedDateTime = reader.GetString(ordinal);
+            if (!DateTime.TryParseExact(unparsedDateTime, Formats.ToArray(), CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDateTime))
+                throw new FormatException($"Unable to parse '{ColumnName}' as DateTime! Incoming value: `{unparsedDateTime}`");
+
+            Value = (TDateTime)(object)parsedDateTime;
+        }
+    }
     public class DbPrimaryCell : DbCell<long> {
         const DbCellFlags PrimaryBaseFlags = DbCellFlags.PrimaryKey | DbCellFlags.UniqueKey | DbCellFlags.NotNull;
         const DbCellFlags PrimaryAutoFlags = PrimaryBaseFlags | DbCellFlags.AutoIncrement;
         public DbPrimaryCell(string name = "Id", bool autoIncrement = true) 
             : base(name, DbType.Int64, -1L, autoIncrement ? PrimaryAutoFlags : PrimaryBaseFlags) 
             { }
+
+        public override void FromReader(DbDataReader reader)
+            => Value = reader.GetInt64(reader.GetOrdinal(ColumnName));
     }
     public interface IDbForeignCell : IDbCell {
         ITable ForeignTableRefrence { get; }
