@@ -207,7 +207,7 @@ main {
 .projectEntry > .content > .title {
   font-weight: bold;
   overflow: hidden;
-  white-space: normal;
+  white-space: nowrap;
   text-overflow: ellipsis;
   cursor: pointer;
 }
@@ -298,8 +298,14 @@ main {
     transition: box-shadow var(--animation-duration) ease-in-out,
       width var(--animation-duration) ease-in-out;
   }
-
-  .projectEntry > .content > .labels { display: block; }
+  
+  .projectEntry > .content > .timestamp { margin-left: 0; }
+  
+  .projectEntry > .content > .timestamp::before {
+    /* clearfix hack, make a new line even though its an inline element */
+    content: "";
+    display: block;
+  }
 
   .projectEntry > .content > .description { -webkit-line-clamp: 3; }
 

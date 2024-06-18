@@ -44,23 +44,15 @@ namespace Portfolio.Controllers {
         }
 
         public HttpResponse? Index(HttpListenerRequest request) {
-            ProjectsHomeModel model = new ProjectsHomeModel(this) {
+            ProjectsHomeModel model = new ProjectsHomeModel(Endpoint, this) {
                 Organizations = OrganizationTable.Query(new WhereClause<bool>(OrganizationTable.Schema.IsPublished, " = ", true)),
                 LooseProjects = ProjectsTable.Query(
-                    new WhereClause<long?>(ProjectsTable.Schema.OrginizationId, "IS", null),
+                    new WhereClause<long?>(ProjectsTable.Schema.OrganizationId, "IS", null),
                     new WhereClause<bool>(ProjectsTable.Schema.IsPublished, "=", true)
                 )
             };
-            
-            if (!Endpoint.TryGetTemplate("/Projects.html", out string content, out var statusModel, model))
-                return Endpoint.GetGenericStatusPage(statusModel);
-            
-            return new HttpResponse() {
-                StatusCode = HttpStatusCode.OK,
-                AllowCaching = true,
-                ContentString = content,
-                MimeString = "text/html"
-            };
+
+            return model.Render();
         }
 
         public HttpResponse? OnOrgPageRequested(HttpListenerRequest request) {
@@ -76,15 +68,15 @@ namespace Portfolio.Controllers {
             if (!org.IsPublished) return Endpoint.GetGenericStatusPage(new StatusPageModel(HttpStatusCode.Forbidden,
                 subtitle: $"The '{org.Name}' organization page is not currently unavailable. Check back later"
             ));
-            OrganizationLinksTable linksTable = Endpoint.Database.OrganizationLinksTable;
             IEnumerable<ProjectInfo> projects = ProjectsTable.Query(
-                new WhereClause<long?>(ProjectsTable.Schema.OrginizationId, "=", org.OrginizationId),
+                new WhereClause<long?>(ProjectsTable.Schema.OrganizationId, "=", org.OrganizationId),
                 new WhereClause<bool>(ProjectsTable.Schema.IsPublished, "=", true)
             );
+            OrganizationLinksTable linksTable = Endpoint.Database.OrganizationLinksTable;
             OrganizationPageModel orgPageModel = new OrganizationPageModel(this) {
                 OrganizationInfo = org,
-                OrganizationLinks = Endpoint.Database.OrganizationLinksTable.Query(
-                    new WhereClause<long>(linksTable.Schema.OrganizationId, "=", org.OrginizationId),
+                OrganizationLinks = linksTable.Query(
+                    new WhereClause<long>(linksTable.Schema.OrganizationId, "=", org.OrganizationId),
                     new WhereClause<bool>(linksTable.Schema.IsPublished, "=", true)
                 ),
                 Projects = projects
@@ -114,7 +106,7 @@ namespace Portfolio.Controllers {
                 subtitle: $"The '{org.Name}' organization page is not currently unavailable. Check back later"
             ));
             ProjectInfo? proj = ProjectsTable.Query(1,
-                new WhereClause<long?>(ProjectsTable.Schema.OrginizationId, "=", org.OrginizationId),
+                new WhereClause<long?>(ProjectsTable.Schema.OrganizationId, "=", org.OrganizationId),
                 new WhereClause<string>(ProjectsTable.Schema.UrlName, "=", projName),
                 new WhereClause<bool>(ProjectsTable.Schema.IsPublished, "=", true)
             ).FirstOrDefault();

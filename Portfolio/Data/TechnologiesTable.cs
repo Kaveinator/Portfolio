@@ -1,4 +1,6 @@
 using System.Data;
+using System.Data.SQLite;
+using System.Linq;
 using ExperimentalSQLite;
 
 namespace Portfolio.Projects {
@@ -6,6 +8,15 @@ namespace Portfolio.Projects {
         public TechnologiesTable(PortfolioDatabase database) : base(database, nameof(TechnologyInfo)) { }
 
         public override TechnologyInfo ConstructRow() => new TechnologyInfo(this);
+
+        public IEnumerable<TechnologyInfo> GetTechInfoSetFromTechUsedSet(IEnumerable<TechnologyUsedInfo> techUsed) {
+            // Since the values are all ints, I won't use SQL parameters here
+            if (!techUsed.Any()) return Array.Empty<TechnologyInfo>();
+            string whereClause = string.Join(" OR ", techUsed.Select(techItem => $"`{Schema.TechId.ColumnName}` = {techItem.TechId.Value}"));
+            using (SQLiteCommand cmd = new($"SELECT * FROM `{TableName}` WHERE {whereClause};", Database.Connection)) {
+                return ReadFromReader(cmd.ExecuteReader());
+            }
+        }
     }
     public class TechnologyInfo : TechnologiesTable.SQLiteRow {
         public override IEnumerable<IDbCell> Fields => new IDbCell[] { TechId, EnumName, DefaultBadgeText, TitleMarkdown, ContentMarkdown };

@@ -7,9 +7,6 @@ using WebServer.Http;
 using WebServer.Models;
 using Markdig;
 using System.Collections.Generic;
-using Markdig.Syntax;
-using Markdig.Renderers.Html;
-using Markdig.Parsers;
 
 namespace Portfolio.Controllers {
     public class ProjectsHomeModel : IPageModel {
@@ -38,7 +35,7 @@ namespace Portfolio.Controllers {
         public Dictionary<string, object> Values => new Dictionary<string, object>(OrganizationInfo.Values) {
             { nameof(OrganizationLinks), !OrganizationLinks.Any() ? string.Empty : $"<span class=\"linksBox centerize\">{string.Join("", OrganizationLinks.Select(RenderLink))}</span>" },
             { nameof(OverviewSubtitle), OverviewSubtitle },
-            { nameof(Projects), string.Join("", Projects.Select(proj => new ProjectEntryPageModel(this, proj).Render())) }
+            { nameof(Projects), string.Join("", Projects.OrderByDescending(proj => proj.StartTimestamp.Value).Select(proj => new ProjectEntryPageModel(this, proj).Render())) }
         }.Update(nameof(OrganizationInfo.OverviewMarkdown), _ => Markdown.ToHtml(OrganizationInfo.OverviewMarkdown, ProjectController.MarkdownPipeline));
 
         readonly ProjectController Controller;
@@ -139,7 +136,7 @@ namespace Portfolio.Controllers {
             { nameof(OrgUrlName), OrgUrlName },
             { nameof(RenderLinks), RenderLinks() },
             { nameof(RenderMediaContainer), RenderMediaContainer() },
-            { nameof(TechnologiesUsed), string.Join('\n', TechnologiesUsed.Select(tech => new TechUsedModel(this, tech).Render())) }
+            { nameof(TechnologiesUsed), RenderTechnologies() }
         }.Update(nameof(ProjectInfo.OverviewMarkdown), _ => Markdown.ToHtml(ProjectInfo.OverviewMarkdown))
         .Update(nameof(ProjectInfo.HeaderVerticalAnchorOverride), currentValue => currentValue ?? 40);
 
@@ -175,6 +172,19 @@ namespace Portfolio.Controllers {
             RequestLocation = requestLocation;
         }
 
+        string RenderTechnologies() {
+            TechnologiesTable techTable = Controller.Endpoint.Database.TechnologiesTable;
+            var techInfo = techTable.GetTechInfoSetFromTechUsedSet(TechnologiesUsed);
+
+            var technologies = techInfo.Join(TechnologiesUsed,
+                techInfo => techInfo.TechId.Value,
+                techUsedInfo => techUsedInfo.TechId.Value,
+                (techInfo, techUsedInfo) => new KeyValuePair<TechnologyInfo, TechnologyUsedInfo>(techInfo, techUsedInfo)
+            );
+
+            return string.Join('\n', technologies.Select(tech => new TechUsedModel(Controller.Endpoint, tech.Key, tech.Value).Render()));
+        }
+
         string RenderLinks() => string.Join('\n', Links.Select(linkInfo => {
             Uri uri = Uri.IsWellFormedUriString(linkInfo.Href, UriKind.Absolute) ? new Uri(linkInfo.Href)
                 : new Uri(RequestLocation, linkInfo.Href);
@@ -200,19 +210,16 @@ namespace Portfolio.Controllers {
                 .Update(nameof(TechnologyInfo.TitleMarkdown), _ => Markdown.ToHtml(TechnologyInfo.TitleMarkdown, ProjectController.MarkdownPipeline))
                 .Update(nameof(TechnologyInfo.ContentMarkdown), _ => Markdown.ToHtml(TechnologyInfo.ContentMarkdown, ProjectController.MarkdownPipeline))
                 .Update(nameof(ProjectTechnologyInfo.DetailsMarkdown), _ => Markdown.ToHtml(ProjectTechnologyInfo.DetailsMarkdown, ProjectController.MarkdownPipeline));
-            public readonly ProjectController Controller;
+            public readonly HttpEndpointHandler ResourceProvider;
             public readonly TechnologyUsedInfo ProjectTechnologyInfo;
             public readonly TechnologyInfo TechnologyInfo;
-            public TechUsedModel(OrganizationProjectPageModel parentPageModel, TechnologyUsedInfo techUsedInfo) {
-                Controller = parentPageModel.Controller;
+            public TechUsedModel(HttpEndpointHandler resourceProvider, TechnologyInfo techInfo, TechnologyUsedInfo techUsedInfo) {
+                ResourceProvider = resourceProvider;
+                TechnologyInfo = techInfo;
                 ProjectTechnologyInfo = techUsedInfo;
-                TechnologiesTable techTable = Controller.Endpoint.Database.TechnologiesTable;
-                TechnologyInfo = techTable.Query(1,
-                    new WhereClause<long>(techTable.Schema.TechId, "=", techUsedInfo.TechId)
-                ).First();
             }
 
-            public string Render() => Controller.Endpoint.GetTemplate($"{BaseTemplatePath}/TechItem.html", this);
+            public string Render() => ResourceProvider.GetTemplate($"{BaseTemplatePath}/TechItem.html", this);
         }
     }
 }

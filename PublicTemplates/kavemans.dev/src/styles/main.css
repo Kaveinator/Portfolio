@@ -33,7 +33,6 @@ main .intro {
   text-align: left;
   /*background-color: #ff00000D;*/
   font-size: 2em;
-  text-shadow: #000 0 0 5px;
   z-index: 1;
 }
 
@@ -260,7 +259,6 @@ main .credits {
   height: 20px;
   display: block;
   margin: 0;
-  cursor: pointer;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -271,7 +269,6 @@ main .credits {
   min-height: 40px;
 }
 
-#projects .row span,
 #projects .row p {
   font-size: 1em;
   font-weight: normal;
@@ -281,6 +278,17 @@ main .credits {
   margin: 0;
   padding: 10px 15px 0 15px;
 }
+
+#projects .row .timestamp,
+.projectEntry > .content > .timestamp {
+  color: #fff;
+  opacity: 0.6;
+  display: inline;
+  margin-left: 5px;
+  font-size: 0.8em;
+  font-weight: normal;
+}
+
 #projects .row p:nth-of-type(2) {
   padding-top: 0;
 }

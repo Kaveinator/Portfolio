@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.SQLite;
 using ExperimentalSQLite;
 using WebServer.Models;
 
@@ -7,10 +8,34 @@ namespace Portfolio.Projects {
         public ProjectsTable(PortfolioDatabase database) : base(database, nameof(ProjectInfo)) { }
 
         public override ProjectInfo ConstructRow() => new ProjectInfo(this);
+
+        public IEnumerable<ProjectInfo> GetMostRecentProjects(byte limit = 4) {
+            // Since the values are all ints, I won't use SQL parameters here
+            if (limit == 0) return Array.Empty<ProjectInfo>();
+            string cmdText =
+                $"WITH RankedProjects AS (" +
+                $"\n    SELECT *, ROW_NUMBER() OVER (" +
+                $"\n        PARTITION BY {Schema.OrganizationId.ColumnName}" +
+                $"\n        ORDER BY {Schema.StartTimestamp.ColumnName} DESC" +
+                $"\n    ) AS rowNumInOrg" +
+                $"\n    FROM ProjectInfo" +
+                $"\n    WHERE IsPublished = 1" +
+                $"\n)" +
+                $"\nSELECT * FROM RankedProjects WHERE rowNumInOrg = 1" +
+                $"\nORDER BY {Schema.StartTimestamp.ColumnName} DESC LIMIT @{nameof(limit)};";
+            using (SQLiteCommand cmd = new(cmdText, Database.Connection)) {
+                // The readFromReader function automatically reads all rows and returned an IEnumerable<ProjectInfo>
+                cmd.Parameters.AddWithValue($"@{nameof(limit)}", limit);
+                return ReadFromReader(cmd.ExecuteReader());
+            }
+        }
     }
     public class ProjectInfo : ProjectsTable.SQLiteRow, IPageModel {
-        public override IEnumerable<IDbCell> Fields => new IDbCell[] { ProjectId, OrginizationId, UrlName, Name, Role, ThumbnailOverrideHref, HeaderOverrideHref, HeaderVerticalAnchorOverride, BriefText, OverviewMarkdown, IsPublished };
-        public Dictionary<string, object> Values => Fields.Omit(ProjectId, OrginizationId, IsPublished).ToDictionary(cell => cell.ColumnName, cell => cell.Value);
+        public override IEnumerable<IDbCell> Fields => new IDbCell[] { ProjectId, OrganizationId, UrlName, Name, Role, StartTimestamp, EndTimestamp, ThumbnailOverrideHref, HeaderOverrideHref, HeaderVerticalAnchorOverride, BriefText, OverviewMarkdown, IsPublished };
+        //public Dictionary<string, object> Values => Fields.Omit(ProjectId, OrganizationId, IsPublished).ToDictionary(cell => cell.ColumnName, cell => cell.Value);
+        public Dictionary<string, object> Values => new(Fields.Omit(ProjectId, OrganizationId, IsPublished).ToDictionary(cell => cell.ColumnName, cell => cell.Value)) {
+            { "Duration", StartTimestamp.Value.ToDurationString(EndTimestamp.Value) }
+        };
 
         public readonly DbPrimaryCell ProjectId = new DbPrimaryCell(nameof(ProjectId));
         public override bool IsInDb => ProjectId.Value > 0;
