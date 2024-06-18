@@ -64,7 +64,7 @@ namespace Portfolio.Commands {
                 (1, "Car Insurance App", "CarInsuranceMVC", "C# Programmer", "This project utilized ASP.NET MVC to make CRUD pages and Entity Framework as the Database transport.", dummyMarkdown, true)
             }) {
                 var row = new ProjectInfo(database.ProjectsTable);
-                row.OrginizationId.Value = proj.orgId;
+                row.OrganizationId.Value = proj.orgId;
                 row.Name.Value = proj.name;
                 row.UrlName.Value = proj.urlName;
                 row.Role.Value = proj.role;

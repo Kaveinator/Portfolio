@@ -12,8 +12,8 @@ using ExperimentalSQLite;
 using WebServer.Models;
 
 namespace Portfolio.TechAcademy {
-    internal partial class TechAcademyDemoEndpoint { // ServerLocalTimeController.cs
-        class CarInsuranceController {
+    public partial class TechAcademyDemoEndpoint { // ServerLocalTimeController.cs
+        public class CarInsuranceController {
             public const string StandardPath = "/orgs/TechAcademy/CarInsuranceMVC";
             static string TemplatesPath => StandardPath; // They are same literals, but this one binds to Internal Templates
             static string BindPath => StandardPath; // And this one to the request URIs

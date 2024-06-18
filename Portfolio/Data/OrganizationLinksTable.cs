@@ -12,7 +12,7 @@ namespace Portfolio.Projects {
         public readonly DbForeignCell<long> OrganizationId;
         public OrganizationLinkInfo(OrganizationLinksTable table) : base(table) {
             OrganizationTable orgsTable = table.Database.OrganizationTable;
-            OrganizationId = new DbForeignCell<long>(nameof(OrganizationId), orgsTable, orgsTable.Schema.OrginizationId, constraints: DbCellFlags.NotNull);
+            OrganizationId = new DbForeignCell<long>(nameof(OrganizationId), orgsTable, orgsTable.Schema.OrganizationId, constraints: DbCellFlags.NotNull);
         }
     }
 }

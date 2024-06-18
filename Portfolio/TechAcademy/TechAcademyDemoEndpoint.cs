@@ -2,11 +2,11 @@ using WebServer.Http;
 using ExperimentalSQLite;
 
 namespace Portfolio.TechAcademy {
-    internal partial class TechAcademyDemoEndpoint : HttpEndpointHandler {
+    public partial class TechAcademyDemoEndpoint : HttpEndpointHandler {
         public readonly TechAcademyDemoDatabase DemoDatabase;
-        readonly ServerLocalTimeController ServerLocalTimeMVCDemo;
-        readonly NewsLetterController NewsLetterMVCDemo;
-        readonly CarInsuranceController CarInsuranceDemo;
+        public readonly ServerLocalTimeController ServerLocalTimeMVCDemo;
+        public readonly NewsLetterController NewsLetterMVCDemo;
+        public readonly CarInsuranceController CarInsuranceDemo;
         public TechAcademyDemoEndpoint(HttpServer server) : base("kavemans.dev", server) {
             DemoDatabase = TechAcademyDemoDatabase.GetOrCreate();
             ServerLocalTimeMVCDemo = new ServerLocalTimeController(this);

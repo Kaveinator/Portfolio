@@ -14,10 +14,12 @@ namespace Portfolio.Projects {
 
         public readonly DbPrimaryCell ProjectId = new DbPrimaryCell(nameof(ProjectId));
         public override bool IsInDb => ProjectId.Value > 0;
-        public readonly DbForeignCell<long?, long> OrginizationId;
-        public readonly DbStringCell UrlName = new DbStringCell(nameof(UrlName), constraints: DbCellFlags.UniqueKey | DbCellFlags.NotNull, collation: StringCollation.NOCASE);
+        public readonly DbForeignCell<long?, long> OrganizationId;
+        public readonly DbStringCell UrlName = new DbStringCell(nameof(UrlName), constraints: DbCellFlags.NotNull, collation: StringCollation.NOCASE);
         public readonly DbCell<string> Name = new DbCell<string>(nameof(Name), DbType.String, constraints: DbCellFlags.NotNull);
         public readonly DbCell<string> Role = new DbCell<string>(nameof(Role), DbType.String, constraints: DbCellFlags.NotNull);
+        public readonly DbDateTimeCell<DateTime> StartTimestamp = new DbDateTimeCell<DateTime>(nameof(StartTimestamp), constraints: DbCellFlags.NotNull);
+        public readonly DbDateTimeCell<DateTime?> EndTimestamp = new DbDateTimeCell<DateTime?>(nameof(EndTimestamp));
         public readonly DbCell<string?> ThumbnailOverrideHref = new DbCell<string?>(nameof(ThumbnailOverrideHref), DbType.String, null, DbCellFlags.None);
         public readonly DbCell<string?> HeaderOverrideHref = new DbCell<string?>(nameof(HeaderOverrideHref), DbType.String, null, DbCellFlags.None);
         public readonly DbCell<byte?> HeaderVerticalAnchorOverride = new DbCell<byte?>(nameof(HeaderVerticalAnchorOverride), DbType.Byte);
@@ -27,7 +29,7 @@ namespace Portfolio.Projects {
 
         public ProjectInfo(ProjectsTable table) : base(table) {
             OrganizationTable orgsTable = table.Database.OrganizationTable;
-            OrginizationId = new DbForeignCell<long?, long>(nameof(OrginizationId), orgsTable, orgsTable.Schema.OrginizationId);
+            OrganizationId = new DbForeignCell<long?, long>(nameof(OrganizationId), orgsTable, orgsTable.Schema.OrganizationId);
         }
     }
 }

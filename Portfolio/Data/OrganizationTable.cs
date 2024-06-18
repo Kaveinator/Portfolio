@@ -9,13 +9,17 @@ namespace Portfolio.Projects {
         public override OrganizationInfo ConstructRow() => new OrganizationInfo(this);
     }
     public class OrganizationInfo : OrganizationTable.SQLiteRow, IPageModel {
-        public override IEnumerable<IDbCell> Fields => new IDbCell[] { OrginizationId, UrlName, Name, Role, BriefText, OverviewSubheaderOverride, OverviewMarkdown, IsPublished };
-        public Dictionary<string, object> Values => Fields.Omit(OrginizationId, IsPublished).ToDictionary(cell => cell.ColumnName, cell => cell.Value);
-        public readonly DbPrimaryCell OrginizationId = new DbPrimaryCell(nameof(OrginizationId));
-        public override bool IsInDb => OrginizationId.Value > 0;
+        public override IEnumerable<IDbCell> Fields => new IDbCell[] { OrganizationId, UrlName, Name, Role, StartTimestamp, EndTimestamp, BriefText, OverviewSubheaderOverride, OverviewMarkdown, IsPublished };
+        public Dictionary<string, object> Values => new(Fields.Omit(OrganizationId, IsPublished).ToDictionary(cell => cell.ColumnName, cell => cell.Value)) {
+            { "Duration", StartTimestamp.Value.ToDurationString(EndTimestamp.Value) }
+        };
+        public readonly DbPrimaryCell OrganizationId = new DbPrimaryCell(nameof(OrganizationId));
+        public override bool IsInDb => OrganizationId.Value > 0;
         public readonly DbStringCell UrlName = new DbStringCell(nameof(UrlName), constraints: DbCellFlags.UniqueKey | DbCellFlags.NotNull, collation: StringCollation.NOCASE);
         public readonly DbCell<string> Name = new DbCell<string>(nameof(Name), DbType.String, constraints: DbCellFlags.NotNull);
         //public readonly DbCell<string> FullName = new DbCell<string>(nameof(FullName), DbType.String, constraints: DbCellFlags.UniqueKey);
+        public readonly DbDateTimeCell<DateTime> StartTimestamp = new DbDateTimeCell<DateTime>(nameof(StartTimestamp), constraints: DbCellFlags.NotNull);
+        public readonly DbDateTimeCell<DateTime?> EndTimestamp = new DbDateTimeCell<DateTime?>(nameof(EndTimestamp));
         public readonly DbCell<string> Role = new DbCell<string>(nameof(Role), DbType.String, constraints: DbCellFlags.NotNull);
         public readonly DbCell<string> BriefText = new DbCell<string>(nameof(BriefText), DbType.String, constraints: DbCellFlags.NotNull);
         public readonly DbCell<string?> OverviewSubheaderOverride = new DbCell<string?>(nameof(OverviewSubheaderOverride), DbType.String);

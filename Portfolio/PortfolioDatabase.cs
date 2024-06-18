@@ -59,7 +59,7 @@ namespace Portfolio {
     public class ContactInfo : ContactTable.SQLiteRow {
         public override IEnumerable<IDbCell> Fields => new IDbCell[] { Id, Timestamp, Name, Email, Subject, Message };
         public readonly DbPrimaryCell Id = new DbPrimaryCell();
-        public readonly DbCell<DateTime> Timestamp = new DbCell<DateTime>(nameof(Timestamp), DbType.DateTime, DateTime.Now, constraints: DbCellFlags.NotNull);
+        public readonly DbDateTimeCell<DateTime> Timestamp = new DbDateTimeCell<DateTime>(nameof(Timestamp), DateTime.Now, constraints: DbCellFlags.NotNull);
         public readonly DbCell<string> Name = new DbCell<string>(nameof(Name), DbType.String, constraints: DbCellFlags.NotNull);
         public readonly DbCell<string> Email = new DbCell<string>(nameof(Email), DbType.String, constraints: DbCellFlags.NotNull);
         public readonly DbCell<string> Subject = new DbCell<string>(nameof(Subject), DbType.String, constraints: DbCellFlags.NotNull);

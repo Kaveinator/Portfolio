@@ -10,8 +10,8 @@ using ExperimentalSQLite;
 using WebServer.Models;
 
 namespace Portfolio.TechAcademy {
-    internal partial class TechAcademyDemoEndpoint { // ServerLocalTimeController.cs
-        class NewsLetterController {
+    public partial class TechAcademyDemoEndpoint { // ServerLocalTimeController.cs
+        public class NewsLetterController {
             static NewsletterSubscriptionTable Table;
             public const string TemplatesPath = "/orgs/TechAcademy/NewsLetterMVC/";
             public readonly TechAcademyDemoEndpoint Endpoint;

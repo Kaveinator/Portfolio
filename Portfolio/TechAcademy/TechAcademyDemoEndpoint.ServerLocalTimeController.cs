@@ -8,9 +8,9 @@ using ExperimentalSQLite;
 using WebServer.Models;
 
 namespace Portfolio.TechAcademy {
-    internal partial class TechAcademyDemoEndpoint { // ServerLocalTimeController.cs
-        class ServerLocalTimeController : IPageModel { // I would not recommend to make the controller as the Page Model but here we are
-            readonly TimestampsTable Registry;
+    public partial class TechAcademyDemoEndpoint { // ServerLocalTimeController.cs
+        public class ServerLocalTimeController : IPageModel { // I would not recommend to make the controller as the Page Model but here we are
+            public readonly TimestampsTable Registry;
             public readonly TechAcademyDemoEndpoint Endpoint;
             public long RefreshCount;
             public DateTime CurrentDateTime => DateTime.Now;
@@ -41,7 +41,7 @@ namespace Portfolio.TechAcademy {
                     MimeString = "text/html",
                 };
             }
-            class TimestampsTable : TechAcademyDemoDatabase.SQLiteTable<TimestampsTable, RecordedTimestamp> {
+            public class TimestampsTable : TechAcademyDemoDatabase.SQLiteTable<TimestampsTable, RecordedTimestamp> {
                 public TimestampsTable(TechAcademyDemoDatabase db)
                     : base(db, "ServerLocalTimeRegistry") { }
 
@@ -52,12 +52,12 @@ namespace Portfolio.TechAcademy {
                     return (long)command.ExecuteScalar();
                 }
             }
-            class RecordedTimestamp : TimestampsTable.SQLiteRow {
+            public class RecordedTimestamp : TimestampsTable.SQLiteRow {
                 public override IEnumerable<IDbCell> Fields => new IDbCell[] { Id, Timestamp };
 
                 public readonly DbPrimaryCell Id = new DbPrimaryCell();
                 public override bool IsInDb => 0 < Id;
-                public readonly DbCell<DateTime> Timestamp = new DbCell<DateTime>(nameof(Timestamp), DbType.DateTime, default, DbCellFlags.NotNull);
+                public readonly DbDateTimeCell<DateTime> Timestamp = new DbDateTimeCell<DateTime>(nameof(Timestamp), constraints: DbCellFlags.NotNull);
 
                 public RecordedTimestamp(TimestampsTable table) : base(table) {}
                 public RecordedTimestamp(TimestampsTable table, DateTime value) : base(table)
