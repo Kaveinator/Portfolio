@@ -7,10 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using ExperimentalSQLite;
 using Portfolio.Commands;
-using Portfolio.Data;
+using Portfolio.DevLog.Data;
+using Portfolio.Portfolio.DevLog.Data;
 using Portfolio.Projects;
 
-namespace Portfolio {
+namespace Portfolio
+{
     public partial class PortfolioDatabase : SQLiteDatabase<PortfolioDatabase> {
         public static PortfolioDatabase? Instance { get; private set; }
         public static PortfolioDatabase GetOrCreate() => Instance = Instance ?? new PortfolioDatabase();

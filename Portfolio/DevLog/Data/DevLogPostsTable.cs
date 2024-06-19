@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ExperimentalSQLite;
 
-namespace Portfolio.Data {
+namespace Portfolio.DevLog.Data {
     public class DevLogPosts : PortfolioDatabase.SQLiteTable<DevLogPosts, DevLogPostInfo> {
         public DevLogPosts(PortfolioDatabase database) : base(database, nameof(DevLogPostInfo)) { }
 
