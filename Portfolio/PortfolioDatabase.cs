@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using ExperimentalSQLite;
 using Portfolio.Commands;
 using Portfolio.DevLog.Data;
-using Portfolio.Portfolio.DevLog.Data;
 using Portfolio.Projects;
 
 namespace Portfolio
@@ -34,8 +33,9 @@ namespace Portfolio
         #endregion
 
         #region DevLog Tables
-        public readonly DevLogPosts DevLogPosts;
-        public readonly DevLogTags DevLogTags;
+        public readonly DevLogPostsTable DevLogPostsTable;
+        public readonly DevLogTagsTable DevLogTagsTable;
+        public readonly DevLogTagBindingsTable DevLogTagBindingsTable;
         #endregion
 
         protected override void OnLog(SQLog log) => Logger.Log(log.Message);
@@ -58,8 +58,9 @@ namespace Portfolio
             #endregion
 
             #region Init DevLog Tables
-            DevLogPosts = RegisterTable<DevLogPosts, DevLogPostInfo>(() => new DevLogPosts(this));
-            DevLogTags = RegisterTable<DevLogTags, DevLogTagInfo>(() => new DevLogTags(this));
+            DevLogPostsTable = RegisterTable<DevLogPostsTable, DevLogPostInfo>(() => new DevLogPostsTable(this));
+            DevLogTagsTable = RegisterTable<DevLogTagsTable, DevLogTagInfo>(() => new DevLogTagsTable(this));
+            DevLogTagBindingsTable = RegisterTable<DevLogTagBindingsTable, DevLogTagBindingInfo>(() => new DevLogTagBindingsTable(this, DevLogPostsTable, DevLogTagsTable));
             #endregion
 
             if (Program.Mode == Mode.Development)
