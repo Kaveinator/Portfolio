@@ -8,9 +8,10 @@ namespace Portfolio.DevLog.Data {
         public override DevLogPostInfo ConstructRow() => new DevLogPostInfo(this);
     }
     public class DevLogPostInfo : DevLogPostsTable.SQLiteRow {
-        public override IEnumerable<IDbCell> Fields => new IDbCell[] { PostId, TitleText, ContentMarkdown, CreatedTimestamp, LastUpdatedTimestamp, IsPublished };
+        public override IEnumerable<IDbCell> Fields => new IDbCell[] { PostId, TitleText, UrlName, ContentMarkdown, CreatedTimestamp, LastUpdatedTimestamp, IsPublished };
         public override bool IsInDb => PostId.Value > 0;
         public readonly DbPrimaryCell PostId = new DbPrimaryCell(nameof(PostId));
+        public readonly DbCell<string> UrlName = new DbCell<string>(nameof(UrlName), DbType.String, constraints: DbCellFlags.NotNull | DbCellFlags.UniqueKey);
         public readonly DbCell<string> TitleText = new DbCell<string>(nameof(TitleText), DbType.String, constraints: DbCellFlags.NotNull);
         public readonly DbCell<string> ContentMarkdown = new DbCell<string>(nameof(ContentMarkdown), DbType.String, constraints: DbCellFlags.NotNull);
         public readonly DbDateTimeCell<DateTime> CreatedTimestamp = new DbDateTimeCell<DateTime>(nameof(CreatedTimestamp), DateTime.Now, constraints: DbCellFlags.NotNull);
