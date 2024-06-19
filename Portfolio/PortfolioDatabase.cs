@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ExperimentalSQLite;
 using Portfolio.Commands;
+using Portfolio.Data;
 using Portfolio.Projects;
 
 namespace Portfolio {
@@ -30,11 +31,17 @@ namespace Portfolio {
         public readonly ProjectMediaTable ProjectMediaTable;
         #endregion
 
+        #region DevLog Tables
+        public readonly DevLogPosts DevLogPosts;
+        #endregion
+
         protected override void OnLog(SQLog log) => Logger.Log(log.Message);
 
         protected PortfolioDatabase() : base($"Data/{nameof(PortfolioDatabase)}") {
             OpenAsync().Wait();
             ContactInfoTable = RegisterTable<ContactTable, ContactInfo>(() => new ContactTable(this));
+
+            #region Init Org/Project Tables
             OrganizationTable = RegisterTable<OrganizationTable, OrganizationInfo>(() => new OrganizationTable(this));
             ProjectsTable = RegisterTable<ProjectsTable, ProjectInfo>(() => new ProjectsTable(this));
 
@@ -45,6 +52,11 @@ namespace Portfolio {
             OrganizationLinksTable = RegisterTable<OrganizationLinksTable, OrganizationLinkInfo>(() => new OrganizationLinksTable(this));
 
             ProjectMediaTable = RegisterTable<ProjectMediaTable, ProjectMediaInfo>(() => new ProjectMediaTable(this));
+            #endregion
+
+            #region Init DevLog Tables
+            DevLogPosts = RegisterTable<DevLogPosts, DevLogPostInfo>(() => new DevLogPosts(this));
+            #endregion
 
             if (Program.Mode == Mode.Development)
                 EventLog.AddCommand<SeedDatabase>();
