@@ -36,6 +36,7 @@ namespace Portfolio
         public readonly DevLogPostsTable DevLogPostsTable;
         public readonly DevLogTagsTable DevLogTagsTable;
         public readonly DevLogTagBindingsTable DevLogTagBindingsTable;
+        public readonly DevLogProjectBindingsTable DevLogProjectBindingsTable;
         #endregion
 
         protected override void OnLog(SQLog log) => Logger.Log(log.Message);
@@ -60,7 +61,9 @@ namespace Portfolio
             #region Init DevLog Tables
             DevLogPostsTable = RegisterTable<DevLogPostsTable, DevLogPostInfo>(() => new DevLogPostsTable(this));
             DevLogTagsTable = RegisterTable<DevLogTagsTable, DevLogTagInfo>(() => new DevLogTagsTable(this));
+            
             DevLogTagBindingsTable = RegisterTable<DevLogTagBindingsTable, DevLogTagBindingInfo>(() => new DevLogTagBindingsTable(this, DevLogPostsTable, DevLogTagsTable));
+            DevLogProjectBindingsTable = RegisterTable<DevLogProjectBindingsTable, DevLogProjectBindingInfo>(() => new DevLogProjectBindingsTable(this, DevLogPostsTable, ProjectsTable));
             #endregion
 
             if (Program.Mode == Mode.Development)

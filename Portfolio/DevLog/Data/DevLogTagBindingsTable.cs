@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SQLite;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using ExperimentalSQLite;
 
 namespace Portfolio.DevLog.Data {
@@ -13,7 +7,7 @@ namespace Portfolio.DevLog.Data {
         internal readonly DevLogTagsTable TagsTableRefrence;
         // This is another method of getting refrence tables, you could still refrence them through Database, since they are defined there, but it makes it more obvious ig
         public DevLogTagBindingsTable(PortfolioDatabase database, DevLogPostsTable postsRefrence, DevLogTagsTable tagsRefrence)
-            : base(database, nameof(DevLogTagBindingsTable)) {
+            : base(database, "DevLogTagBindings") {
             PostsTableRefrence = postsRefrence;
             TagsTableRefrence = tagsRefrence;
         }

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SQLite;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
 using ExperimentalSQLite;
 
 namespace Portfolio.DevLog.Data {
     public class DevLogPostsTable : PortfolioDatabase.SQLiteTable<DevLogPostsTable, DevLogPostInfo> {
-        public DevLogPostsTable(PortfolioDatabase database) : base(database, nameof(DevLogPostInfo)) { }
+        public DevLogPostsTable(PortfolioDatabase database) : base(database, "DevLogPosts") { }
 
         public override DevLogPostInfo ConstructRow() => new DevLogPostInfo(this);
     }
