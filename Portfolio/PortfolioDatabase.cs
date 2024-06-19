@@ -33,6 +33,7 @@ namespace Portfolio {
 
         #region DevLog Tables
         public readonly DevLogPosts DevLogPosts;
+        public readonly DevLogTags DevLogTags;
         #endregion
 
         protected override void OnLog(SQLog log) => Logger.Log(log.Message);
@@ -56,6 +57,7 @@ namespace Portfolio {
 
             #region Init DevLog Tables
             DevLogPosts = RegisterTable<DevLogPosts, DevLogPostInfo>(() => new DevLogPosts(this));
+            DevLogTags = RegisterTable<DevLogTags, DevLogTagInfo>(() => new DevLogTags(this));
             #endregion
 
             if (Program.Mode == Mode.Development)

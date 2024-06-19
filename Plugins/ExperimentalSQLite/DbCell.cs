@@ -137,17 +137,44 @@ namespace ExperimentalSQLite {
         IDbCell IDbForeignCell.ForeignCellRefrence => Refrence;
         ITable IDbForeignCell.ForeignTableRefrence => TableRefrence;
 
-        public DbForeignCell(string name, ITable table, DbCell<TForeignValue> foreignKeyRefrence, TValue defaultValue = default, DbCellFlags constraints = DbCellFlags.None) 
+        public DbForeignCell(string name, ITable foreignTable, DbCell<TForeignValue> foreignKeyRefrence, TValue defaultValue = default, DbCellFlags constraints = DbCellFlags.None) 
             : base(name, foreignKeyRefrence.DataType, defaultValue, constraints)
         {
-            TableRefrence = table;
+            TableRefrence = foreignTable;
             Refrence = foreignKeyRefrence;
         }
     }
-    
+
     public class DbForeignCell<TValue> : DbForeignCell<TValue, TValue> {
-        public DbForeignCell(string name, ITable table, DbCell<TValue> foreignKeyRefrence, TValue defaultValue = default, DbCellFlags constraints = DbCellFlags.None) 
-            : base(name, table, foreignKeyRefrence, defaultValue, constraints) { }
+        public DbForeignCell(string name, ITable foreignTable, DbCell<TValue> foreignKeyRefrence, TValue defaultValue = default, DbCellFlags constraints = DbCellFlags.None)
+            : base(name, foreignTable, foreignKeyRefrence, defaultValue, constraints) { }
+    }
+    public class DbForeignCellWithCheck<TValue, TForeignValue> : DbForeignCell<TValue, TForeignValue> {
+        public readonly string CheckString;
+
+        /// <summary>Defines a foreign DbCell with a check, keep in mind the check is not sanitized (yet)</summary>
+        /// <param name="name">Name of the cell</param>
+        /// <param name="foreignTable">Foreign table refrence</param>
+        /// <param name="foreignKeyRefrence">DbCell of the cell</param>
+        /// <param name="checkStr">Check string. Not sanitized, so be aware</param>
+        /// <param name="defaultValue">Default value, in this case refrence, if TValue is nullable then it will be null (assuming constraints don't have 'NotNull')</param>
+        /// <param name="constraints">Constraints for the cell <seealso cref=""/></param>
+        public DbForeignCellWithCheck(string name, ITable foreignTable, DbCell<TForeignValue> foreignKeyRefrence, string checkStr, TValue defaultValue = default, DbCellFlags constraints = DbCellFlags.None)
+            : base(name, foreignTable, foreignKeyRefrence, defaultValue, constraints)
+        {
+            CheckString = checkStr;
+        }
+
+        public override string ToCreateTableString() {
+            return $"`{ColumnName}` {DataType.GetDbTypeAsString()} CHECK({CheckString}) "
+                + (Constraints.HasFlag(DbCellFlags.PrimaryKey) ? " PRIMARY KEY" : "")
+                + (Constraints.HasFlag(DbCellFlags.UniqueKey) ? " UNIQUE" : "")
+                + (Constraints.HasFlag(DbCellFlags.NotNull) ? " NOT NULL" : "");
+        }
+    }
+    public class DbForeignCellWithCheck<TValue> : DbForeignCellWithCheck<TValue, TValue> {
+        public DbForeignCellWithCheck(string name, ITable foreignTable, DbCell<TValue> foreignKeyRefrence, string checkStr, TValue defaultValue = default, DbCellFlags constraints = DbCellFlags.None)
+            : base(name, foreignTable, foreignKeyRefrence, checkStr, defaultValue, constraints) { }
     }
     public class DbStringCell : DbCell<string> {
         public readonly StringCollation? Collation; 
