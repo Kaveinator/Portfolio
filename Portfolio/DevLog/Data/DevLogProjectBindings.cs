@@ -1,8 +1,9 @@
 ﻿
 using ExperimentalSQLite;
-using Portfolio.Projects;
+using Portfolio.Projects.Data;
 
-namespace Portfolio.DevLog.Data {
+namespace Portfolio.DevLog.Data
+{
     public class DevLogProjectBindingsTable : PortfolioDatabase.SQLiteTable<DevLogProjectBindingsTable, DevLogProjectBindingInfo> {
         internal readonly DevLogPostsTable PostsTableRefrence;
         internal readonly ProjectsTable ProjectsTableRefrence;

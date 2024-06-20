@@ -10,7 +10,7 @@ using WebServer.Models;
 using ExperimentalSQLite;
 using Portfolio.DevLog.Data;
 using Portfolio.DevLog.Models;
-using Portfolio.Portfolio.DevLog.Models;
+using Portfolio.DevLog.Models;
 
 namespace Portfolio.DevLog.Controllers {
     public class DevLogController {

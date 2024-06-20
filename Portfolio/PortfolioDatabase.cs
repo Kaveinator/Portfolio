@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using ExperimentalSQLite;
 using Portfolio.Commands;
 using Portfolio.DevLog.Data;
-using Portfolio.Projects;
+using Portfolio.Orgs.Data;
+using Portfolio.Projects.Data;
+using Portfolio.Technologies.Data;
 
 namespace Portfolio
 {

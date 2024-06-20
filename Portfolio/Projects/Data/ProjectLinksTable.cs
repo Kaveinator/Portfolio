@@ -1,13 +1,13 @@
 using System.Data;
 using ExperimentalSQLite;
+using Portfolio.Orgs.Data;
 
-namespace Portfolio.Projects {
+namespace Portfolio.Projects.Data {
     public class ProjectLinksTable : AbstractLinksTable<ProjectLinksTable, ProjectLinkInfo> {
         public ProjectLinksTable(PortfolioDatabase db) : base(db, nameof(ProjectLinkInfo)) { }
 
         public override ProjectLinkInfo ConstructRow() => new ProjectLinkInfo(this);
     }
-    
     public class ProjectLinkInfo : ProjectLinksTable.Row {
         public override IEnumerable<IDbCell> Fields => base.Fields.Include(ProjectId, IsLiveDemo);
 

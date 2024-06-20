@@ -1,14 +1,14 @@
-using System.Data.Entity;
 using System.Net;
 using ExperimentalSQLite;
-using Microsoft.VisualBasic;
-using Portfolio.Projects;
 using WebServer.Http;
 using WebServer.Models;
 using Markdig;
-using System.Collections.Generic;
+using Portfolio.Projects.Data;
+using Portfolio.Technologies.Data;
+using Portfolio.Orgs.Data;
+using Portfolio.Projects.Controllers;
 
-namespace Portfolio.Controllers {
+namespace Portfolio.Projects.Models {
     public class ProjectsHomeModel : IPageModel {
         public Dictionary<string, object> Values => new() {
             { nameof(Organizations), string.Join(string.Empty, Organizations?.OrderByDescending(org => org.StartTimestamp.Value).Select(org => EndpointProvider.GetTemplate("/Projects.OrgItem.html", org)) ?? Array.Empty<string>()) },
@@ -126,7 +126,7 @@ namespace Portfolio.Controllers {
                     { "BadgeTextOverride", "Live Demo Available" }
                 };
 
-                public LiveProjectBadge(ProjectEntryPageModel parentPageModel) : base(parentPageModel) {}
+                public LiveProjectBadge(ProjectEntryPageModel parentPageModel) : base(parentPageModel) { }
             }
         }
     }
@@ -205,7 +205,7 @@ namespace Portfolio.Controllers {
         public string Render() => Controller.Endpoint.GetTemplate($"{BaseTemplatePath}/_Layout.html", this);
 
         class TechUsedModel : IPageModel {
-            Dictionary<string, object> IPageModel.Values => new [] { ProjectTechnologyInfo.Fields, TechnologyInfo.Fields }.SelectMany(row => row)
+            Dictionary<string, object> IPageModel.Values => new[] { ProjectTechnologyInfo.Fields, TechnologyInfo.Fields }.SelectMany(row => row)
                 .DistinctBy(field => field.ColumnName).ToDictionary(field => field.ColumnName, field => field.Value)
                 .Update(nameof(TechnologyInfo.TitleMarkdown), _ => Markdown.ToHtml(TechnologyInfo.TitleMarkdown, PortfolioEndpoint.MarkdownPipeline))
                 .Update(nameof(TechnologyInfo.ContentMarkdown), _ => Markdown.ToHtml(TechnologyInfo.ContentMarkdown, PortfolioEndpoint.MarkdownPipeline))

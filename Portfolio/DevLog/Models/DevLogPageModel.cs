@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using WebServer.Http;
 using WebServer.Models;
 
-namespace Portfolio.Portfolio.DevLog.Models {
+namespace Portfolio.DevLog.Models {
     public class DevLogPageModel : IPageModel {
         readonly Dictionary<string, object> Values;
         Dictionary<string, object> IPageModel.Values => Values;

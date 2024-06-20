@@ -5,11 +5,13 @@ using ExperimentalSQLite;
 using Markdig;
 using Markdig.Extensions.Tables;
 using Microsoft.VisualBasic;
-using Portfolio.Projects;
+using Portfolio.Orgs.Data;
+using Portfolio.Projects.Data;
+using Portfolio.Projects.Models;
 using WebServer.Http;
 using WebServer.Models;
 
-namespace Portfolio.Controllers {
+namespace Portfolio.Projects.Controllers {
     public class ProjectController {
         public readonly PortfolioEndpoint Endpoint;
         public OrganizationTable OrganizationTable => Endpoint.Database.OrganizationTable;
@@ -20,7 +22,7 @@ namespace Portfolio.Controllers {
             Endpoint.TryAddEventCallback(@"^/orgs/[^/]+$", OnOrgPageRequested);
             Endpoint.TryAddEventCallback(@"^/orgs/[^/]+/[^/]+$", OnOrgProjectRequested);
             Endpoint.TryAddEventCallback(ImagePathRegex, OnImageRequest);
-            
+
         }
 
         readonly Regex ImagePathRegex = new Regex(@"^/src/orgs/(?:(?<orgName>[^/]+)/)?(?<projName>[^/.]+)\.(?<imgLabel>[^/.]+)\.webp$", RegexOptions.IgnoreCase);

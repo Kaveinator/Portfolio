@@ -1,9 +1,10 @@
 using System.Data;
 using System.Data.SQLite;
 using ExperimentalSQLite;
+using Portfolio.Orgs.Data;
 using WebServer.Models;
 
-namespace Portfolio.Projects {
+namespace Portfolio.Projects.Data {
     public class ProjectsTable : PortfolioDatabase.SQLiteTable<ProjectsTable, ProjectInfo> {
         public ProjectsTable(PortfolioDatabase database) : base(database, nameof(ProjectInfo)) { }
 

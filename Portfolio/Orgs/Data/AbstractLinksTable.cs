@@ -1,7 +1,7 @@
 using System.Data;
 using ExperimentalSQLite;
 
-namespace Portfolio.Projects {
+namespace Portfolio.Orgs.Data {
     public abstract class AbstractLinksTable<TTable, TRow> : PortfolioDatabase.SQLiteTable<TTable, TRow>
         where TTable : AbstractLinksTable<TTable, TRow>
         where TRow : AbstractLinksTable<TTable, TRow>.Row {

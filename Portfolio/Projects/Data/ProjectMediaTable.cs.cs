@@ -3,7 +3,7 @@ using ExperimentalSQLite;
 using Markdig;
 using WebServer.Models;
 
-namespace Portfolio.Projects {
+namespace Portfolio.Projects.Data {
     public class ProjectMediaTable : PortfolioDatabase.SQLiteTable<ProjectMediaTable, ProjectMediaInfo> {
         public ProjectMediaTable(PortfolioDatabase database) : base(database, nameof(ProjectMediaInfo)) { }
 

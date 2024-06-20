@@ -1,10 +1,12 @@
 using WebServer.Http;
-using Portfolio.Controllers;
-using Portfolio.Portfolio.Controllers;
 using Portfolio.DevLog.Controllers;
 using Markdig;
+using Portfolio.Contact.Controllers;
+using Portfolio.Projects.Controllers;
+using Portfolio.Homepage.Controllers;
 
-namespace Portfolio {
+namespace Portfolio
+{
     public class PortfolioEndpoint : HttpEndpointHandler {
         public static MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
                 .UseEmphasisExtras()    // Adds strikethough and stuff

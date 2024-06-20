@@ -1,4 +1,7 @@
-﻿using Portfolio.Projects;
+﻿using Portfolio.Orgs.Data;
+using Portfolio.Projects;
+using Portfolio.Projects.Data;
+using Portfolio.Technologies.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;

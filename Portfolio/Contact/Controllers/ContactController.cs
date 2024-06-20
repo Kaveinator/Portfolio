@@ -6,9 +6,9 @@ using SimpleJSON;
 using Portfolio.Commands;
 using System.Text.RegularExpressions;
 using System.Text;
-using System.Security.Cryptography.X509Certificates;
 
-namespace Portfolio.Controllers {
+namespace Portfolio.Contact.Controllers
+{
     public class ContactController {
         public readonly PortfolioEndpoint Endpoint;
         public ContactController(PortfolioEndpoint endpoint) {
@@ -25,7 +25,7 @@ namespace Portfolio.Controllers {
             // Parse query
             NameValueCollection query;
             using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
-                 query = HttpUtility.ParseQueryString(reader.ReadToEnd());
+                query = HttpUtility.ParseQueryString(reader.ReadToEnd());
 
             // Form Fields
             JSONObject jsonResponse = new JSONObject();
@@ -95,6 +95,7 @@ namespace Portfolio.Controllers {
             };
         }
 
+        // TODO: Make a config for captcha secret/public keys
         static async Task<bool> IsCaptchaValid(string captchaResponse, string remoteIp) {
             const string secretKey = "6LfV48IpAAAAAJntMMii2GLXMXEQc1n5PxlV629p";
             using (HttpClient httpClient = new HttpClient()) {

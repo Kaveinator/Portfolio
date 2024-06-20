@@ -19,6 +19,7 @@
 	  <Folder Remove="PublicTemplates\" />
 	  <Folder Remove="PrivateTemplates\" />
 	  <Folder Include="Data\" />
+	  <Folder Include="Portfolio\Data\" />
 	</ItemGroup>
   <ItemGroup>
     <None Include="configs/**">

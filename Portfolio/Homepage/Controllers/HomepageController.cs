@@ -1,22 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using Markdig;
-using Portfolio.Projects;
+using Portfolio.Orgs.Data;
+using Portfolio.Projects.Data;
 using WebServer.Http;
 using WebServer.Models;
 
-namespace Portfolio.Portfolio.Controllers {
+namespace Portfolio.Homepage.Controllers {
     public class HomepageController {
         public readonly PortfolioEndpoint Endpoint;
-        public static MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
-                .UseGenericAttributes() // Includes GenericAttributesExtension
-                .Build();
         public OrganizationTable OrganizationTable => Endpoint.Database.OrganizationTable;
         public ProjectsTable ProjectsTable => Endpoint.Database.ProjectsTable;
         public HomepageController(PortfolioEndpoint endpoint) {

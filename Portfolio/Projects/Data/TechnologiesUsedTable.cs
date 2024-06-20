@@ -1,7 +1,8 @@
 using System.Data;
 using ExperimentalSQLite;
+using Portfolio.Technologies.Data;
 
-namespace Portfolio.Projects {
+namespace Portfolio.Projects.Data {
     public class TechnologiesUsedTable : PortfolioDatabase.SQLiteTable<TechnologiesUsedTable, TechnologyUsedInfo> {
         public TechnologiesUsedTable(PortfolioDatabase database) : base(database, nameof(TechnologyUsedInfo)) { }
 
