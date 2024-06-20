@@ -12,9 +12,6 @@ using WebServer.Models;
 namespace Portfolio.Controllers {
     public class ProjectController {
         public readonly PortfolioEndpoint Endpoint;
-        public static MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
-                .UseGenericAttributes() // Includes GenericAttributesExtension
-                .Build();
         public OrganizationTable OrganizationTable => Endpoint.Database.OrganizationTable;
         public ProjectsTable ProjectsTable => Endpoint.Database.ProjectsTable;
         public ProjectController(PortfolioEndpoint endpoint) {

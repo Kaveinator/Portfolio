@@ -36,7 +36,7 @@ namespace Portfolio.Controllers {
             { nameof(OrganizationLinks), !OrganizationLinks.Any() ? string.Empty : $"<span class=\"linksBox centerize\">{string.Join("", OrganizationLinks.Select(RenderLink))}</span>" },
             { nameof(OverviewSubtitle), OverviewSubtitle },
             { nameof(Projects), string.Join("", Projects.OrderByDescending(proj => proj.StartTimestamp.Value).Select(proj => new ProjectEntryPageModel(this, proj).Render())) }
-        }.Update(nameof(OrganizationInfo.OverviewMarkdown), _ => Markdown.ToHtml(OrganizationInfo.OverviewMarkdown, ProjectController.MarkdownPipeline));
+        }.Update(nameof(OrganizationInfo.OverviewMarkdown), _ => Markdown.ToHtml(OrganizationInfo.OverviewMarkdown, PortfolioEndpoint.MarkdownPipeline));
 
         readonly ProjectController Controller;
         public OrganizationInfo OrganizationInfo;
@@ -137,7 +137,7 @@ namespace Portfolio.Controllers {
             { nameof(RenderLinks), RenderLinks() },
             { nameof(RenderMediaContainer), RenderMediaContainer() },
             { nameof(TechnologiesUsed), RenderTechnologies() }
-        }.Update(nameof(ProjectInfo.OverviewMarkdown), _ => Markdown.ToHtml(ProjectInfo.OverviewMarkdown))
+        }.Update(nameof(ProjectInfo.OverviewMarkdown), _ => Markdown.ToHtml(ProjectInfo.OverviewMarkdown, PortfolioEndpoint.MarkdownPipeline))
         .Update(nameof(ProjectInfo.HeaderVerticalAnchorOverride), currentValue => currentValue ?? 40);
 
         const string BaseTemplatePath = "/OrgProjectPage";
@@ -207,9 +207,9 @@ namespace Portfolio.Controllers {
         class TechUsedModel : IPageModel {
             Dictionary<string, object> IPageModel.Values => new [] { ProjectTechnologyInfo.Fields, TechnologyInfo.Fields }.SelectMany(row => row)
                 .DistinctBy(field => field.ColumnName).ToDictionary(field => field.ColumnName, field => field.Value)
-                .Update(nameof(TechnologyInfo.TitleMarkdown), _ => Markdown.ToHtml(TechnologyInfo.TitleMarkdown, ProjectController.MarkdownPipeline))
-                .Update(nameof(TechnologyInfo.ContentMarkdown), _ => Markdown.ToHtml(TechnologyInfo.ContentMarkdown, ProjectController.MarkdownPipeline))
-                .Update(nameof(ProjectTechnologyInfo.DetailsMarkdown), _ => Markdown.ToHtml(ProjectTechnologyInfo.DetailsMarkdown, ProjectController.MarkdownPipeline));
+                .Update(nameof(TechnologyInfo.TitleMarkdown), _ => Markdown.ToHtml(TechnologyInfo.TitleMarkdown, PortfolioEndpoint.MarkdownPipeline))
+                .Update(nameof(TechnologyInfo.ContentMarkdown), _ => Markdown.ToHtml(TechnologyInfo.ContentMarkdown, PortfolioEndpoint.MarkdownPipeline))
+                .Update(nameof(ProjectTechnologyInfo.DetailsMarkdown), _ => Markdown.ToHtml(ProjectTechnologyInfo.DetailsMarkdown, PortfolioEndpoint.MarkdownPipeline));
             public readonly HttpEndpointHandler ResourceProvider;
             public readonly TechnologyUsedInfo ProjectTechnologyInfo;
             public readonly TechnologyInfo TechnologyInfo;

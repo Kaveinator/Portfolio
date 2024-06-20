@@ -12,7 +12,7 @@ namespace Portfolio.Projects {
     public class ProjectMediaInfo : ProjectMediaTable.SQLiteRow, IPageModel {
         public override IEnumerable<IDbCell> Fields => new IDbCell[] { EntryId, ProjectId, CaptionMarkdown, ImageSource, IsPublished };
         Dictionary<string, object> IPageModel.Values => Fields.Omit(EntryId, ProjectId, IsPublished).ToDictionary(field => field.ColumnName, field => field.Value)
-            .Update(nameof(CaptionMarkdown), _ => Markdown.ToHtml(CaptionMarkdown.Value));
+            .Update(nameof(CaptionMarkdown), _ => Markdown.ToHtml(CaptionMarkdown.Value, PortfolioEndpoint.MarkdownPipeline));
         public readonly DbPrimaryCell EntryId = new DbPrimaryCell(nameof(EntryId));
         public override bool IsInDb => EntryId.Value > 0;
         public readonly DbForeignCell<long> ProjectId;

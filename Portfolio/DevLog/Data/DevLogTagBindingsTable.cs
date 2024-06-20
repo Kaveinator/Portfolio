@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Data.SQLite;
 using ExperimentalSQLite;
 
 namespace Portfolio.DevLog.Data {
@@ -13,6 +14,22 @@ namespace Portfolio.DevLog.Data {
         }
 
         public override DevLogTagBindingInfo ConstructRow() => new DevLogTagBindingInfo(this);
+
+        public IEnumerable<DevLogTagBindingInfo> GetAllTagsForPosts(IEnumerable<DevLogPostInfo> posts) {
+            if (!posts.Any()) return Array.Empty<DevLogTagBindingInfo>();
+            var postIds = posts.Select(post => post.PostId.Value).Distinct();
+            string whereClause = string.Join(" OR ", postIds.Select(postId => $"`{Schema.PostId.ColumnName}` = {postId}"));
+            using (SQLiteCommand cmd = new($"SELECT * FROM `{TableName}` WHERE {whereClause};", Database.Connection)) {
+                return ReadFromReader(cmd.ExecuteReader());
+            }
+        }
+
+        public IEnumerable<DevLogTagBindingInfo> GetTagBindingsForPost(DevLogPostInfo post) {
+            return post == null ? Array.Empty<DevLogTagBindingInfo>()
+            : Query(
+                new WhereClause<long>(Schema.PostId, "=", post.PostId.Value)
+            );
+        }
     }
     public class DevLogTagBindingInfo : DevLogTagBindingsTable.SQLiteRow {
         public override IEnumerable<IDbCell> Fields => new IDbCell[] { BindingId, PostId, TagId, Priority };

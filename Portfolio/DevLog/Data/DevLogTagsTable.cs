@@ -1,4 +1,6 @@
 ﻿using System.Data;
+using System.Data.SQLite;
+using System.Runtime.CompilerServices;
 using ExperimentalSQLite;
 
 namespace Portfolio.DevLog.Data {
@@ -6,6 +8,15 @@ namespace Portfolio.DevLog.Data {
         public DevLogTagsTable(PortfolioDatabase database) : base(database, "DevLogTags") { }
 
         public override DevLogTagInfo ConstructRow() => new DevLogTagInfo(this);
+
+        public IEnumerable<DevLogTagInfo> GetTagsFromBindingsSet(IEnumerable<DevLogTagBindingInfo> bindingsSet) {
+            if (!bindingsSet.Any()) return Enumerable.Empty<DevLogTagInfo>();
+
+            var tagIds = bindingsSet.Select(bind => bind.TagId.Value).Distinct();
+            string whereClause = string.Join(" OR ", tagIds.Select(tagId => $"`{Schema.TagId.ColumnName}` = {tagId}"));
+            using (SQLiteCommand cmd = new SQLiteCommand($"SELECT * FROM `{TableName}` WHERE {whereClause};", Database.Connection))
+                return ReadFromReader(cmd.ExecuteReader());
+        }
     }
     public class DevLogTagInfo : DevLogTagsTable.SQLiteRow {
         public override IEnumerable<IDbCell> Fields => new IDbCell[] { TagId, ClassName, TagName, ParentTagId };
@@ -20,6 +31,11 @@ namespace Portfolio.DevLog.Data {
             ParentTagId = new DbForeignCellWithCheck<long?, long>(parentTagIdName, table, TagId,
                 $"`{parentTagIdName}` ISNULL OR `{TagId.ColumnName}` <> `{parentTagIdName}`", null
             );
+        }
+    }
+    public static class DevLogTagInfoExtensions {
+        public static string ToHtml(this IEnumerable<DevLogTagInfo> tags) {
+            return string.Join('\n', tags.Select(tag => $"<span class=\"tag {tag.ClassName}\">{tag.TagName}</span>"));
         }
     }
 }
