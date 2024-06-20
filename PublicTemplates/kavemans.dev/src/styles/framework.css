@@ -8,12 +8,12 @@
          url('/src/fonts/OpenSans/Regular.ttf') format('truetype');
 }*/
 
-@font-face{
-	font-family:'Open Sans Light';
-	src: url('./../fonts/OpenSans/Light.eot');
-	src: local('Open Sans Light'),
-         url('./../fonts/OpenSans/Light.woff') format('woff'),
-         url('./../fonts/OpenSans/Light.ttf') format('truetype');
+@font-face {
+  font-family: 'Open Sans Light';
+  src: url('./../fonts/OpenSans/Light.eot');
+  src: local('Open Sans Light'),
+    url('./../fonts/OpenSans/Light.woff') format('woff'),
+    url('./../fonts/OpenSans/Light.ttf') format('truetype');
 }
 
 /* Poppins font... not used
@@ -24,14 +24,15 @@
          url('/src/fonts/Poppins/Light.ttf') format('truetype');
 }*/
 
-html, body {
-    min-height: 100vh;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    font-family: "Open Sans Light", sans-serif;
-    color: #fff;
-    background-color: #131a26;
+html,
+body {
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans Light", sans-serif;
+  color: #fff;
+  background-color: #131a26;
 }
 
 body {
@@ -42,183 +43,298 @@ body {
 }
 
 .centerize {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .clearfix::after {
-    content: "";
-    display: block;
-    clear: both;
+  content: "";
+  display: block;
+  clear: both;
 }
 
 
 /* Setting up grid system */
-.callenderRow, .row {
-    width: 100%;
-    /* Fixes the issue of cols being indented */
-    margin: 0 -15px;
+.callenderRow,
+.row {
+  width: 100%;
+  /* Fixes the issue of cols being indented */
+  margin: 0 -15px;
 }
 
-.callenderRow, .row::after {
-    /*build in clearfix*/
-    content: "";
-    display: block;
-    clear: both;
+.callenderRow,
+.row::after {
+  /*build in clearfix*/
+  content: "";
+  display: block;
+  clear: both;
 }
 
-[class*="calenderCol-"], [class*="col-"] {
-    float: left;
-    padding: 0 0px;
-    /* display: flex;
+[class*="calenderCol-"],
+[class*="col-"] {
+  float: left;
+  padding: 0 0px;
+  /* display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center; */
 }
 
-.col-1 {width: calc(100% * (1 / 12)) !important;}
-.col-2 {width: calc(100% * (2 / 12)) !important;}
-.col-3 {width: calc(100% * (3 / 12)) !important;}
-.col-4 {width: calc(100% * (4 / 12)) !important;}
-.col-5 {width: calc(100% * (5 / 12)) !important;}
-.col-6 {width: calc(100% * (6 / 12)) !important;}
-.col-7 {width: calc(100% * (7 / 12)) !important;}
-.col-8 {width: calc(100% * (8 / 12)) !important;}
-.col-9 {width: calc(100% * (9 / 12)) !important;}
-.col-10 {width: calc(100% * (10 / 12)) !important;}
-.col-11 {width: calc(100% * (11 / 12)) !important;}
-.col-12 {width: calc(100% * (12 / 12)) !important;}
+.col-1 {
+  width: calc(100% * (1 / 12)) !important;
+}
 
-.col-1-centered {width: calc(100% * (1 / 12)) !important; margin: 0 calc(50% * (11 / 12)) !important;}
-.col-2-centered {width: calc(100% * (2 / 12)) !important; margin: 0 calc(50% * (10 / 12)) !important;}
-.col-3-centered {width: calc(100% * (3 / 12)) !important; margin: 0 calc(50% * (9 / 12)) !important;}
-.col-4-centered {width: calc(100% * (4 / 12)) !important; margin: 0 calc(50% * (8 / 12)) !important;}
-.col-5-centered {width: calc(100% * (5 / 12)) !important; margin: 0 calc(50% * (7 / 12)) !important;}
-.col-6-centered {width: calc(100% * (6 / 12)) !important; margin: 0 calc(50% * (6 / 12)) !important;}
-.col-7-centered {width: calc(100% * (7 / 12)) !important; margin: 0 calc(50% * (5 / 12)) !important;}
-.col-8-centered {width: calc(100% * (8 / 12)) !important; margin: 0 calc(50% * (4 / 12)) !important;}
-.col-9-centered {width: calc(100% * (9 / 12)) !important; margin: 0 calc(50% * (3 / 12)) !important;}
-.col-10-centered {width: calc(100% * (10 / 12)) !important; margin: 0 calc(50% * (2 / 12)) !important;}
-.col-11-centered {width: calc(100% * (11 / 12)) !important; margin: 0 calc(50% * (1 / 12)) !important;}
-.col-12-centered {width: calc(100% * (12 / 12)) !important; margin: 0 calc(50% * (0 / 12)) !important;}
+.col-2 {
+  width: calc(100% * (2 / 12)) !important;
+}
 
-.calenderCol-1 { width: calc(100% / 7 * 1) !important; }
-.calenderCol-2 { width: calc(100% / 7 * 2) !important; }
-.calenderCol-3 { width: calc(100% / 7 * 3) !important; }
-.calenderCol-4 { width: calc(100% / 7 * 4) !important; }
-.calenderCol-5 { width: calc(100% / 7 * 5) !important; }
-.calenderCol-6 { width: calc(100% / 7 * 6) !important; }
-.calenderCol-7 { width: calc(100% / 7 * 7) !important; }
+.col-3 {
+  width: calc(100% * (3 / 12)) !important;
+}
+
+.col-4 {
+  width: calc(100% * (4 / 12)) !important;
+}
+
+.col-5 {
+  width: calc(100% * (5 / 12)) !important;
+}
+
+.col-6 {
+  width: calc(100% * (6 / 12)) !important;
+}
+
+.col-7 {
+  width: calc(100% * (7 / 12)) !important;
+}
+
+.col-8 {
+  width: calc(100% * (8 / 12)) !important;
+}
+
+.col-9 {
+  width: calc(100% * (9 / 12)) !important;
+}
+
+.col-10 {
+  width: calc(100% * (10 / 12)) !important;
+}
+
+.col-11 {
+  width: calc(100% * (11 / 12)) !important;
+}
+
+.col-12 {
+  width: calc(100% * (12 / 12)) !important;
+}
+
+.col-1-centered {
+  width: calc(100% * (1 / 12)) !important;
+  margin: 0 calc(50% * (11 / 12)) !important;
+}
+
+.col-2-centered {
+  width: calc(100% * (2 / 12)) !important;
+  margin: 0 calc(50% * (10 / 12)) !important;
+}
+
+.col-3-centered {
+  width: calc(100% * (3 / 12)) !important;
+  margin: 0 calc(50% * (9 / 12)) !important;
+}
+
+.col-4-centered {
+  width: calc(100% * (4 / 12)) !important;
+  margin: 0 calc(50% * (8 / 12)) !important;
+}
+
+.col-5-centered {
+  width: calc(100% * (5 / 12)) !important;
+  margin: 0 calc(50% * (7 / 12)) !important;
+}
+
+.col-6-centered {
+  width: calc(100% * (6 / 12)) !important;
+  margin: 0 calc(50% * (6 / 12)) !important;
+}
+
+.col-7-centered {
+  width: calc(100% * (7 / 12)) !important;
+  margin: 0 calc(50% * (5 / 12)) !important;
+}
+
+.col-8-centered {
+  width: calc(100% * (8 / 12)) !important;
+  margin: 0 calc(50% * (4 / 12)) !important;
+}
+
+.col-9-centered {
+  width: calc(100% * (9 / 12)) !important;
+  margin: 0 calc(50% * (3 / 12)) !important;
+}
+
+.col-10-centered {
+  width: calc(100% * (10 / 12)) !important;
+  margin: 0 calc(50% * (2 / 12)) !important;
+}
+
+.col-11-centered {
+  width: calc(100% * (11 / 12)) !important;
+  margin: 0 calc(50% * (1 / 12)) !important;
+}
+
+.col-12-centered {
+  width: calc(100% * (12 / 12)) !important;
+  margin: 0 calc(50% * (0 / 12)) !important;
+}
+
+.calenderCol-1 {
+  width: calc(100% / 7 * 1) !important;
+}
+
+.calenderCol-2 {
+  width: calc(100% / 7 * 2) !important;
+}
+
+.calenderCol-3 {
+  width: calc(100% / 7 * 3) !important;
+}
+
+.calenderCol-4 {
+  width: calc(100% / 7 * 4) !important;
+}
+
+.calenderCol-5 {
+  width: calc(100% / 7 * 5) !important;
+}
+
+.calenderCol-6 {
+  width: calc(100% / 7 * 6) !important;
+}
+
+.calenderCol-7 {
+  width: calc(100% / 7 * 7) !important;
+}
 
 [class*="calenderCol-"] {
-    box-shadow: inset 0 0 0 1px #000;
-    overflow: hidden;
+  box-shadow: inset 0 0 0 1px #000;
+  overflow: hidden;
 }
 
 [class*="calenderCol-"] .dayHeader {
-    background-color: #000;
-    padding: 5px;
-    width: 100%;
+  background-color: #000;
+  padding: 5px;
+  width: 100%;
 }
 
 ::selection {
-	/*color: rgba(225, 225, 225, 1);*/
-	/*text-shadow: 0px 0px 0px rgba(0, 0, 0, 0.8);*/
-	background-color: rgba(168, 206, 255, 0.45);
+  /*color: rgba(225, 225, 225, 1);*/
+  /*text-shadow: 0px 0px 0px rgba(0, 0, 0, 0.8);*/
+  background-color: rgba(168, 206, 255, 0.45);
 }
 
 a {
-    text-decoration: none;
-    color: #00baff;
+  text-decoration: none;
+  color: #00baff;
 }
 
 a[disabled] {
-    color: #cacaca;
-    cursor: text;
-    pointer-events: none;
+  color: #cacaca;
+  cursor: text;
+  pointer-events: none;
 }
 
 a:not([disabled]):hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .AppInputField {
-    transition: 0.3s;
-    width: 90%;
-    margin: 15px 5%;
+  transition: 0.3s;
+  width: 90%;
+  margin: 15px 5%;
 }
 
 .AppInputField input {
-    outline: none;
-    width: 98%;
-    padding: 0 1%;
-    border: none;
-    font-size: 18pt;
-    background-color: rgba(0, 0, 0, 0);
-    font-family: inherit;
-    color: #fff;
+  outline: none;
+  width: 98%;
+  padding: 0 1%;
+  border: none;
+  font-size: 18pt;
+  background-color: rgba(0, 0, 0, 0);
+  font-family: inherit;
+  color: #fff;
 }
 
 .AppInputField div {
-    height: 3.75px;
-    border-radius: 1.875px;
-    background-color: rgba(255, 255, 255, 0.5);
-    width: 100%;
-    transition: 0.3s;
-    opacity: 0.1764;
+  height: 3.75px;
+  border-radius: 1.875px;
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 100%;
+  transition: 0.3s;
+  opacity: 0.1764;
 }
 
 .AppInputField:hover div {
-    background-color: rgba(255, 255, 255, 0.5);
-    transition: 0.6s;
-    opacity: 0.8;
+  background-color: rgba(255, 255, 255, 0.5);
+  transition: 0.6s;
+  opacity: 0.8;
 }
 
 .AppInputField:focus-within div {
-    background-color: rgb(156, 255, 255);
-    opacity: 0.8;
+  background-color: rgb(156, 255, 255);
+  opacity: 0.8;
 }
 
 .FormButton {
-    padding: 15px 0;
-    margin: 0;
-    font-size: 15pt;
-    color: #fff;
-    background-color: rgba(255, 255, 255, 0.15);
-    border: 0;
-    border-radius: 10px;
-    font-family: inherit;
-    transition: 0.2s;
-    margin-top: 5px;
+  padding: 15px 0;
+  margin: 0;
+  font-size: 15pt;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 0;
+  border-radius: 10px;
+  font-family: inherit;
+  transition: 0.2s;
+  margin-top: 5px;
 }
 
 .FormButton:hover {
-    color: rgb(205, 230, 255);
-    background-color: rgba(255, 255, 255, 0.2);
-    cursor: pointer;
+  color: rgb(205, 230, 255);
+  background-color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
 }
 
 html {
-    --scrollbarBG: #000;
-    --thumbBG: #90A4AE;
-}
-body::-webkit-scrollbar {
-    width: 15px;
-}
-body {
-    scrollbar-width: 8px;
-    scrollbar-color: var(--thumbBG) var(--scrollbarBG);
-}
-body::-webkit-scrollbar-track {
-    background: var(--scrollbarBG);
-}
-body::-webkit-scrollbar-thumb {
-    background-color: var(--thumbBG);
-    border-radius: 6px;
-    border: 3px solid var(--scrollbarBG);
+  --scrollbarBG: #000;
+  --thumbBG: #90A4AE;
 }
 
-.strongTextShadow { text-shadow: #000 0 0 5px, #000 0 0 5px, #000 0 0 5px;}
+body::-webkit-scrollbar {
+  width: 15px;
+}
+
+body {
+  scrollbar-width: 8px;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG);
+  border-radius: 6px;
+  border: 3px solid var(--scrollbarBG);
+}
+
+.strongTextShadow {
+  text-shadow: #000 0 0 5px, #000 0 0 5px, #000 0 0 5px;
+}
+
+.container.hr {
+  box-shadow: rgba(255, 255, 255, 0.3) 0 -3px 0;
+}

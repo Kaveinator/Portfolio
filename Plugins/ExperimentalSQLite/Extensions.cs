@@ -21,13 +21,11 @@ namespace ExperimentalSQLite {
                 case DbType.Decimal:
                     return "NUMERIC";
                 case DbType.String:
+                case DbType.Date:
+                case DbType.DateTime:
                     return "TEXT";
                 case DbType.Binary:
                     return "BLOB";
-                case DbType.Date:
-                    return "DATE";
-                case DbType.DateTime:
-                    return "DATETIME";
                 default:
                     throw new NotSupportedException($"Unsupported DbType: {dbType}");
             }

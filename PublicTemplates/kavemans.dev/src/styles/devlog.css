@@ -32,3 +32,62 @@ main {
   width: 100%;
   display: block;
 }
+
+.entry {
+  border-radius: 6px;
+  padding: 5px;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  background-color: #212937;
+  box-shadow: inset rgb(255 255 255 / 10%) 0 0 0 1px;
+  transition: all 200ms;
+  box-sizing: border-box;
+}
+
+.entry:hover {
+  box-shadow: inset rgb(255 255 255 / 20%) 0 0 0 1px;
+  background-color: #242d3c;
+}
+
+.entry .publishDate::after {
+  content: "·";
+  margin: 0 8px;
+}
+
+.entry > .content {
+  display: flex;
+
+}
+
+.entry .publishDate {
+  float: left;
+  padding-left: 4px;
+  color: rgba(255, 255, 255, 0.6);
+  display: block;
+  height: 40px;
+}
+
+
+
+.tags > .tag {
+  font-size: 9pt;
+  display: inline-block;
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 0 6px;
+  color: #fff;
+  margin-right: 4px;
+}
+
+@media (max-width: 765px), (orientation: portrait) {
+  .entry .dot { display: none; }
+
+  .entry .publishDate {
+    float: none;
+    font-size: 0.8em;
+    display: inline;
+    padding-right: 2px;
+  }
+
+  .entry .publishDate::after { display: none; }
+}

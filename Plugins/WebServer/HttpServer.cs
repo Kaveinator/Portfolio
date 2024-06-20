@@ -188,6 +188,7 @@ namespace WebServer.Http {
                 if (response == null) {
                     methodUsed = MethodBase.GetCurrentMethod();
                     response = GetStaticFile(context.Request);
+                    response.AccessControlAllowOrigin = "*";
                 }
                 context.Response.Headers.Add("cache-control",
                     !response.AllowCaching || Program.Mode == Mode.Development

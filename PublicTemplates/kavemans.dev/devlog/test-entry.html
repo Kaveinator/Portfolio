@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Devlog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/src/styles/framework.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/common.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/main.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/devlog.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/orgOverrides.css" type="text/css" rel="stylesheet">
+    <link href="/src/styles/markdown.css" type="text/css" rel="stylesheet">
+    <model src="kavemans.dev/FontAwesome"></model>
+  </head>
+  <body>
+    <model src="kavemans.dev/header.html"></model>
+    <div class="header"></div>
+    <div class="contentWrapper">
+      <main class="container centerize hr">
+        <model src="kavemans.dev/announcements"></model>
+        <h2 style="margin-block-end: 0;">
+          The Making of the Devlog for my Custom Website
+          <span class="tags"><span class="tag">Web Development</span><span class="tag">Fullstack Development</span></span>
+          <!--<span class="tags"><span class="tag">Web Development</span><span class="tag">Backend Development</span></span>-->
+          <!--<span class="tags"><span class="tag">Unity</span><span class="tag">C#</span><span class="tag">Multiplayer</span><span class="tag">Video</span></span>-->
+          <span style="margin-top: 4px;">Last Updated on Jun 19, 2024</span>
+        </h2>
+        <div class="dynamicMargin md">
+          <h3>The Motive</h3>
+          <p>I've wanted to make a devlog for some time, except I haven't had a clue as to what I should include or how it would look like.
+            For example, I saw some forums contain a catergory for each post alongside with tags.
+            I was already planning to add tags, since it makes searching for content much easier, but didn't understand why I would need another catergory filter.
+            And thought, since I am already able to directly group devlogs with projects (which in turn also connects it to an organization), I could make a filter based
+            on those instead of searching for catergories. Everything else could be searched via a tech stack filter or tag. Therefore, adding yet another searchable term,
+            would just make things confusing to implement and would also hinder the user experience.
+          </p>
+          <h3>Planning</h3>
+          <p>I already have a database for everything related to my portfolio like the contact form submition details, (and recently) projects and organizations and (finally) devlog related tables. Since I already indexed most of my projects into the projects database, I also got the idea of linking projects directly from the devlog post and vice versa, and the most exciting part? This can all be done autonamously, since I made a table dedicated to linking project ids (a number assigned to each project) with devlog post ids (a number assigned to each devlog entry), and adding it to the projects page is a matter of reversing the lookup and then adding it to the project page.</p>
+          
+          <h3>Gonna add more stuff later</h3>
+          <p>This is a mockup after all, this isn't even hooked to the db properly yet</p>
+        </div>
+      </main>
+      <div class="container centerize hr">
+        <h2 style="margin-block-end: 0;">Refrenced Projects<span>Project this post refered to</span></h2>
+        <div class="feed dynamicMargin">
+          <div class="projectEntry dynamicMargin">
+            <div class="graphic">
+              <img src="/src/images/aspects/16x9.png" />
+              <img src="/src/orgs/TankiX/BoomboxUpdate.Thumbnail.webp" onerror="this.style.display = 'none';" />
+            </div>
+            <div class="content">
+              <a href="/orgs/TankiX/BoomboxUpdate" class="title">Boombox Update - Unity Developer</a>
+              <span class="timestamp">Apr 2023</span>
+              <span class="labels">
+                <span class="label centerize">
+                  <img src="/src/sprites/langs/unity.png" alt="Unity3D">
+                  <span class="tooltiptext">Unity3D</span>
+                </span>
+              </span>
+              <div class="description">The update that brought a new map called "Rising School"</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container centerize hr">
+        <h2>You may also like<span>Other posts that have similar tags</span></h2>
+        <div class="feed dynamicMargin">
+          <div class="entry">
+            <span style="display: block;">
+              <span class="publishDate">23 Jan 2024</span>
+              <a href="/devlog/test-entry">Making a Development Log for my Portfolio Website</a>
+            </span>
+            <div class="content">
+              <div class="badges"></div>
+              <div class="tags">
+                <span class="tag">Web Development</span>
+                <span class="tag">Backend Development</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <model src="kavemans.dev/footer.html"></model>
+  </body>
+</html>
