@@ -2,7 +2,7 @@
 <html>
   <head>
 		<meta charset="UTF-8">
-		<title>Devblog</title>
+		<title>DevLog - kavemans.dev</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/src/styles/framework.css" type="text/css" rel="stylesheet" />
     <link href="/src/styles/common.css" type="text/css" rel="stylesheet" />
@@ -17,21 +17,7 @@
       <main class="container centerize">
         <model src="kavemans.dev/announcements"></model>
         <h2>Development Log<span>Recent things I've worked on</span></h2>
-        <div class="feed dynamicMargin">
-          <div class="entry">
-            <span style="display: block;">
-              <span class="publishDate">23 Jan 2024</span>
-              <a href="/devlog/test-entry">The making of this Devlog on my Custom Webserver</a>
-            </span>
-            <div class="content">
-              <div class="badges"></div>
-              <div class="tags">
-                <span class="tag">Web Development</span>
-                <span class="tag">Backend Development</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="feed dynamicMargin">{?:Posts}</div>
       </main>
     </div>
     <model src="kavemans.dev/footer.html"></model>
