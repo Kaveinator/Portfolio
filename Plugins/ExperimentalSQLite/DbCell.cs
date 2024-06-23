@@ -54,8 +54,12 @@ namespace ExperimentalSQLite {
         public virtual void FromReader(DbDataReader reader) {
             int ordinal = reader.GetOrdinal(ColumnName);
             Type valueType = typeof(TValue);
-            Value = reader.IsDBNull(ordinal) ? default!
+            TValue incomingValue = reader.IsDBNull(ordinal) ? default!
                 : (TValue)Convert.ChangeType(reader.GetValue(ordinal), Nullable.GetUnderlyingType(valueType) ?? valueType);
+            bool overrideCurrentValue = (CachedValue ?? incomingValue).Equals(Value);
+            CachedValue = incomingValue;
+            if (overrideCurrentValue)
+                Value = incomingValue;
         }
 
         public override string ToString() => Value?.ToString() ?? string.Empty;
