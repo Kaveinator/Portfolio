@@ -79,23 +79,25 @@ namespace Portfolio
         public override ContactInfo ConstructRow() => new ContactInfo(this);
     }
     public class ContactInfo : ContactTable.SQLiteRow {
-        public override IEnumerable<IDbCell> Fields => new IDbCell[] { Id, Timestamp, Name, Email, Subject, Message };
+        public override IEnumerable<IDbCell> Fields => new IDbCell[] { Id, Timestamp, Name, Email, Subject, Message, CaptchaSuccess };
         public readonly DbPrimaryCell Id = new DbPrimaryCell();
         public readonly DbDateTimeCell<DateTime> Timestamp = new DbDateTimeCell<DateTime>(nameof(Timestamp), DateTime.Now, constraints: DbCellFlags.NotNull);
         public readonly DbCell<string> Name = new DbCell<string>(nameof(Name), DbType.String, constraints: DbCellFlags.NotNull);
         public readonly DbCell<string> Email = new DbCell<string>(nameof(Email), DbType.String, constraints: DbCellFlags.NotNull);
         public readonly DbCell<string> Subject = new DbCell<string>(nameof(Subject), DbType.String, constraints: DbCellFlags.NotNull);
         public readonly DbCell<string> Message = new DbCell<string>(nameof(Message), DbType.String, constraints: DbCellFlags.NotNull);
+        public readonly DbCell<bool> CaptchaSuccess = new DbCell<bool>(nameof(CaptchaSuccess), DbType.Boolean, constraints: DbCellFlags.NotNull);
         public override bool IsInDb => Id != -1L;
 
         public ContactInfo(ContactTable table) : base(table) {}
 
         /// <summary>Call to create this</summary>
-        public ContactInfo(ContactTable table, string name, string email, string subject, string message) : base(table) {
+        public ContactInfo(ContactTable table, string name, string email, string subject, string message, bool captchaSucceeded) : base(table) {
             Name.Value = name;
             Email.Value = email;
             Subject.Value = subject;
             Message.Value = message;
+            CaptchaSuccess.Value = captchaSucceeded;
         }
     }
 }

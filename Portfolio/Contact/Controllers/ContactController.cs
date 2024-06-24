@@ -3,25 +3,37 @@ using System.Web;
 using System.Collections.Specialized;
 using WebServer.Http;
 using SimpleJSON;
-using Portfolio.Commands;
 using System.Text.RegularExpressions;
 using System.Text;
+using WebServer.Models;
 
-namespace Portfolio.Contact.Controllers
-{
+namespace Portfolio.Contact.Controllers {
+    public class ReCaptchaConfig : IPageModel {
+        public static ReCaptchaConfig? Instance { get; private set; }
+        public static ReCaptchaConfig GetOrCreate() => Instance ?? (Instance = new ReCaptchaConfig());
+
+        readonly JSONFile ConfigFile = Properties.GetOrCreate<ReCaptchaConfig>();
+        Dictionary<string, object> IPageModel.Values => new Dictionary<string, object>() {
+            { nameof(SiteKey), SiteKey }
+        };
+        public string? SecretKey => ConfigFile.GetValueOrDefault(nameof(SecretKey), null);
+        public string? SiteKey => ConfigFile.GetValueOrDefault(nameof(SiteKey), null);
+    }
     public class ContactController {
         public readonly PortfolioEndpoint Endpoint;
+        static ReCaptchaConfig Config = ReCaptchaConfig.GetOrCreate();
         public ContactController(PortfolioEndpoint endpoint) {
             Endpoint = endpoint;
             Endpoint.TryAddEventCallback(@"^/contact$", OnContactRequest);
         }
 
-        // Site Key: 6LfV48IpAAAAANnkENaFMFCoq1DASzzdqbiGbrzW
-        // Secret Key: 6LfV48IpAAAAAJntMMii2GLXMXEQc1n5PxlV629p
         static Regex EmailValidator = new Regex(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
         async Task<HttpResponse?> OnContactRequest(HttpListenerRequest request) {
-            if (!request.HttpMethod.Equals(HttpMethod.Post.Method, StringComparison.InvariantCultureIgnoreCase))
-                return null; // By returning null, underlaying server will take care of GET
+            if (!request.HttpMethod.Equals(HttpMethod.Post.Method, StringComparison.InvariantCultureIgnoreCase)) {
+                if (!Endpoint.TryGetTemplate("/Contact.html", out string content, out StatusPageModel statusModel, Config))
+                    return Endpoint.GetGenericStatusPage(statusModel);
+                return new HttpResponse(HttpStatusCode.OK, content, "text/html", true);
+            }
             // Parse query
             NameValueCollection query;
             using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
@@ -41,12 +53,6 @@ namespace Portfolio.Contact.Controllers
             if (string.IsNullOrEmpty(recaptchaToken)) {
                 success = false;
                 errorMessage = "Captcha Token Missing!";
-                goto shipResponse;
-            }
-            captchaValid = await IsCaptchaValid(recaptchaToken, remoteIp);
-            if (!captchaValid.Value) {
-                success = false;
-                errorMessage = "Captcha Validation Failed!";
                 goto shipResponse;
             }
             if (name.Length < 2) {
@@ -69,9 +75,15 @@ namespace Portfolio.Contact.Controllers
                 errorMessage = "Double check your email field!";
                 goto shipResponse;
             }
+            captchaValid = await IsCaptchaValid(recaptchaToken, remoteIp);
+            /*if (!captchaValid.Value) {
+                success = false;
+                errorMessage = "Captcha Validation Failed!";
+                goto shipResponse;
+            }*/
 
             success = true;
-            var info = new ContactInfo(Endpoint.Database.ContactInfoTable, name, email ?? "", subject, message).Push();
+            var info = new ContactInfo(Endpoint.Database.ContactInfoTable, name, email ?? "", subject, message, captchaValid.Value).Push();
         shipResponse:
             jsonResponse.Add(nameof(success), success);
             jsonResponse.Add(nameof(errorMessage), errorMessage);
@@ -95,11 +107,9 @@ namespace Portfolio.Contact.Controllers
             };
         }
 
-        // TODO: Make a config for captcha secret/public keys
         static async Task<bool> IsCaptchaValid(string captchaResponse, string remoteIp) {
-            const string secretKey = "6LfV48IpAAAAAJntMMii2GLXMXEQc1n5PxlV629p";
             using (HttpClient httpClient = new HttpClient()) {
-                var content = new StringContent($"secret={secretKey}&response={captchaResponse}&remoteip={remoteIp}", Encoding.UTF8, "application/x-www-form-urlencoded");
+                var content = new StringContent($"secret={Config.SecretKey}&response={captchaResponse}&remoteip={remoteIp}", Encoding.UTF8, "application/x-www-form-urlencoded");
                 HttpResponseMessage response = await httpClient.PostAsync("https://www.google.com/recaptcha/api/siteverify", content);
                 if (response.IsSuccessStatusCode) {
                     JSONNode obj = JSONNode.Parse(await response.Content.ReadAsStringAsync());

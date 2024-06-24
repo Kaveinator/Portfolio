@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-		<meta charset="UTF-8">
-		<title>Contact Kaveman</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/src/styles/framework.css" type="text/css" rel="stylesheet" />
-    <link href="/src/styles/common.css" type="text/css" rel="stylesheet" />
-    <link href="/src/styles/main.css" type="text/css" rel="stylesheet" />
-    <link href="/src/styles/contact.css" type="text/css" rel="stylesheet" />
-    <model src="kavemans.dev/captchaClassicV3/head.html"></model>
-    <model src="kavemans.dev/FontAwesome"></model>
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Kaveman</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/src/styles/framework.css" type="text/css" rel="stylesheet" />
+  <link href="/src/styles/common.css" type="text/css" rel="stylesheet" />
+  <link href="/src/styles/main.css" type="text/css" rel="stylesheet" />
+  <link href="/src/styles/contact.css" type="text/css" rel="stylesheet" />
+  <script src="https://www.google.com/recaptcha/api.js?render={?:SiteKey}"></script>
+  <model src="kavemans.dev/FontAwesome"></model>
+</head>
   <body class="stickyFooter" onload="Start();">
     <model src="kavemans.dev/header.html"></model>
     <div class="contentWrapper" style="height: 100vh;">
@@ -42,7 +42,7 @@
             <div class="line"></div>
             <span style="font-size: 10pt;">You can also find me on...</span>
             <div class="horizontalGroup centerize">
-              <a style="background-image: url('/src/sprites/platforms/icons8-linkedin-188.png'); --color: #196fbc;" href="http://linkedin.com"></a>
+              <!--<a style="background-image: url('/src/sprites/platforms/icons8-linkedin-188.png'); --color: #196fbc;" href="http://linkedin.com"></a>-->
               <a style="background-image: url('/src/sprites/langs/github.png'); --color: #b4b8bf;" href="http://github.com"></a>
               <a style="background-image: url('/src/sprites/platforms/icons8-discord-188.png'); --color: #567ea2;" href="https://discordapp.com/users/596233653332344842"></a>
             </div>
@@ -50,7 +50,8 @@
         </div>
       </main>
       <script type="text/javascript">
-        const FormContainer = document.querySelector(".form"),
+        const SiteKey = '{?:SiteKey}',
+            FormContainer = document.querySelector(".form"),
             FormElem = FormContainer.querySelector("form#contact"),
             SubmitBtn = FormElem.querySelector("button[type=\"submit\"]"),
             ErrorField = FormElem.querySelector("span.error"),
