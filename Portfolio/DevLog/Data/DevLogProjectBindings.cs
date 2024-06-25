@@ -22,6 +22,7 @@ namespace Portfolio.DevLog.Data
             IEnumerable<DevLogProjectBindingInfo> bindingInfo = Query(
                 new WhereClause<long>(Schema.PostId, '=', post.PostId)
             );
+            if (!bindingInfo.Any()) return Enumerable.Empty<ProjectInfo>();
 
             ProjectsTable projects = Database.ProjectsTable;
             IEnumerable<WhereClause> filters = bindingInfo.DistinctBy(bind => bind.ProjectId.Value)
@@ -40,6 +41,7 @@ namespace Portfolio.DevLog.Data
             IEnumerable<DevLogProjectBindingInfo> bindingInfo = Query(
                 new WhereClause<long>(Schema.ProjectId, '=', project.ProjectId)
             );
+            if (!bindingInfo.Any()) return Enumerable.Empty<DevLogPostInfo>();
 
             DevLogPostsTable posts = Database.DevLogPostsTable;
             IEnumerable<WhereClause> filters = bindingInfo.DistinctBy(bind => bind.ProjectId.Value)

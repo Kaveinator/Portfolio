@@ -1,15 +1,18 @@
 @charset "UTF-8";
 
-.md h1,
-.md h2,
-.md h3,
-.md h4,
-.md h5,
-.md h6 {
-    margin-block-end: 0;
-    margin-bottom: 4px;
+.md h1, .md h2, .md h3,
+.md h4, .md h5, .md h6 {
+  margin-block-end: 0;
+  margin-bottom: 4px;
 }
 
 .md p {
-    margin: 2px 0;
+  margin: 2px 0;
+}
+
+.md kbd, .md code {
+  display: inline-block;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  padding: 2px 4px;
+  border-radius: 5px;
 }
