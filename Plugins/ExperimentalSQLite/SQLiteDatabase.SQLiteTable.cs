@@ -54,6 +54,9 @@ namespace ExperimentalSQLite {
             // TODO: Instead of a `WhereClause` there should be an `IClause` so you can also add OrderByClause or similar
             public virtual IEnumerable<TRow> Query(params WhereClause[] whereClauses) => Query(0, whereClauses);
             public virtual IEnumerable<TRow> Query(int limit, params WhereClause[] whereClauses) {
+                for (byte i = 0; i < whereClauses.Length; i++)
+                    whereClauses[i].SetIndex(i);
+
                 if (whereClauses.Length == 0) throw new Exception("Attempting to execute command with no where clauses. Since this will retrieve all records from DB, this has been disallowed. Use GetAll instead");
                 whereClauses = whereClauses.Where(clause => clause != null).ToArray();
                 // Build the query
