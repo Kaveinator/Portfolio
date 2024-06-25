@@ -24,10 +24,6 @@ main {
   --animation-duration: 200ms;
 }
 
-.container.hr {
-  box-shadow: rgba(255, 255, 255, 0.3) 0 -3px 0;
-}
-
 .subProjectEntry {
   height: auto;
   min-height: 40px;

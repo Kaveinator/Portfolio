@@ -152,9 +152,9 @@ namespace Portfolio.TechAcademy {
                     return null;
                 }
             }
-            public class NewsletterSubscription : NewsletterSubscriptionTable.SQLiteRow, IPageModel {
+            public class NewsletterSubscription : NewsletterSubscriptionTable.SQLiteRow, IDataModel {
                 public override IEnumerable<IDbCell> Fields => new IDbCell[] { Id, FirstName, LastName, EmailAddress, IsDeleted };
-                Dictionary<string, object> IPageModel.Values => Fields.Where(cell => cell != IsDeleted).ToDictionary(cell => cell.ColumnName, cell => cell.Value);
+                Dictionary<string, object> IDataModel.Values => Fields.Where(cell => cell != IsDeleted).ToDictionary(cell => cell.ColumnName, cell => cell.Value);
                 public readonly DbPrimaryCell Id = new DbPrimaryCell();
                 public readonly DbCell<string> FirstName = new DbCell<string>(nameof(FirstName), DbType.String, constraints: DbCellFlags.NotNull);
                 public readonly DbCell<string> LastName = new DbCell<string>(nameof(LastName), DbType.String, constraints: DbCellFlags.NotNull);

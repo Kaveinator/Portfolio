@@ -9,12 +9,12 @@ using WebServer.Models;
 
 namespace Portfolio.TechAcademy {
     public partial class TechAcademyDemoEndpoint { // ServerLocalTimeController.cs
-        public class ServerLocalTimeController : IPageModel { // I would not recommend to make the controller as the Page Model but here we are
+        public class ServerLocalTimeController : IDataModel { // I would not recommend to make the controller as the Page Model but here we are
             public readonly TimestampsTable Registry;
             public readonly TechAcademyDemoEndpoint Endpoint;
             public long RefreshCount;
             public DateTime CurrentDateTime => DateTime.Now;
-            Dictionary<string, object> IPageModel.Values => new() {
+            Dictionary<string, object> IDataModel.Values => new() {
                 { nameof(RefreshCount), RefreshCount },
                 { nameof(CurrentDateTime), CurrentDateTime }
             };

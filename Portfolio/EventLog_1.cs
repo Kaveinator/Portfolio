@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using ExperimentalSQLite;
 using WebServer;
 
-namespace Portfolio.Portfolio {
+namespace Portfolio {
     /*public class Journal<TJournal> : SQLiteDatabase<TJournal>
         where TJournal : SQLiteDatabase<TJournal> {
         public Journal(string name) : base($"logs/{name}") { }

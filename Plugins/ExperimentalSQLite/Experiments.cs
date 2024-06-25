@@ -17,6 +17,9 @@ namespace ExperimentalSQLite {
             Value = value;
         }
 
+        public WhereClause(DbCell<T> column, char _operator, T value)
+            : this(column, _operator.ToString(), value) { }
+
         public override string ToString()
             => $"`{Column.ColumnName}` {Operator} {ParamName}";
 

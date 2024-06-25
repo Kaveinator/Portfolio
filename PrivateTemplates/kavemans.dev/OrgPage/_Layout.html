@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
 	<meta charset="UTF-8">
-	<title>{?:Name} - kavemans.dev</title>
+	<title>{?:Organization.Name} - kavemans.dev</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/src/styles/framework.css" type="text/css" rel="stylesheet" />
     <link href="/src/styles/common.css" type="text/css" rel="stylesheet" />
@@ -18,21 +18,21 @@
   <body>
     <model src="kavemans.dev/header.html"></model>
     <div class="contentWrapper">
-      <main id="simpleParallaxEffect" class="centerize" style="--background-image: url('/src/orgs/{?:UrlName}.Header.webp'); --background-y-anchor: 40%;">
-        <div class="intro dynamicMargin" style="--background-image: url('/src/orgs/{?:UrlName}.webp');">
-          <span>{?:Name} Projects</span>
+      <main id="simpleParallaxEffect" class="centerize" style="--background-image: url('/src/orgs/{?:Organization.UrlName}.Header.webp'); --background-y-anchor: 40%;">
+        <div class="intro dynamicMargin" style="--background-image: url('/src/orgs/{?:Organization.UrlName}.webp');">
+          <span>{?:Organization.Name} Projects</span>
           {?:OrganizationLinks}
           <!--{?:BriefText}-->
         </div>
       </main>
       <div class="container showBorder centerize" style="margin-bottom: 0;">
         <div class="dynamicMargin">
-          <a href="/">Home</a> / <a href="/projects">Projects</a> / {?:Name}
+          <a href="/">Home</a> / <a href="/projects">Projects</a> / {?:Organization.Name}
         </div>
       </div>
       <div class="container centerize overview">
         <h2>Overview<span>{?:OverviewSubtitle}</span></h2>
-        <div class="dynamicMargin">{?:OverviewMarkdown}</div>
+        <div class="dynamicMargin">{?:Organization.OverviewMarkdown}</div>
       </div>
       <div class="container centerize hr">
         <h2>Projects<span>Most recent shown first</span></h2>

@@ -13,6 +13,7 @@ namespace WebServer.Http {
         private const string QuestionMark = "?";
         private const string DefaultMimeType = "application/octet-stream";
         private static readonly Lazy<IDictionary<string, string>> _mappings = new Lazy<IDictionary<string, string>>(BuildMappings);
+        public static string HtmlDocument = GetMimeType(".html");
 
         private static IDictionary<string, string> BuildMappings() {
             var mappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) {

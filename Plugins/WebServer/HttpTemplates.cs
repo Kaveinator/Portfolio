@@ -30,7 +30,7 @@ namespace WebServer.Http {
             return File.ReadAllText(path);
         }*/
 
-        public static bool TryGet(string path, out string result, IPageModel? pageModel = null) {
+        public static bool TryGet(string path, out string result, IDataModel? pageModel = null) {
             Dictionary<string, object>? parameters = pageModel?.Values;
             result = string.Empty;
             if (string.IsNullOrEmpty(path))
@@ -44,8 +44,14 @@ namespace WebServer.Http {
             if (parameters != null) {
                 foreach (string key in parameters.Keys) {
                     string keyString = $"{{?:{key}}}";
+                    object? value = parameters[key];
+                    string strValue = value?.ToString() ?? string.Empty;
+                    if (value is IPageComponentModel pageComponentModel)
+                        strValue = pageComponentModel.Render();
+                    else if (value is IEnumerable<IPageComponentModel> pagesComponentModel)
+                        strValue = string.Join('\n', pagesComponentModel.Select(component => component.Render()));
                     //if (result.IndexOf(keyString) != -1)
-                        result = result.Replace(keyString, parameters[key]?.ToString() ?? string.Empty);
+                    result = result.Replace(keyString, strValue);
                 }
             }
             if (MimeTypeMap.GetMimeType(path).ToLower().Contains("text"))
@@ -53,19 +59,25 @@ namespace WebServer.Http {
             return true;
         }
 
-        public static string Format(string content, IPageModel? pageModel = null) {
+        public static string Format(string content, IDataModel? pageModel = null) {
             Dictionary<string, object>? parameters = pageModel?.Values;
             if (parameters != null) {
                 foreach (string key in parameters.Keys) {
                     string keyString = $"{{?:{key}}}";
+                    object? value = parameters[key];
+                    string strValue = value?.ToString() ?? string.Empty;
+                    if (value is IPageComponentModel pageComponentModel)
+                        strValue = pageComponentModel.Render();
+                    else if (value is IEnumerable<IPageComponentModel> pagesComponentModel)
+                        strValue = string.Join('\n', pagesComponentModel.Select(component => component.Render()));
                     //if (result.IndexOf(keyString) != -1)
-                    content = content.Replace(keyString, parameters[key].ToString());
+                    content = content.Replace(keyString, strValue);
                 }
             }
             return content;
         }
 
-        public static string Get(string path, IPageModel? pageModel = null) {
+        public static string Get(string path, IDataModel? pageModel = null) {
             Dictionary<string, object>? parameters = pageModel?.Values;
             StreamReader reader = GetStream(path);
             if (reader == null)
@@ -78,8 +90,16 @@ namespace WebServer.Http {
                 while ((line = reader.ReadLine()) != null) {
                     foreach (string key in parameters.Keys) {
                         string keyString = $"{{?:{key}}}";
-                        if (line.IndexOf(keyString) != -1)
-                            line = line.Replace(keyString, parameters[key]?.ToString() ?? string.Empty);
+                        if (line.IndexOf(keyString) != -1) {
+                            object value = parameters[key];
+                            string strValue;
+                            if (value is IPageComponentModel component)
+                                strValue = component.Render();
+                            else if (value is IEnumerable<IPageComponentModel> componentCollection)
+                                strValue = string.Join('\n', componentCollection.Select(component => component.Render()));
+                            else strValue = value?.ToString() ?? string.Empty;
+                            line = line.Replace(keyString, strValue);
+                        }
                     }
                     result.Append(line);
                 }

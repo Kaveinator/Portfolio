@@ -38,5 +38,8 @@ namespace System.Linq {
         /// <param name="source">IEnumerable instance</param>
         /// <param name="action">Method to call for each itemk</param>
         public static void Do<T>(this IEnumerable<T> source, Action<T> action) => ForEach<T>(source, action);
+
+        public static void Do<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, Action<TKey, TValue> action)
+            => source.ForEach(kvp => action(kvp.Key, kvp.Value));
     }
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>{?:Post.TitleText} - kavemans.dev</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/src/styles/framework.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/common.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/main.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/devlog.css" type="text/css" rel="stylesheet" />
+    <link href="/src/styles/orgOverrides.css" type="text/css" rel="stylesheet">
+    <link href="/src/styles/markdown.css" type="text/css" rel="stylesheet">
+    <model src="kavemans.dev/FontAwesome"></model>
+  </head>
+  <body>
+    <model src="kavemans.dev/header.html"></model>
+    <div class="header"></div>
+    <div class="contentWrapper">
+      <main class="container centerize">
+        <model src="kavemans.dev/announcements"></model>
+        <h2 style="margin-block-end: 0;">
+          {?:Post.TitleText}
+          <span class="tags">{?:Tags}</span>
+          <!--<span class="tags"><span class="tag">Web Development</span><span class="tag">Backend Development</span></span>-->
+          <!--<span class="tags"><span class="tag">Unity</span><span class="tag">C#</span><span class="tag">Multiplayer</span><span class="tag">Video</span></span>-->
+          <span style="margin-top: 4px;">Last Updated on {?:Post.LastUpdatedDate}</span>
+        </h2>
+        <div class="dynamicMargin md">{?:Post.ContentMarkdown}</div>
+      </main>
+      {?:ProjectsContainer}
+      {?:OtherPosts}
+    </div>
+    <model src="kavemans.dev/footer.html"></model>
+  </body>
+</html>

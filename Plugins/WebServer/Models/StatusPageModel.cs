@@ -3,8 +3,8 @@ using WebServer.Models;
 using System.Net;
 
 namespace WebServer.Models {
-    public class StatusPageModel : IPageModel {
-        Dictionary<string, object> IPageModel.Values => new() {
+    public class StatusPageModel : IDataModel {
+        Dictionary<string, object> IDataModel.Values => new() {
             { nameof(StatusCode), (int)StatusCode },
             { nameof(Header), Header },
             { nameof(Details), Details }
