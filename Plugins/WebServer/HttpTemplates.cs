@@ -9,8 +9,8 @@ using Portfolio;
 namespace WebServer.Http {
     public static class HttpTemplates {
         static EventLogger Logger = EventLogger.GetOrCreate(typeof(HttpTemplates));
-        public static DirectoryInfo PrivatePath = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "PrivateTemplates"));
-        public static DirectoryInfo PublicPath = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "PublicTemplates"));
+        public static DirectoryInfo PrivatePath = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "Views"));
+        public static DirectoryInfo PublicPath = new DirectoryInfo(Path.Combine(Environment.CurrentDirectory, "Public"));
         public static StreamReader GetStream(string path, bool isPrivate = true) {
             if (string.IsNullOrEmpty(path))
                 return null;
