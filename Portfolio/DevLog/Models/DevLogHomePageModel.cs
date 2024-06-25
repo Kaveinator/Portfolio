@@ -9,16 +9,15 @@ using Portfolio.DevLog.Controllers;
 using Portfolio.DevLog.Data;
 
 namespace Portfolio.DevLog.Models {
-    public class HomePageModel : IPageModel {
-        Dictionary<string, object> Values = new();
-        Dictionary<string, object> IPageModel.Values => Values;
+    public class DevLogHomePageModel : IPageModel {
+        public Dictionary<string, object> Values { get; } = new();
 
         readonly PortfolioEndpoint Resources;
         readonly IEnumerable<DevLogPostInfo> Posts;
         readonly IEnumerable<DevLogTagBindingInfo> TagBindings;
         readonly IEnumerable<DevLogTagInfo> Tags;
 
-        public HomePageModel(DevLogController controller, IEnumerable<DevLogPostInfo> posts) {
+        public DevLogHomePageModel(DevLogController controller, IEnumerable<DevLogPostInfo> posts) {
             Resources = controller.Endpoint;
             Posts = posts.Where(post => post.IsPublished.Value)
                 .OrderByDescending(post => post.CreatedTimestamp.Value);

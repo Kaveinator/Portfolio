@@ -19,7 +19,6 @@
 	  <Folder Remove="PublicTemplates\" />
 	  <Folder Remove="PrivateTemplates\" />
 	  <Folder Include="Data\" />
-	  <Folder Include="Portfolio\Data\" />
 	</ItemGroup>
   <ItemGroup>
     <None Include="configs/**">
@@ -37,9 +36,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Portfolio\Data\**" />
     <Compile Remove="PrivateTemplates\**" />
     <Compile Remove="PublicTemplates\**" />
     <Compile Remove="Static\**" />
+    <EmbeddedResource Remove="Portfolio\Data\**" />
+    <None Remove="Portfolio\Data\**" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Data\PortfolioDatabase.db3">

@@ -8,12 +8,12 @@ using System.Text;
 using WebServer.Models;
 
 namespace Portfolio.Contact.Controllers {
-    public class ReCaptchaConfig : IPageModel {
+    public class ReCaptchaConfig : IDataModel {
         public static ReCaptchaConfig? Instance { get; private set; }
         public static ReCaptchaConfig GetOrCreate() => Instance ?? (Instance = new ReCaptchaConfig());
 
         readonly JSONFile ConfigFile = Properties.GetOrCreate<ReCaptchaConfig>();
-        Dictionary<string, object> IPageModel.Values => new Dictionary<string, object>() {
+        Dictionary<string, object> IDataModel.Values => new Dictionary<string, object>() {
             { nameof(SiteKey), SiteKey }
         };
         public string? SecretKey => ConfigFile.GetValueOrDefault(nameof(SecretKey), null);

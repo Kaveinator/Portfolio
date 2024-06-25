@@ -1,6 +1,8 @@
-﻿using Portfolio.DevLog.Controllers;
+﻿using Portfolio.Common.Models;
+using Portfolio.DevLog.Controllers;
 using Portfolio.DevLog.Data;
 using Portfolio.DevLog.Models;
+using Portfolio.Projects.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +13,20 @@ using WebServer.Models;
 
 namespace Portfolio.DevLog.Models {
     public class DevLogPageModel : IPageModel {
-        readonly Dictionary<string, object> Values;
-        Dictionary<string, object> IPageModel.Values => Values;
+        Dictionary<string, object> Values => new Dictionary<string, object>(Post.Values
+            .Update(nameof(Post.ContentMarkdown), _ => Markdig.Markdown.ToHtml(Post.ContentMarkdown.Value, PortfolioEndpoint.MarkdownPipeline))
+            .UpdateKeys(key => $"{nameof(Post)}.{key}")
+        ) {
+            { nameof(Tags), Tags },
+            { nameof(ProjectsContainer), ProjectsContainer },
+            { nameof(OtherPosts), OtherPosts }
+        };
+        Dictionary<string, object> IDataModel.Values => Values;
 
         readonly PortfolioEndpoint Resources;
         readonly DevLogPostInfo Post;
+        public ContainerModel ProjectsContainer;
+        public ContainerModel OtherPosts;
         readonly IEnumerable<DevLogTagInfo> Tags;
 
         public DevLogPageModel(DevLogController controller, DevLogPostInfo post) {
@@ -27,9 +38,13 @@ namespace Portfolio.DevLog.Models {
             var bindings = tagBindingsTable.GetTagBindingsForPost(post);
             Tags = tagsTable.GetTagsFromBindingsSet(bindings);
 
-            Values = new Dictionary<string, object>(post.Values) {
-                { nameof(Tags), Tags.ToHtml() }
-            }.Update(nameof(post.ContentMarkdown), _ => Markdig.Markdown.ToHtml(post.ContentMarkdown.Value, PortfolioEndpoint.MarkdownPipeline));
+            var projects = Resources.Database.DevLogProjectBindingsTable.GetProjects(post, false);
+            if (projects.Any()) {
+                ProjectsContainer = new ContainerModel("Refrenced Projects", "Project this post referred to");
+                ProjectsContainer.ClassList.Add("hr");
+                ProjectsContainer.Content = projects.Select(project => new ProjectEntryModel(controller.Endpoint, project));
+            }
+
         }
 
         public HttpResponse Render() {

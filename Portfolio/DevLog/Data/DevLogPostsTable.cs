@@ -8,7 +8,7 @@ namespace Portfolio.DevLog.Data {
 
         public override DevLogPostInfo ConstructRow() => new DevLogPostInfo(this);
     }
-    public class DevLogPostInfo : DevLogPostsTable.SQLiteRow, IPageModel {
+    public class DevLogPostInfo : DevLogPostsTable.SQLiteRow, IDataModel {
         public override IEnumerable<IDbCell> Fields => new IDbCell[] { PostId, TitleText, UrlName, ContentMarkdown, CreatedTimestamp, LastUpdatedTimestamp, IsPublished };
         public Dictionary<string, object> Values => new(Fields.Omit(IsPublished).ToDictionary(field => field.ColumnName, field => field.Value)) {
             { "CreatedDate", $"{CreatedTimestamp.Value:MMM d yyyy}" },

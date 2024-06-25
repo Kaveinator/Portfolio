@@ -8,10 +8,19 @@ namespace Portfolio.Projects.Data {
         public ProjectMediaTable(PortfolioDatabase database) : base(database, nameof(ProjectMediaInfo)) { }
 
         public override ProjectMediaInfo ConstructRow() => new ProjectMediaInfo(this);
+
+        public IEnumerable<ProjectMediaInfo> GetFromProject(ProjectInfo project, bool includePrivate = false) {
+            if (project == null)
+                return Enumerable.Empty<ProjectMediaInfo>();
+
+            var projectIdFilter = new WhereClause<long>(Schema.ProjectId, '=', project.ProjectId);
+            return !includePrivate ? Query(projectIdFilter)
+                : Query(projectIdFilter, new WhereClause<bool>(Schema.IsPublished, '=', true));
+        }
     }
-    public class ProjectMediaInfo : ProjectMediaTable.SQLiteRow, IPageModel {
+    public class ProjectMediaInfo : ProjectMediaTable.SQLiteRow, IDataModel {
         public override IEnumerable<IDbCell> Fields => new IDbCell[] { EntryId, ProjectId, CaptionMarkdown, ImageSource, IsPublished };
-        Dictionary<string, object> IPageModel.Values => Fields.Omit(EntryId, ProjectId, IsPublished).ToDictionary(field => field.ColumnName, field => field.Value)
+        Dictionary<string, object> IDataModel.Values => Fields.Omit(EntryId, ProjectId, IsPublished).ToDictionary(field => field.ColumnName, field => field.Value)
             .Update(nameof(CaptionMarkdown), _ => Markdown.ToHtml(CaptionMarkdown.Value, PortfolioEndpoint.MarkdownPipeline));
         public readonly DbPrimaryCell EntryId = new DbPrimaryCell(nameof(EntryId));
         public override bool IsInDb => EntryId.Value > 0;

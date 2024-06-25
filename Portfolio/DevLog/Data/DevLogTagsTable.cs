@@ -2,6 +2,7 @@
 using System.Data.SQLite;
 using System.Runtime.CompilerServices;
 using ExperimentalSQLite;
+using WebServer.Models;
 
 namespace Portfolio.DevLog.Data {
     public class DevLogTagsTable : PortfolioDatabase.SQLiteTable<DevLogTagsTable, DevLogTagInfo> {
@@ -18,8 +19,9 @@ namespace Portfolio.DevLog.Data {
                 return ReadFromReader(cmd.ExecuteReader());
         }
     }
-    public class DevLogTagInfo : DevLogTagsTable.SQLiteRow {
+    public class DevLogTagInfo : DevLogTagsTable.SQLiteRow, IPageComponentModel {
         public override IEnumerable<IDbCell> Fields => new IDbCell[] { TagId, ClassName, TagName, ParentTagId };
+        Dictionary<string, object> IDataModel.Values => new();
         public override bool IsInDb => TagId.Value > 0;
         public readonly DbPrimaryCell TagId = new DbPrimaryCell(nameof(TagId));
         public readonly DbCell<string> ClassName = new DbCell<string>(nameof(ClassName), DbType.String, constraints: DbCellFlags.NotNull | DbCellFlags.UniqueKey);
@@ -32,10 +34,7 @@ namespace Portfolio.DevLog.Data {
                 $"`{parentTagIdName}` ISNULL OR `{TagId.ColumnName}` <> `{parentTagIdName}`", null
             );
         }
-    }
-    public static class DevLogTagInfoExtensions {
-        public static string ToHtml(this IEnumerable<DevLogTagInfo> tags) {
-            return string.Join('\n', tags.Select(tag => $"<span class=\"tag {tag.ClassName}\">{tag.TagName}</span>"));
-        }
+
+        public string Render() => $"<span class=\"tag {ClassName}\">{TagName}</span>";
     }
 }

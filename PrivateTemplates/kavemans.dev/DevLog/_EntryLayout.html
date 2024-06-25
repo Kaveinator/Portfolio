@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Devlog</title>
+    <title>{?:Post.TitleText} - kavemans.dev</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/src/styles/framework.css" type="text/css" rel="stylesheet" />
     <link href="/src/styles/common.css" type="text/css" rel="stylesheet" />
@@ -19,22 +19,16 @@
       <main class="container centerize">
         <model src="kavemans.dev/announcements"></model>
         <h2 style="margin-block-end: 0;">
-          {?:TitleText}
+          {?:Post.TitleText}
           <span class="tags">{?:Tags}</span>
           <!--<span class="tags"><span class="tag">Web Development</span><span class="tag">Backend Development</span></span>-->
           <!--<span class="tags"><span class="tag">Unity</span><span class="tag">C#</span><span class="tag">Multiplayer</span><span class="tag">Video</span></span>-->
-          <span style="margin-top: 4px;">Last Updated on {?:LastUpdatedDate}</span>
+          <span style="margin-top: 4px;">Last Updated on {?:Post.LastUpdatedDate}</span>
         </h2>
-        <div class="dynamicMargin md">{?:ContentMarkdown}</div>
+        <div class="dynamicMargin md">{?:Post.ContentMarkdown}</div>
       </main>
-      <div class="container centerize hr">
-        <h2 style="margin-block-end: 0;">Refrenced Projects<span>Project this post referred to</span></h2>
-        <div class="feed dynamicMargin">{?:RefrencedProjects}</div>
-      </div>
-      <div class="container centerize hr">
-        <h2>You may also like<span>Other posts that have similar tags</span></h2>
-        <div class="feed dynamicMargin">{?:OtherPosts}</div>
-      </div>
+      {?:ProjectsContainer}
+      {?:OtherPosts}
     </div>
     <model src="kavemans.dev/footer.html"></model>
   </body>

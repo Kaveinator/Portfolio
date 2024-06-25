@@ -15,6 +15,42 @@ namespace Portfolio.DevLog.Data
         }
 
         public override DevLogProjectBindingInfo ConstructRow() => new DevLogProjectBindingInfo(this);
+
+        public IEnumerable<ProjectInfo> GetProjects(DevLogPostInfo post, bool includePrivate = false) {
+            if (post == null)
+                return Enumerable.Empty<ProjectInfo>();
+            IEnumerable<DevLogProjectBindingInfo> bindingInfo = Query(
+                new WhereClause<long>(Schema.PostId, '=', post.PostId)
+            );
+
+            ProjectsTable projects = Database.ProjectsTable;
+            IEnumerable<WhereClause> filters = bindingInfo.DistinctBy(bind => bind.ProjectId.Value)
+                .Select(bindInfo => new WhereClause<long>(projects.Schema.ProjectId, '=', bindInfo.ProjectId)
+            );
+            if (!includePrivate)
+                filters = filters.Append(new WhereClause<bool>(projects.Schema.IsPublished, '=', true));
+
+            return projects.Query(filters.ToArray());
+        }
+
+        public IEnumerable<DevLogPostInfo> GetPosts(ProjectInfo project, bool includePrivate = false) {
+            if (project == null)
+                return Enumerable.Empty<DevLogPostInfo>();
+
+            IEnumerable<DevLogProjectBindingInfo> bindingInfo = Query(
+                new WhereClause<long>(Schema.ProjectId, '=', project.ProjectId)
+            );
+
+            DevLogPostsTable posts = Database.DevLogPostsTable;
+            IEnumerable<WhereClause> filters = bindingInfo.DistinctBy(bind => bind.ProjectId.Value)
+                .Select(bindInfo => new WhereClause<long>(posts.Schema.PostId, '=', bindInfo.PostId)
+            );
+
+            if (!includePrivate)
+                filters = filters.Append(new WhereClause<bool>(posts.Schema.IsPublished, '=', true));
+
+            return posts.Query(filters.ToArray());
+        }
     }
     public class DevLogProjectBindingInfo : DevLogProjectBindingsTable.SQLiteRow {
         public override IEnumerable<IDbCell> Fields => new IDbCell[] { BindingId, PostId, ProjectId };

@@ -58,8 +58,8 @@ namespace Portfolio.TechAcademy {
                 )) return Endpoint.GetGenericStatusPage(statusModel);
                 return RenderLayout("Home", content);
             }
-            public class DetailsModel : IPageModel {
-                Dictionary<string, object> IPageModel.Values => new() {
+            public class DetailsModel : IDataModel {
+                Dictionary<string, object> IDataModel.Values => new() {
                     { nameof(Rows), string.Join(string.Empty, Rows.Select(row => Controller.Endpoint.TryGetTemplate(RowModelPath, out var renderedHtml, out var _, row) ? renderedHtml : string.Empty)) }
                 };
                 readonly CarInsuranceController Controller;
@@ -197,7 +197,7 @@ namespace Portfolio.TechAcademy {
 
                 public override Insuree ConstructRow() => new Insuree(this);
             }
-            public class Insuree : InsuranceEntities.SQLiteRow, IPageModel {
+            public class Insuree : InsuranceEntities.SQLiteRow, IDataModel {
                 public override IEnumerable<IDbCell> Fields => new IDbCell[] {
                     Id, FirstName, LastName, EmailAddress, DateOfBirth,
                     CarYear, CarMake, CarModel,
@@ -206,7 +206,7 @@ namespace Portfolio.TechAcademy {
                 };
                 public IEnumerable<IDbCell> NonPublicFields => new IDbCell[] { IsArchived };
                 
-                Dictionary<string, object> IPageModel.Values {
+                Dictionary<string, object> IDataModel.Values {
                     get {
                         Dictionary<string, object> result = new();
                         foreach (IDbCell cell in Fields) {
@@ -330,7 +330,7 @@ namespace Portfolio.TechAcademy {
                 }
             }
             
-            class LayoutModel : IPageModel {
+            class LayoutModel : IDataModel {
                 public Dictionary<string, object> Values => new() {
                     { nameof(Title), Title },
                     { nameof(Year), Year },

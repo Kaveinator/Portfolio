@@ -9,11 +9,11 @@ using Portfolio.DevLog.Data;
 using ExperimentalSQLite;
 
 namespace Portfolio.DevLog.Models {
-    internal class DevLogEntryModel : IPageModel {
+    internal class DevLogEntryModel : IPageComponentModel {
         public Dictionary<string, object> Values => new Dictionary<string, object>(Post.Values) {
-            { nameof(Tags), Tags.ToHtml() }
+            { nameof(Tags), Tags }
         };
-        public readonly PortfolioEndpoint Resources; 
+        public readonly PortfolioEndpoint Resources;
         public readonly DevLogPostInfo Post;
         public readonly IEnumerable<DevLogTagInfo> Tags;
 

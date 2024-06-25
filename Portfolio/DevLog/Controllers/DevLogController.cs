@@ -34,7 +34,7 @@ namespace Portfolio.DevLog.Controllers {
                 new WhereClause<bool>(DevLogPostsTable.Schema.IsPublished, "=", true)
             ).OrderByDescending(post => post.CreatedTimestamp.Value);
 
-            HomePageModel model = new HomePageModel(this, posts);
+            DevLogHomePageModel model = new DevLogHomePageModel(this, posts);
             return model.Render();
         }
 

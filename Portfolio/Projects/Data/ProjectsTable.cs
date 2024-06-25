@@ -31,7 +31,7 @@ namespace Portfolio.Projects.Data {
             }
         }
     }
-    public class ProjectInfo : ProjectsTable.SQLiteRow, IPageModel {
+    public class ProjectInfo : ProjectsTable.SQLiteRow, IDataModel {
         public override IEnumerable<IDbCell> Fields => new IDbCell[] { ProjectId, OrganizationId, UrlName, Name, Role, StartTimestamp, EndTimestamp, ThumbnailOverrideHref, HeaderOverrideHref, HeaderVerticalAnchorOverride, BriefText, OverviewMarkdown, IsPublished };
         //public Dictionary<string, object> Values => Fields.Omit(ProjectId, OrganizationId, IsPublished).ToDictionary(cell => cell.ColumnName, cell => cell.Value);
         public Dictionary<string, object> Values => new(Fields.Omit(ProjectId, OrganizationId, IsPublished).ToDictionary(cell => cell.ColumnName, cell => cell.Value)) {

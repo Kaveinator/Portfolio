@@ -1,8 +1,11 @@
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using ExperimentalSQLite;
+using Markdig;
 using Portfolio.Projects.Data;
+using WebServer.Models;
 
 namespace Portfolio.Technologies.Data {
     public class TechnologiesTable : PortfolioDatabase.SQLiteTable<TechnologiesTable, TechnologyInfo> {
@@ -18,9 +21,19 @@ namespace Portfolio.Technologies.Data {
                 return ReadFromReader(cmd.ExecuteReader());
             }
         }
+
+        public TechnologyInfo? GetTechInfo(TechnologyUsedInfo techUsedInfo) {
+            if (techUsedInfo == null) return null;
+            return Query(1,
+                new WhereClause<long>(Schema.TechId, "=", techUsedInfo.TechId)
+            ).FirstOrDefault(defaultValue: null);
+        }
     }
-    public class TechnologyInfo : TechnologiesTable.SQLiteRow {
+    public class TechnologyInfo : TechnologiesTable.SQLiteRow, IDataModel {
         public override IEnumerable<IDbCell> Fields => new IDbCell[] { TechId, EnumName, DefaultBadgeText, TitleMarkdown, ContentMarkdown };
+        public Dictionary<string, object> Values => Fields.ToDictionary(field => field.ColumnName, field => field.Value)
+            .Update(TitleMarkdown.ColumnName, _ => Markdown.ToHtml(TitleMarkdown.Value, PortfolioEndpoint.MarkdownPipeline))
+            .Update(ContentMarkdown.ColumnName, _ => Markdown.ToHtml(ContentMarkdown.Value, PortfolioEndpoint.MarkdownPipeline));
         public readonly DbPrimaryCell TechId = new DbPrimaryCell(nameof(TechId));
         public override bool IsInDb => TechId.Value > 0;
         public readonly DbCell<string> EnumName = new DbCell<string>(nameof(EnumName), DbType.String, constraints: DbCellFlags.NotNull | DbCellFlags.UniqueKey);

@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using WebServer.Http;
 
 namespace WebServer.Models {
-    public interface IPageModel {
+    public interface IDataModel {
         /// <summary>
         /// Reflection would have made this so much easier,
         /// but one of my goals for this project is to not use
@@ -9,9 +10,15 @@ namespace WebServer.Models {
         /// </summary>
         Dictionary<string, object> Values { get; }
     }
-    public class DynamicPageModel : IPageModel {
+    public interface IPageModel : IDataModel {
+        HttpResponse Render();
+    }
+    public interface IPageComponentModel : IDataModel {
+        string Render();
+    }
+    public class DynamicPageModel : IDataModel {
         public Dictionary<string, object> Values = new();
-        Dictionary<string, object> IPageModel.Values => Values;
+        Dictionary<string, object> IDataModel.Values => Values;
         
         public DynamicPageModel Add(string key, object value) {
             if (!Values.TryAdd(key, value))

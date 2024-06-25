@@ -1,0 +1,13 @@
+<div class="projectEntry dynamicMargin">
+  <div class="graphic">
+    <img src="/src/images/aspects/16x9.png" />
+    <img src="{?:ThumbnailUrl}" onerror="this.style.display = 'none';" />
+  </div>
+  <div class="content">
+    <a href="{?:ProjectUrl}" class="title">{?:project.Name} - {?:project.Role}</a>
+    <span class="timestamp">{?:project.Duration}</span>
+    <span class="labels">{?:Badges}</span>
+    </span>
+    <div class="description">{?:project.BriefText}</div>
+  </div>
+</div>
