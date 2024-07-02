@@ -12,7 +12,7 @@ namespace Portfolio.Commands {
 
         public void Execute(string[] args) {
             if (args.Length > 1) { Help(args); return; }
-            Program.Endpoint?.Stop();
+            try { Program.Endpoint?.Stop(); } catch { }
             Environment.Exit(0);
         }
         public string Help(string[] args)

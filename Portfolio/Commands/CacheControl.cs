@@ -11,7 +11,7 @@ namespace Portfolio.Commands {
         enum Action { Purge, View, MaxAge }
 
         public string Name => "Cache Control";
-        public string Description => "Mofify cache policies";
+        public string Description => "Modify cache policies";
         public string[] Aliases => new[] { "cache", "c" };
 
         public void Execute(string[] args) {
