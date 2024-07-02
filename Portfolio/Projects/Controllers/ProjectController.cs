@@ -31,7 +31,7 @@ namespace Portfolio.Projects.Controllers {
 
         }
 
-        readonly Regex ImagePathRegex = new Regex(@"^/src/projects/(?<projName>[^/.]+)\.(?<imgLabel>[^/.]+)\.webp$", RegexOptions.IgnoreCase);
+        readonly Regex ImagePathRegex = new Regex(@"^/src/projects/(?<projName>[^/.]+)(\.(?<imgLabel>[^/.]+))?\.webp$", RegexOptions.IgnoreCase);
         public HttpResponse? OnImageRequest(HttpListenerRequest request) {
             HttpResponse staticResponse = Endpoint.HttpServer.GetStaticFile(request);
             if (staticResponse.IsSuccessStatusCode)
@@ -42,7 +42,10 @@ namespace Portfolio.Projects.Controllers {
                     projName = match.Groups.TryGetValue(nameof(projName), out grp) ? grp.Value : null,
                     imgLabel = match.Groups.TryGetValue(nameof(imgLabel), out grp) ? grp.Value : null;
                 // Currently routes to a single image, but will need to look at org banners => then default banners
-                return "Default".IsOfAny(orgName, projName) ? staticResponse : Endpoint.HttpServer.GetStaticFile(request.Url.Host, $"/src/orgs/Default.{imgLabel}.webp");
+                bool reRoute = !"Default".IsOfAny(orgName, projName);
+                if (!reRoute) return staticResponse;
+                string routePath = $"/src/projects/Default{(!string.IsNullOrEmpty(imgLabel) ? $".{imgLabel}" : "")}.webp";
+                return Endpoint.HttpServer.GetStaticFile(request.Url.Host, routePath);
             }
 
             return staticResponse;
