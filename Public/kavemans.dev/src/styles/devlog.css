@@ -16,7 +16,7 @@ body > .header {
   box-shadow: inset rgb(255 255 255 / 30%) 0 -3px 0;
 }
 
-main {
+main.devlogContainer {
   padding-top: 80px !important;
   height: auto;
   background-image: none;

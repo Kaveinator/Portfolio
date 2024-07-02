@@ -107,6 +107,8 @@ main {
   position: relative;
 }
 
+.projectEntry:nth-of-type(1) { margin-top: 0; }
+
 .projectEntry:hover {
   --background-color: #242d3c;
   ---border-width: 1px;
