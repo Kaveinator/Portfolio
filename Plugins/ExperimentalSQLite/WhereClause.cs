@@ -17,7 +17,7 @@ namespace ExperimentalSQLite {
         public override string ToString()
             => $"`{Column.ColumnName}` {Operator} {ParamName}";
 
-        protected string ParamName => $"@{Index}-{Column.ColumnName}-Value";
+        protected string ParamName => $"@{Index}{Column.ColumnName}Value";
         
         public void SetIndex(byte index) => Index = index;
 
@@ -30,13 +30,15 @@ namespace ExperimentalSQLite {
         public new readonly DbCell<T> Column;
         public new readonly T Value;
 
-        public WhereClause(DbCell<T> column, string _operator, T value)
+        public WhereClause(DbCell<T> column, string _operator, T value, byte index = 0)
             : base(column, _operator, value) {
             Column = column;
             Value = value;
+            SetIndex(index);
         }
 
-        public WhereClause(DbCell<T> column, char _operator, T value)
-            : this(column, _operator.ToString(), value) { }
+        public WhereClause(DbCell<T> column, char _operator, T value, byte index = 0)
+            : this(column, _operator.ToString(), value)
+            => SetIndex(index);
     }
 }

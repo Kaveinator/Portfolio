@@ -1,4 +1,7 @@
-﻿using Portfolio.Orgs.Data;
+﻿using Markdig;
+using Portfolio.Common.Models;
+using Portfolio.DevLog.Models;
+using Portfolio.Orgs.Data;
 using Portfolio.Projects.Data;
 using System;
 using System.Collections.Generic;
@@ -24,6 +27,7 @@ namespace Portfolio.Projects.Models {
         public string OrganizationLinkElement;
         public readonly IEnumerable<ProjectLinkInfo> ProjectLinks;
         public readonly IEnumerable<TechUsedModel> TechnologiesUsed;
+        public readonly ContainerModel? RelatedDevLogs;
         public readonly ProjectMediaModel MediaContainer;
 
         public ProjectPageModel(PortfolioEndpoint endpoint, ProjectInfo project, OrganizationInfo? org) {
@@ -55,6 +59,16 @@ namespace Portfolio.Projects.Models {
                 (techUsed, techInfo) => new TechUsedModel(endpoint, techUsed, techInfo)
             );
             MediaContainer = new ProjectMediaModel(endpoint, Project);
+
+            var posts = endpoint.Database.DevLogProjectBindingsTable.GetPosts(project)
+                .OrderByDescending(post => post.CreatedTimestamp.Value)
+                .Select(post => new DevLogEntryModel(endpoint, post));
+            if (posts.Any()) {
+                RelatedDevLogs = new ContainerModel("Related DevLogs", "DevLogs that mentioned this project") {
+                    Content = posts
+                };
+                RelatedDevLogs.ClassList.Add("hr");
+            }
         }
 
         public ProjectPageModel(PortfolioEndpoint endpoint, ProjectInfo project)
@@ -68,10 +82,13 @@ namespace Portfolio.Projects.Models {
                 { nameof(TechnologiesUsed), TechnologiesUsed },
                 { nameof(ProjectLinks), ProjectLinks },
                 { nameof(MediaContainer), MediaContainer },
-                { nameof(OrganizationLinkElement), OrganizationLinkElement }
+                { nameof(OrganizationLinkElement), OrganizationLinkElement },
+                { nameof(RelatedDevLogs), RelatedDevLogs }
             };
 
-            Project.Values.UpdateKeys(key => $"{nameof(Project)}.{key}").Do(Values.Add);
+            Project.Values.Update(Project.OverviewMarkdown.ColumnName, _ => Markdown.ToHtml(Project.OverviewMarkdown, PortfolioEndpoint.MarkdownPipeline))
+                .Update(nameof(ProjectInfo.HeaderVerticalAnchorOverride), currentValue => currentValue ?? 40)
+                .UpdateKeys(key => $"{nameof(Project)}.{key}").Do(Values.Add);
             if (Organization != null)
                 Organization.Values.UpdateKeys(key => $"{nameof(Organization)}.{key}").Do(Values.Add);
 

@@ -1,6 +1,8 @@
 ﻿
 using ExperimentalSQLite;
 using Portfolio.Projects.Data;
+using System.Data.SQLite;
+using System.Linq;
 
 namespace Portfolio.DevLog.Data
 {
@@ -44,14 +46,22 @@ namespace Portfolio.DevLog.Data
             if (!bindingInfo.Any()) return Enumerable.Empty<DevLogPostInfo>();
 
             DevLogPostsTable posts = Database.DevLogPostsTable;
-            IEnumerable<WhereClause> filters = bindingInfo.DistinctBy(bind => bind.ProjectId.Value)
-                .Select(bindInfo => new WhereClause<long>(posts.Schema.PostId, '=', bindInfo.PostId)
-            );
+            byte index = 0;
+            List<WhereClause> filters = bindingInfo.DistinctBy(bind => bind.PostId.Value)
+                .Select(bindInfo => new WhereClause<long>(posts.Schema.PostId, '=', bindInfo.PostId, ++index) as WhereClause
+            ).ToList();
 
-            if (!includePrivate)
-                filters = filters.Append(new WhereClause<bool>(posts.Schema.IsPublished, '=', true));
+            string whereClause = '(' + string.Join(" OR ", filters.Select(clause => clause.ToString())) + ')';
+            if (!includePrivate) {
+                var publishedFilter = new WhereClause<bool>(posts.Schema.IsPublished, '=', true, ++index);
+                whereClause += $" AND {publishedFilter}";
+                filters.Add(publishedFilter);
+            }
 
-            return posts.Query(filters.ToArray());
+            using (SQLiteCommand cmd = new($"SELECT * FROM `{posts.TableName}` WHERE {whereClause};", Database.Connection)) {
+                filters.ForEach(filter => cmd.Parameters.Add(filter.ToParameter()));
+                return posts.ReadFromReader(cmd.ExecuteReader());
+            }
         }
     }
     public class DevLogProjectBindingInfo : DevLogProjectBindingsTable.SQLiteRow {
