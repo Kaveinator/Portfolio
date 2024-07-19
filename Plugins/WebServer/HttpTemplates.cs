@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebServer.Models;
 using Portfolio;
+using System.Linq;
 
 namespace WebServer.Http {
     public static class HttpTemplates {

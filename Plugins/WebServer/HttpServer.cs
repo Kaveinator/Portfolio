@@ -9,12 +9,11 @@ using System.Threading.Tasks;
 using SimpleJSON;
 using Timer = System.Timers.Timer;
 using System.Reflection;
-using System.Reflection.Metadata;
 using Portfolio;
 using WebServer.Models;
 using System.Diagnostics.Contracts;
-using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace WebServer.Http {
     /* Notes
@@ -30,7 +29,7 @@ namespace WebServer.Http {
         static Type Type = typeof(HttpServer);
         public bool IsListening => Socket?.IsListening ?? false;
         // HttpCallbacks[domainName (lowercase)][path (lowercase)] => Func<in request, out response>
-        Dictionary<string, Dictionary<Regex, Func<HttpListenerRequest, Task<HttpResponse?>>>> HttpCallbacks = new();
+        Dictionary<string, Dictionary<Regex, Func<HttpListenerRequest, Task<HttpResponse?>>>> HttpCallbacks = new Dictionary<string, Dictionary<Regex, Func<HttpListenerRequest, Task<HttpResponse?>>>>();
         public List<HttpEndpointHandler> HttpEndpointsHandlers = new List<HttpEndpointHandler>();
         // So in staticDomainDirectory, it searched for the domain name, if not found, returns
         public string ProductionDirectory => Config.GetValueOrDefault(nameof(ProductionDirectory), "Static");
@@ -216,7 +215,10 @@ namespace WebServer.Http {
                 }
                 context.Response.Close();
                 // Log result
-                Action<object, bool?> LogFunc = response.IsSuccessStatusCode ? Logger.LogDebug : Logger.LogWarning;
+                Action<object, bool?> LogFunc;
+                if (response.IsSuccessStatusCode)
+                    LogFunc = Logger.LogDebug;
+                else LogFunc = Logger.LogWarning;
                 LogFunc($"[{(int)response.StatusCode}] '{context.Request.Url}'", null);
                 //LogFunc($"[{(int)response.StatusCode}] '{new UriBuilder(context.Request.Url) { Query = string.Empty }.Uri}'", null);
             } catch (Exception ex) { Logger.LogError($"[Undocumented Error] '{context.Request.Url}'\n{ex}"); }
@@ -319,7 +321,7 @@ namespace WebServer.Http {
             if (string.IsNullOrEmpty(host) || regex == null || callback == null) return false;
             host = FormatCallbackKey(host);
             if (!HttpCallbacks.TryGetValue(host, out var domainCallbacks))
-                HttpCallbacks.Add(host, domainCallbacks = new());
+                HttpCallbacks.Add(host, domainCallbacks = new Dictionary<Regex, Func<HttpListenerRequest, Task<HttpResponse?>>>());
             domainCallbacks[regex] = callback;
             return true;
         }

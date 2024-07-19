@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using WebServer.Http;
 
@@ -17,7 +18,7 @@ namespace WebServer.Models {
         string Render();
     }
     public class DynamicPageModel : IDataModel {
-        public Dictionary<string, object> Values = new();
+        public Dictionary<string, object> Values = new Dictionary<string, object>();
         Dictionary<string, object> IDataModel.Values => Values;
         
         public DynamicPageModel Add(string key, object value) {

@@ -27,8 +27,8 @@ namespace WebServer.Http {
 
         public static CachedResource GetOrDefault(HttpServer server, string name, Func<CachedResource> defaultResource) {
             name = name.ToLower();
-            return Instances.SingleOrDefault(
-                x => x.Server == server && x.Name == name,
+            return Instances.FirstOrDefault(
+                x => x?.Server == server && x.Name == name,
                 null
             ) ?? defaultResource();
         }

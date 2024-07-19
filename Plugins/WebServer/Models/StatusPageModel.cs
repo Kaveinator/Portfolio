@@ -4,7 +4,7 @@ using System.Net;
 
 namespace WebServer.Models {
     public class StatusPageModel : IDataModel {
-        Dictionary<string, object> IDataModel.Values => new() {
+        Dictionary<string, object> IDataModel.Values => new Dictionary<string, object>() {
             { nameof(StatusCode), (int)StatusCode },
             { nameof(Header), Header },
             { nameof(Details), Details }
@@ -14,7 +14,7 @@ namespace WebServer.Models {
         public string Header;
         public string Details;
 
-        static readonly Dictionary<HttpStatusCode, (string header, string details)> GenericStatusContent = new() {
+        static readonly Dictionary<HttpStatusCode, (string header, string details)> GenericStatusContent = new Dictionary<HttpStatusCode, (string header, string details)>() {
             { HttpStatusCode.OK, ("OK", "The request succeeded") },
             { HttpStatusCode.BadRequest, ("Bad Request", "The server cannot or will not process the request due to something that is perceived to be a client error") },
             { HttpStatusCode.Unauthorized, ("Unauthorized", "Authorization Required") },

@@ -1,0 +1,3 @@
+[submodule "Plugins/WebServer"]
+	path = Plugins/WebServer
+	url = https://github.com/Kaveinator/WebServer.git

@@ -1,5 +1,7 @@
+using System;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using WebServer.Models;
 
 namespace WebServer.Http {
@@ -23,7 +25,7 @@ namespace WebServer.Http {
         public bool TryGetTemplate(string path, out string content, out StatusPageModel statusModel, IDataModel? pageModel = null) {
             path = Host + path;
             bool success = HttpTemplates.TryGet(path, out content, pageModel);
-            statusModel = !success ? new(
+            statusModel = !success ? new StatusPageModel(
                 HttpStatusCode.InternalServerError,
                 subtitle: $"The '{path}' View was not found"
             ) : new StatusPageModel(HttpStatusCode.OK);
