@@ -3,8 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
-# Ignore Static (the build folder for the sites) from WebServer
-/[Ss]tatic
+
+# Ignored Project Files/Dirs
+/Portfolio/Data
+/Portfolio/configs/ReCaptchaConfig.json
+/Portfolio/[Ss]tatic
+
 # Ignore all backup folders
 **.bck
 
@@ -402,5 +406,3 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-/Data
-configs/ReCaptchaConfig.json
