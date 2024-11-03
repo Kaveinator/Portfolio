@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <StartupObject>Portfolio.Program</StartupObject>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -54,5 +55,10 @@
   <ItemGroup>
     <PackageReference Include="Markdig.Signed" Version="0.37.0" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExperimentalSQLite\ExperimentalSQLite.csproj" />
+    <ProjectReference Include="..\SimpleJSON\SimpleJSON.csproj" />
+    <ProjectReference Include="..\WebServer\WebServer.csproj" />
   </ItemGroup>
 </Project>

@@ -4,3 +4,6 @@
 [submodule "SimpleJSON"]
 	path = SimpleJSON
 	url = https://github.com/Kaveinator/SimpleJSON.git
+[submodule "ExperimentalSQLite"]
+	path = ExperimentalSQLite
+	url = https://github.com/Kaveinator/ExperimentalSQLite.git
